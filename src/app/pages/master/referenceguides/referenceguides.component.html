@@ -1,0 +1,338 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12">
+          <h3 class="card-title">References</h3>
+        </div>
+        <div class="row" style="padding-left: 16px">
+          <div class="col-md-4 pr-md-1">
+            <div *ngIf="isStaffAdmin">
+              <div class="form-group">
+                <label><strong>Choose a reference category</strong></label>
+                <div class="scrollbar-hidden::-webkit-scrollbar mb-2">
+                  <ng-select appendTo="body" id="referenceCategoryId" #select [clearable]="false"
+                    [items]="allReferenceCategoriesList" bindLabel="referenceCategory" bindValue="id"
+                    [(ngModel)]="referenceCategoryId" appearance="outline" name="referenceCategoryId"
+                    (change)="getRegerenceGuides($event)">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5 pr-md-1 pl-md-1">
+            <!-- <div class=" form-group mt-3">
+              <button class="btn btn-primary" (click)="getRegerenceGuides(this.referenceCategory)">
+                <i class="tim-icons icon-zoom-split"></i> Search </button>
+            </div> -->
+          </div>
+          <br />
+          <div class="col-md-2 pl-md-1">
+            <div class="form-group" style="margin-top: 17px; float: right">
+              <button type="button" *ngIf="isStaffAdmin" [queryParams]="{ isEdit: 0, isView: 0 }"
+                [routerLink]="['/admin/referenceguideedit']" class="btn btn-primary">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="pt-0">
+          <button type="button"  (click)="goBack()" 
+          class="btn btn-primary" style="float: right; margin-right: 18px;">Back
+          </button>
+        </div> -->
+        <div class="card-body pt-0">
+          <div class="row" *ngIf="showTable">
+            <div class="col-lg-12">
+              <div *ngIf="isStaffAdmin">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped table-hover dataTable" datatable
+                    [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="dt1">
+                    <thead>
+                      <tr style="background-color: #484D56; color: white;">
+                        <th *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
+                          Date
+                        </th>
+                        <th *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
+                          Category
+                        </th>
+                        <th style="width: 30%">Guide Description</th>
+                        <th *ngIf="user.rolename === 'StaffAdmin'">
+                          Reference Guide
+                        </th>
+                        <th *ngIf="user.rolename === 'StaffAdmin'">Role</th>
+                        <th style="width: 16%" *ngIf="isStaffAdmin">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let file of this.referenceGuides" class="pointerCursor" style="cursor: pointer"
+                        (click)="viewFile(file.id, file.fileName)">
+                        <td *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
+                          {{
+                          file.createdDate | date : "MM/dd/yyyy hh:mm:ss a"
+                          }}
+                        </td>
+                        <td *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
+                          {{ file.referenceCategory }}
+                        </td>
+                        <td>
+                          <div *ngIf="file.fileName.search('href') !== -1">
+                            <a href="{{ findreferenceurl(file.fileName) }}" target="_system">{{ file.comments }}
+                            </a>
+                          </div>
+
+                          <div *ngIf="file.fileName.search('href') === -1">
+                            {{ file.comments }}
+                          </div>
+                        </td>
+                        <td *ngIf="user.rolename === 'StaffAdmin'">
+                          <!--*ngIf="isStaffAdmin"-->
+                          <!-- {{ file.fileName }} -->
+                          <div *ngIf="
+                              isStaffAdmin ||
+                              (file.fileName.search('href') !== -1 &&
+                                !isStaffAdmin)
+                            " [innerHTML]="replaceLineBreak(file.fileName)"></div>
+                          <!-- <div *ngFor="let fqdN of file.fileName; let lastItem = last">
+                          <span>{{fqdN}}</span><span *ngIf="!lastItem">#</span>
+                        </div> -->
+                          <!-- <div [innerHTML]="{{file.fileName}}"></div>  -->
+                        </td>
+                        <td *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
+                          {{ file.rolename }}
+                        </td>
+                        <td style="width: 16%" *ngIf="isStaffAdmin" (click)="
+                            $event.preventDefault(); $event.stopPropagation()
+                          ">
+                          <button type="button" *ngIf="file.fileName.search('href') == -1" title="Download File"
+                            (click)="showUndoBtn(file.id, file.fileName)"
+                            class="btn btn-info btn-sm bi bi-cloud-download"></button>&nbsp;
+                          <button type="button" *ngIf="file.fileName.search('href') == -1" title="View File"
+                            (click)="viewFile(file.id, file.fileName)"
+                            class="btn btn-primary btn-sm bi bi-card-image"></button>&nbsp;
+                          <button [routerLink]="['/admin/referenceguideedit']" class="btn btn-warning btn-sm"
+                            [queryParams]="{
+                              referenceId: file.id,
+                              isEdit: 1,
+                              isView: 0
+                            }">
+                            <span><i class="bi bi-pencil"></i> </span></button>&nbsp;
+
+                          <button type="button" (click)="deleteFile(file.id)" title="Delete File"
+                            class="btn btn-danger btn-sm bi bi-x-lg"></button>&nbsp;
+                          <button type="submit" (click)="openModalPeri(template, file.id);" title="Chat With AI"
+                            class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#chatModal">
+                            <i class="bi bi-robot"></i>
+                          </button>
+
+                        </td>
+
+
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- <a id="newTabLink" target="_system" style="display: none;"></a> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="chatModalLabel">Chat with AI</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Chat UI inside the modal -->
+                  <div style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+                    <div *ngFor="let msg of chatMessages">
+                      <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+                    </div>
+                  </div>
+                  <div class="mt-3 d-flex">
+                    <input type="text" class="form-control me-2" [(ngModel)]="chatInput"
+                      placeholder="Type a message..." />
+                    <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <section [ngClass]="{
+                'desktop-view': width >= 768,
+                'mobile-view': width < 768
+              }"></section>
+            <div class="col-md-12">
+              <div *ngIf="!isStaffAdmin">
+                <div class="form-group">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <button type="button" style="
+                          background-color: #58B0BB;
+                          width: 100%;
+                          padding-top: 6px;
+                          padding-bottom: 6px;
+                          color: white;
+                          border: none;
+                        " (click)="collapse.toggle()" [attr.aria-expanded]="!on" aria-controls="collapseExample">
+                        <span style="float: left">Expand All</span>
+                        <i *ngIf="on" class="pull-right fa fa-chevron-down" style="float: right"></i>
+                        <i *ngIf="!on" class="pull-right fa fa-chevron-up" style="float: right"></i>
+                      </button>
+                      <br />
+                      <div #collapse="ngbCollapse" [(ngbCollapse)]="on">
+                        <div *ngFor="let element of RefcatList">
+                          <i *ngIf="element.isSelected" class="pull-right fa fa-chevron-down"
+                            style="float: right; color: white; margin: 7px"></i>
+                          <i *ngIf="!element.isSelected" class="pull-right fa fa-chevron-up"
+                            style="float: right; color: white; margin: 7px"></i>
+                          <div class="card-body" style="
+                              background-color: #58B0BB;
+                              padding: 6px;
+                              margin-top: 15px;
+                              color: white;
+                            ">
+                            <span (click)="element.isSelected = !element.isSelected">{{ element.categoryName }}</span>
+                          </div>
+
+                          <div>
+                            <div *ngIf="element.isSelected">
+                              <table class="table table-bordered table-striped table-hover dataTable"
+                                style="border-style: groove">
+                                <tbody>
+                                  <tr *ngFor="
+                                      let file of this.element.referencelist
+                                    " (click)="viewreference(file.id)" class="pointerCursor" style="cursor: pointer"
+                                    (click)="viewFile(file.id, file.fileName)">
+                                    <td>
+                                      <div *ngIf="
+                                          file.fileName.search('href') !== -1
+                                        ">
+                                        <!-- <div [innerHTML]="{{file.fileName}}"></div> -->
+                                        <span style="color: #3467c5" (click)="newtabopen(file.fileName)">{{
+                                          file.comments }}</span>
+                                      </div>
+                                      <div *ngIf="
+                                          file.fileName.search('href') === -1
+                                        ">
+                                        {{ file.comments }}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                    <div *ngIf="on">
+                      <div *ngFor="
+                          let refcatlist of this.allReferenceCategoriesList;
+                          let i = index
+                        ">
+                        <div class="card">
+                          <div class="col-md-12" [attr.aria-expanded]="!refcatlist.isSelected"
+                            aria-controls="collapseExample" (click)="
+                              collapse.toggle();
+                              getRegerenceGuides({
+                                id: refcatlist.id,
+                                referenceSortOrderId: null
+                              });
+                              refcatlist.isSelected = !refcatlist.isSelected
+                            " id="collapse">
+                            <div class="card-body" style="
+                                background-color: #58B0BB;
+                                padding: 6px;
+                                color: white;
+                              ">
+                              {{ refcatlist.referenceCategory }}
+                              <i *ngIf="!refcatlist.isSelected" class="pull-right fa fa-chevron-down"
+                                style="float: right"></i>
+                              <i *ngIf="refcatlist.isSelected" class="pull-right fa fa-chevron-up"
+                                style="float: right"></i>
+                            </div>
+                          </div>
+
+                          <div #collapse="ngbCollapse" [(ngbCollapse)]="!refcatlist.isSelected">
+                            <div class="col-md-12">
+                              <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable"
+                                  style="border-style: groove">
+                                  <!-- <thead>                          
+                                        <tr style="background-color:#003594">
+                                          <th style="width: 30%;" >Guide Description</th>                           
+                                        </tr>
+                                      </thead> -->
+                                  <tbody>
+                                    <tr *ngFor="let file of this.referenceGuides" (click)="viewreference(file.id)"
+                                      class="pointerCursor" style="cursor: pointer"
+                                      (click)="viewFile(file.id, file.fileName)">
+                                      <td>
+                                        <div *ngIf="
+                                            file.fileName.search('href') !== -1
+                                          ">
+                                          <!-- <div [innerHTML]="{{file.fileName}}"></div> -->
+                                          <span style="color: #3467c5" (click)="newtabopen(file.fileName)">{{
+                                            file.comments }}</span>
+                                        </div>
+                                        <div *ngIf="
+                                            file.fileName.search('href') === -1
+                                          ">
+                                          {{ file.comments }}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #template let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h5 class="modal-title mb-0" style="color: #003594; font-weight: bold;">AI Assistant</h5>
+
+    <button type="button" class="close btn-danger" aria-label="Cancel" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="chat-container">
+      <div class="chat-box" #chatBox>
+        <div *ngFor="let msg of messages" [ngClass]="{'user': msg.sender === 'user', 'bot': msg.sender === 'bot'}"
+          class="message">
+         <div class="bubble" [innerHTML]="msg.text"></div>
+        </div>
+      </div>
+
+      <form (ngSubmit)="sendMessage()" class="chat-input">
+        <input type="text" [(ngModel)]="userInput" name="userInput" placeholder="Type a message..." required />
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <i class="bi bi-send"></i> Send
+        </button>
+      </form>
+    </div>
+  </div>
+</ng-template>

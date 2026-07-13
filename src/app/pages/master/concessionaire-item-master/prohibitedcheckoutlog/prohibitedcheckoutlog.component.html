@@ -1,0 +1,491 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- Header -->
+        <div class="col-md-12" style="margin-right: 10px">
+          <h3 class="card-title">Prohibited Item Check Out</h3>
+
+          <div class="row" *ngIf="isStaffAdmin">
+              <div class="col-md-3 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;">
+                <div class="form-group">
+                  <strong> From Date </strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <input class="form-control" type="text" (click)="fromDate.toggle()" ngbDatepicker
+                      #fromDate="ngbDatepicker" [(ngModel)]="fromToDates.fromDate" name="fromDate"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class=" col-md-3 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;">
+                <div class=" form-group">
+                  <strong> To Date </strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <input class="form-control" type="text" (click)="toDate.toggle()" ngbDatepicker
+                      #toDate="ngbDatepicker" [(ngModel)]="fromToDates.toDate" name="this.toDate"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 pr-md-1 mt-3">
+                <div class="form-group">
+                  <span class="btn btn-primary" (click)="basicSearchAudit()">
+                    <i class="bi bi-search"></i>&nbsp;Search
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3  pr-md-1 pl-md-1 testareawidth" *ngIf="isStaffAdmin">
+                <div class="form-group">
+                  <strong>Company:</strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <select class="form-select" style="width: 200px" [(ngModel)]="selectedCompany"
+                      name="companySelect" (ngModelChange)="onCompanySelected()">
+                      <option [ngValue]="null">All Companies</option>
+                      <option *ngFor="let company of allCompanyList" [ngValue]="company">
+                        {{ company.companyName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+          </div>
+          <!-- <div
+            *ngIf="isStaffAdmin"
+            style="
+              float: right;
+              margin-right: 18px;
+              display: flex;
+              gap: 10px;
+              align-items: center;
+            "
+          >
+            <label style="font-size: 13px; margin: 0">Company:</label>
+
+            <select
+              class="form-select"
+              style="width: 200px"
+              [(ngModel)]="selectedCompany"
+              name="companySelect"
+              (ngModelChange)="onCompanySelected()"
+            >
+              <option [ngValue]="null">All Companies</option>
+              <option
+                *ngFor="let company of allCompanyList"
+                [ngValue]="company"
+              >
+                {{ company.companyName }}
+              </option>
+            </select>
+          </div> -->
+
+          <!-- Company Dropdown -->
+          <div
+            *ngIf="isAuthsigner"
+            style="
+              float: right;
+              margin-right: 18px;
+              display: flex;
+              gap: 10px;
+              align-items: center;
+            "
+          >
+            <label style="font-size: 13px; margin: 0">Company:</label>
+            <select
+              class="form-select"
+              style="width: 200px"
+              [(ngModel)]="selectedCompany"
+              name="companySelect"
+              (ngModelChange)="onCompanySelected()"
+            >
+              <option [ngValue]="null">All Companies</option>
+              <option *ngFor="let company of companies" [ngValue]="company">
+                {{ company.companyName }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Form Body -->
+        <div class="card-body" *ngIf="isAuthsigner">
+          <form #formData="ngForm">
+            <div class="row">
+              <!-- Description -->
+              <div class="col-md-3" *ngIf="!isEdit">
+                <label>Description</label>
+                <ng-select
+                  [items]="shortDesc"
+                  bindLabel="displayText"
+                  bindValue="shortDescription"
+                  [(ngModel)]="prohibitedCheckoutModel.shortDescription"
+                  placeholder="Select Item"
+                  name="shortDescription"
+                  (change)="getProhibitedrecordById($event)"
+                  [disabled]="isEdit"
+                ></ng-select>
+              </div>
+              <div class="col-md-3" *ngIf="isEdit">
+                <label>Description</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="prohibitedCheckoutModel.shortDescription"
+                  name="shortDescription"
+                  
+                  [disabled]="isEdit"
+                />
+                <!-- <ng-select
+                  [items]="shortDesc"
+                  bindLabel="displayText"
+                  bindValue="shortDescription"
+                  [(ngModel)]="prohibitedCheckoutModel.shortDescription"
+                  placeholder="Select Item"
+                  name="shortDescription"
+                  (change)="onShortDescChange($event)"
+                  [disabled]="isEdit"
+                ></ng-select> -->
+              </div>
+
+              <div class="col-md-3">
+                <label>Item ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="prohibitedCheckoutModel.itemId"
+                  name="itemId"
+                  placeholder="Enter Item ID"
+                  disabled
+                />
+              </div>
+
+              <!-- Photo -->
+              <div class="col-md-3" *ngIf="!isEdit">
+                <label>Photo</label><br />
+                <img
+                  *ngIf="selectedThumbnailImage"
+                  [src]="selectedThumbnailImage"
+                  width="80"
+                  height="80"
+                  alt="Selected Item Image"
+                  class="img-thumbnail"
+                />
+              </div>
+
+              <div class="col-md-3" *ngIf="isEdit">
+                <label>Photo</label><br />
+                <img
+                  [src]="prohibitedCheckoutModel.thumbnailImage"
+                  width="80"
+                  height="80"
+                  alt="Selected Item Image"
+                  class="img-thumbnail"
+                />
+              </div>
+
+              <!-- Checkout Date -->
+              <!-- <div class="col-md-2">
+                <label>Date</label>
+                <div class="input-group">
+                  <input class="form-control" type="text" placeholder="mm/dd/yyyy" (click)="checkoutDate.toggle()"
+                    ngbDatepicker #checkoutDate="ngbDatepicker" [(ngModel)]="prohibitedCheckoutModel.checkoutDate"
+                    name="checkoutDate" />
+                  <button class="btn btn-outline-secondary bi bi-calendar4" type="button"
+                    (click)="checkoutDate.toggle()"></button>
+                </div>
+              </div> -->
+
+              <!-- Usage Location -->
+              <div class="col-md-3">
+                <label>Usage Location</label>
+                <!-- <input *ngIf="isEdit"
+                  class="form-control"
+                  placeholder="Location"
+                  type="text"
+                  name="location"
+                  [(ngModel)]="prohibitedCheckoutModel.location"
+                  [disabled]="!isEdit"
+                /> -->
+                <ng-select
+                  [items]="locationList"
+                  bindLabel="location"
+                  [(ngModel)]="prohibitedCheckoutModel.locationId"
+                  name="locationId"
+                  bindValue="id"
+                  placeholder="Select Location"
+                  appendTo="body"
+                  [disabled]="isEdit"
+                  (change)="GetLocationById(prohibitedCheckoutModel.locationId)"
+                >
+                </ng-select>
+              </div>
+
+              <!-- Badge No -->
+              <div class="col-md-3">
+                <label>Assigned To</label>
+                <input
+                  class="form-control"
+                  placeholder="Badge No"
+                  type="text"
+                  name="badgeNo"
+                  [(ngModel)]="prohibitedCheckoutModel.badgeNo"
+                  (blur)="GetBadgeholderInfoASCX()"
+                  [disabled]="isEdit"
+                />
+              </div>
+
+              <div class="col-md-5" *ngIf="prohibitedCheckoutModel.badgeNo">
+                <label>Badgeholder Name</label>
+                <input
+                  class="form-control"
+                  placeholder="Badgeholder Name"
+                  type="text"
+                  name="badgeName"
+                  [(ngModel)]="prohibitedCheckoutModel.badgeName"
+                  [disabled]="isEdit"
+                />
+              </div>
+
+              <!-- Check Out Time -->
+              <div class="col-md-3">
+                <label>Check Out Date Time</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="checkoutTime"
+                  [(ngModel)]="prohibitedCheckoutModel.checkoutTime"
+                  [disabled]="isEdit"
+                />
+              </div>
+
+              <!-- Return Time (disabled for Authsigner) -->
+              <div class="col-md-3" *ngIf="isEdit">
+                <label>Return Date Time</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  name="returnDateTime"
+                  style="background-color: #edf197"
+                  [(ngModel)]="prohibitedCheckoutModel.returnDateTime"
+                />
+              </div>
+
+              <!-- Save Button -->
+              <div class="col-md-3 text-center text-md-start">
+                <br />
+                <button
+                  class="btn btn-primary btn-sm"
+                  type="button"
+                  (click)="saveProhibitedItemCheckOut()"
+                >
+                  Save
+                </button>
+                &nbsp;
+                <button
+                  type="button"
+                  class="btn btn-fill btn-danger btn-sm"
+                  style="margin-left: 2px"
+                  (click)="cancelRecord()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Table Placeholder -->
+        <div *ngIf="!isMobileView" class="card-body">
+          <div class="table-responsive" style="overflow-x: auto; width: 100%">
+            <table
+              id="dt1"
+              class="table table-bordered table-hover"
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+            >
+              <thead>
+                <tr style="background-color: #484D56; color: white">
+                  <th>Company</th>
+                  <th>Description</th>
+                  <th>Item ID</th>
+                  <th>Usage Location</th>
+                  <th>Assigned To</th>
+                  <th>Badgeholder Name</th>
+                  <th>Check Out Date Time</th>
+                  <!-- <th>Check Out Time</th> -->
+                  <th>Return Date Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let company of prohibitedItemCheckoutList"
+                  [ngStyle]="{
+                    'background-color':
+                      editingRowId === company.id ? '#edf197' : ''
+                  }"
+                >
+                  <td>{{ company.companyName }}</td>
+                  <td>{{ company.shortDescription }}</td>
+                  <td>{{ company.itemId }}</td>
+                  <td>{{ company.location }}</td>
+                  <td>{{ company.badgeNo }}</td>
+                  <td>{{ company.badgeName }}</td>
+                  <td>
+                    {{ company.checkoutTime | date : "MM/dd/yyyy HH:mm" }}
+                  </td>
+                  <!-- <td>{{ company.checkoutTime |date: 'HH:mm' }}</td> -->
+                  <td
+                    [ngStyle]="{
+                      'background-color': company.returnDateTime
+                        ? '#edf197'
+                        : '#f8d7da'
+                    }"
+                  >
+                    {{ company.returnDateTime | date : "MM/dd/yyyy HH:mm" }}
+                  </td>
+                  <td>
+                    <button
+                      *ngIf="isAuthsigner && company.returnDateTime == null"
+                      class="btn btn-warning btn-sm"
+                      (click)="GetChekoutItemById(company.id)"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    &nbsp;
+                    <button
+                      *ngIf="isStaffAdmin"
+                      class="btn btn-danger btn-sm"
+                      type="button"
+                      (click)="deleteCheckout(company.id)"
+                    >
+                      <i class="bi bi-trash" title="Delete"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #templatedelete>
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  aria-label="Close"
+                  (click)="modalRef?.close()"
+                ></button>
+              </div>
+              <div class="modal-body text-center">
+                <p class="fs-5">Are you sure you want to delete this record?</p>
+
+                <button class="btn btn-danger me-2" (click)="confirmDelete()">
+                  Yes
+                </button>
+                <button class="btn btn-secondary" (click)="modalRef?.close()">
+                  No
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        <!-- Mobile/List View -->
+        <div *ngIf="isMobileView">
+          <div class="card-body">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <label>Rows</label>
+              <select
+                [(ngModel)]="queryParam1.pageSize"
+                (change)="onPageSizeChange()"
+                id="pageSize"
+              >
+                <option value="10">10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+              </select>
+            </div>
+            <div class="list-group">
+              <a
+                *ngFor="let company of pagedProhibitedcheckoutList"
+                class="list-group-item list-group-item-action prohibited-card"
+              >
+                <div class="row mb-2">
+                  <div class="col-12">
+                    <strong>Company:</strong> {{ company.companyName }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Description:</strong> {{ company.shortDescription }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Item ID:</strong> {{ company.itemId }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Location:</strong> {{ company.location }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Assigned To:</strong> {{ company.badgeNo }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Badgeholder Name:</strong> {{ company.badgeName }}
+                  </div>
+                  <div class="col-12">
+                    <strong>Check Out:</strong>
+                    {{ company.checkoutTime | date : "MM/dd/yyyy HH:mm" }}
+                  </div>
+                  <div
+                    class="col-12"
+                    [ngStyle]="{
+                      'background-color': company.returnDateTime
+                        ? '#edf197'
+                        : '#f8d7da'
+                    }"
+                  >
+                    <strong>Return:</strong>
+                    {{ company.returnDateTime | date : "MM/dd/yyyy HH:mm" }}
+                  </div>
+                  <div class="col-12 mt-2 d-flex flex-wrap gap-2">
+                    <button
+                      *ngIf="isAuthsigner && company.returnDateTime == null"
+                      class="btn btn-warning btn-sm"
+                      (click)="GetChekoutItemById(company.id)"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button
+                      *ngIf="isStaffAdmin"
+                      class="btn btn-danger btn-sm"
+                      (click)="deleteCheckout(company.id)"
+                    >
+                      <i class="bi bi-trash" title="Delete"></i>
+                    </button>
+                  </div>
+                </div>
+              </a>
+              <ngb-pagination
+                [(page)]="pageHeaders1.pageNumber"
+                [pageSize]="pageHeaders1.pageSize"
+                [collectionSize]="pageHeaders1.totalItems"
+                [maxSize]="1"
+                (pageChange)="onPageChange($event)"
+              >
+                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                <ng-template ngbPaginationNext>Next</ng-template>
+              </ngb-pagination>
+            </div>
+            <!-- Pagination -->
+
+            <!-- Entry Count -->
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total {{ pageHeaders1.totalItems }} entries
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

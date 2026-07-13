@@ -1,0 +1,109 @@
+.card {
+    // border: 1px solid black; 
+    // border-radius: 5px; 
+    padding: 15px;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding-left: 0;
+    // padding: 20px;
+}
+.fontSetting{
+    text-align: justify;
+    //text-justify: inter-word;
+    font-size: 14; 
+    //color: #e9ecef;
+    color: white;
+    background-color: #484D56;
+    padding: 4px 4px 4px 10px;
+    font-weight: 400;
+    }
+
+    .fonts{
+        font-size: 15px;
+    }
+
+    .labelFonts{
+        font-size: 15px;
+    }
+
+    .parent {
+        height: 200px;
+        background: #CCCCCC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .child {
+        background-color: red;
+        width: 100px;
+        height: 100px;
+        }
+
+        
+        .badge
+        {
+            height: 30px;
+            width: 250px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid black; 
+            background-color: rgb(55, 61, 239);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 5px;;
+        }
+
+        .centerDivGreen
+        {
+            height: 50px;
+            width: 150px;
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid black; 
+            background-color: green;
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 5px;;
+        }
+
+        .centerDivGray {
+            width: 100%; 
+            text-align: center;
+            border: 1px solid black; 
+            background-color: rgb(114, 116, 114);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .centerDivRed
+        {           
+            border-radius: 5px;;
+            height: 50px;
+            width: 90px;
+            font-weight: 600;
+            font-size: 15px;
+
+            line-height: 50px;
+            text-align: center;
+            border: 1px solid black; 
+            background-color: red;
+            color: white;
+        }
+
+        .table-custom-border {
+            border: 1px solid black; 
+            width: 100%;
+            border-collapse: separate; 
+            border-spacing: 0;
+            border-radius: 4px;
+        }
+        
+        
+      

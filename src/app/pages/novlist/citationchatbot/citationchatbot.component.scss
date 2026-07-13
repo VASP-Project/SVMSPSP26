@@ -1,0 +1,27 @@
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.msg-user {
+  text-align: right;
+  color: #0d6efd;
+}
+
+.msg-bot {
+  text-align: left;
+  color: #198754;
+}
+
+.input-area {
+  display: flex;
+}

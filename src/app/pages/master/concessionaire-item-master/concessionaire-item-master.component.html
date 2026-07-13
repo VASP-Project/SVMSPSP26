@@ -1,0 +1,658 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- Header with aligned title and button -->
+        <div class="col-md-12" style="margin-right: 10px">
+          <h3 class="card-title">Prohibited Item Log</h3>
+          <!-- Company Dropdown -->
+          <div *ngIf="isStaffAdmin" style="
+              float: right;
+              margin-right: 18px;
+              display: flex;
+              gap: 10px;
+              align-items: center;
+            ">
+            <label style="font-size: 13px; margin: 0">Company:</label>
+
+            <select class="form-select" style="width: 200px" [(ngModel)]="selectedCompany" name="companySelect"
+              (ngModelChange)="onCompanySelected()">
+              <option [ngValue]="null">All Companies</option>
+              <option *ngFor="let company of allCompanyList" [ngValue]="company">
+                {{ company.companyName }}
+              </option>
+            </select>
+          </div>
+          <!-- <div
+            *ngIf="isAuthsigner"
+            style="
+              float: right;
+              margin-right: 18px;
+              display: flex;
+              gap: 10px;
+              align-items: center;
+            "
+          >
+            <label style="font-size: 13px; margin: 0">Company:</label>
+            <select
+              class="form-select"
+              style="width: 200px"
+              [(ngModel)]="selectedCompany"
+              name="companySelect"
+              (ngModelChange)="onCompanySelected()"
+            >
+              <option [ngValue]="null">All Companies</option>
+              <option *ngFor="let company of companies" [ngValue]="company">
+                {{ company.companyName }}
+              </option>
+            </select>
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onRequestProhibitedItem()"
+            >
+              Request Prohibited Item
+            </button>
+             <button class="btn btn-primary" (click)="onCompanyGo()">Go</button> 
+          </div> -->
+          <div *ngIf="isAuthsigner" class="d-flex flex-column flex-sm-row align-items-center gap-2 ms-auto"
+            style="margin-right: 18px; max-width: fit-content;">
+
+            <!-- For mobile: full width row with space between label+select and button -->
+            <div class="d-flex flex-grow-1 align-items-center gap-2">
+              <label style="font-size: 13px; margin: 0; min-width: 80px;">Company:</label>
+
+              <select class="form-select" style="min-width: 150px; max-width: 200px;" [(ngModel)]="selectedCompany"
+                name="companySelect" (ngModelChange)="onCompanySelected()">
+                <option [ngValue]="null">All Companies</option>
+                <option *ngFor="let company of companies" [ngValue]="company">
+                  {{ company.companyName }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Button aligned right -->
+            <button type="button" class="btn btn-primary" (click)="onRequestProhibitedItem()"
+              style="white-space: nowrap;">
+              Request Prohibited Item
+            </button>
+          </div>
+
+
+
+          <!-- <div style="clear: both"></div>
+          <div *ngIf="isAuthsigner || isConcessionaireUser" style="float: right; margin-right: 18px; margin-top: 10px">
+            
+          </div> -->
+        </div>
+
+        <!-- Table with data -->
+        <div *ngIf="!isMobileView" class="card-body">
+          <div class="table-responsive" style="overflow-x: auto; width: 100%">
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <label>Rows</label>
+                <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                  <option value="10">10</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                </select>
+              <button class="btn btn-primary btn-sm ms-1" (click)="exportToExcelWithImages()">Excel</button>
+              <button class="btn btn-primary btn-sm ms-1" (click)="exportToCSV()">CSV</button>
+              </div>
+              <div class="p-2 bd-highlight">
+                <input type="text" [(ngModel)]="mobileViewData.searchQuery" id="searchQuery" placeholder="Search" />
+              </div>
+              <button (click)="searchtable()"><i class="fa fa-search"></i></button>
+              <button class="btn btn-primary" (click)="clearSearch()">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+
+            <table id="dt1" class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr style="background-color: #484D56; color: white">
+
+                  <th *ngIf="isStaffAdmin" style="width: 10%">
+                    Company
+                    <i (click)="onSortClick($event, 'CompanyName')" class="sort-icon fa fa-chevron-up" data-column="CompanyName"></i>
+                  </th>
+                  <th>
+                    Item ID
+                    <i (click)="onSortClick($event, 'ItemId')" class="sort-icon fa fa-chevron-up" data-column="ItemId"></i>
+                  </th>
+                  <th>
+                    Description
+                    <i (click)="onSortClick($event, 'ShortDescription')" class="sort-icon fa fa-chevron-up" data-column="ShortDescription"></i>
+                  </th>
+                  <th>
+                    Location
+                    <i (click)="onSortClick($event, 'Location')" class="sort-icon fa fa-chevron-up" data-column="Location"></i>
+                  </th>
+                  <th>
+                    Photo
+
+                  </th>
+                  <th>
+                    Request Comment
+                    <i (click)="onSortClick($event, 'Description')" class="sort-icon fa fa-chevron-up" data-column="Description"></i>
+                  </th>
+                  <th>
+                    Request Date
+                    <!-- <i (click)="onSortClick($event, 'SubmittedDate')" class="my-icon fa fa-chevron-up"></i> -->
+                    <i (click)="onSortClick($event, 'SubmittedDate')" class="sort-icon fa fa-chevron-up" data-column="SubmittedDate"></i>
+
+
+                  </th>
+                  <th>
+                    Approval Date
+                    <i (click)="onSortClick($event, 'ApprovedDate')" class="sort-icon fa fa-chevron-up" data-column="ApprovedDate"></i>
+                  </th>
+                  <th>
+                    Status
+                    <i (click)="onSortClick($event, 'Status')" class="sort-icon fa fa-chevron-up" data-column="Status"></i>
+                  </th>
+                  <th>
+                    Appr Comment
+                    <i (click)="onSortClick($event, 'Comment')" class="sort-icon fa fa-chevron-up" data-column="Comment"></i>
+                  </th>
+
+
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Show each row -->
+                <tr *ngFor="
+                      let company of prohibitedList 
+                | paginate : { 
+                    itemsPerPage: pageHeaders.pageSize,
+                    currentPage: pageHeaders.pageNumber,
+                    totalItems: pageHeaders.totalItems
+                }; 
+                
+                    ">
+                  <td *ngIf="isStaffAdmin" style="width: 10%">
+                    {{ company.companyName }}
+                  </td>
+                  <td style="width: 10%">{{ company.itemId }}</td>
+                  <td style="width: 10%">{{ company.shortDescription }}</td>
+                  <td style="width: 10%">{{ company.location }}</td>
+                  <!-- <td style="width: 10%">
+                    <img
+                      *ngIf="company.thumbnailImage"
+                      [src]="company.thumbnailImage"
+                      width="80"
+                      height="80"
+                      alt="Item Image"
+                    />
+                  </td> -->
+
+                  <td style="width: 10%">
+                    <img *ngIf="company.thumbnailUrl"  
+                    [src]="company.thumbnailUrl" width="120" height="120" loading="lazy"
+                      alt="Item Image" (click)="loadOriginalImage(company)" style="cursor: pointer" />
+                  </td>
+                  <td style="width: 13%">{{ company.description }}</td>
+
+                  <td style="width: 10%">
+                    {{
+                    company.submittedDate
+                    ? (company.submittedDate | date : "MM/dd/yyyy")
+                    : ""
+                    }}
+                  </td>
+                  <td style="width: 10%">
+                    {{
+                    company.approvedDate
+                    ? (company.approvedDate | date : "MM/dd/yyyy")
+                    : ""
+                    }}
+                  </td>
+                  <td style="width: 10%">{{ company.status }}</td>
+                  <td style="width: 13%">
+                    <!-- Read-only message for Authsigner -->
+                    <div *ngIf="isAuthsigner">
+                      <p class="form-control" style="height: auto; min-height: 100px">
+                        {{ company.comment }}
+                      </p>
+                    </div>
+                    <div *ngIf="
+                        isStaffAdmin && company.status != 'Approval Pending'
+                      ">
+                      <p class="form-control" style="height: auto; min-height: 100px">
+                        {{ company.comment }}
+                      </p>
+                    </div>
+                    <!-- Editable textarea for StaffAdmin -->
+                    <div *ngIf="
+                        isStaffAdmin && company.status == 'Approval Pending'
+                      ">
+                      <textarea class="form-control" placeholder="Enter Comments" name="description" rows="4"
+                        style="resize: vertical" [(ngModel)]="company.comment"></textarea>
+                    </div>
+                  </td>
+
+                  <td style="width: 8%">
+                    <div *ngIf="
+                        isAuthsigner && company.status == 'Approval Pending'
+                      ">
+                      <button type="button" class="btn btn-danger btn-sm" (click)="deleteCompany(company.id)">
+                        <i class="bi bi-trash" title="Delete"></i>
+                      </button>
+                    </div>
+
+                    <div>
+                      <button *ngIf="
+                          isStaffAdmin && company.status == 'Approval Pending'
+                        " class="btn btn-success btn-sm" (click)="handleCommentAction(company, 'Approved')">
+                        Approve
+                      </button>
+                      <button *ngIf="
+                          isStaffAdmin && company.status == 'Removal Pending'
+                        " class="btn btn-primary btn-sm" (click)="openEditProhibited(company)">
+                        Review
+                      </button>
+
+                      <button *ngIf="
+                          isStaffAdmin && company.status == 'Approval Pending'
+                        " type="button" class="btn btn-danger btn-sm" (click)="
+                          handleCommentAction(company, 'Addition Rejected')
+                        ">
+                        Reject
+                      </button>
+                    </div>
+
+                    <div>
+                      <!-- <label
+                        *ngIf="company.showlabelApprove"
+                        style="color: #06d79c; padding: 5px; font-size: larger"
+                      >
+                        <strong *ngIf="isStaffAdmin"> Approved</strong>
+                      </label> -->
+
+                      <button *ngIf="
+                          isAuthsigner &&
+                          (company.status == 'Approved' ||
+                            company.status == 'Removal Rejected')
+                        " type="button" class="btn btn-danger btn-sm" (click)="openEditProhibited(company)">
+                        <i class="bi bi-trash" title="Delete"></i>
+                      </button>
+
+                      <!-- <label
+                        *ngIf="company.showlabelReject && isStaffAdmin"
+                        style="color: #ef5350; padding: 5px; font-size: larger"
+                      >
+                        <strong> Rejected</strong>
+                      </label> -->
+
+                      <div *ngIf="isAuthsigner && company.showlabelReject">
+                        <button class="btn btn-warning btn-sm" [routerLink]="['/admin/addeditprohibiteditem']"
+                          [queryParams]="{
+                            recordId: company.id,
+                            isEdit: 1,
+                            isView: 0,
+                            companyId: company.companyId
+                          }" skipLocationChange>
+                          <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                      </div>
+                      <div *ngIf="isStaffAdmin && company.status != 'Removed'">
+                        <button class="btn btn-warning btn-sm" [routerLink]="['/admin/addeditprohibiteditem']"
+                          [queryParams]="{
+                            recordId: company.id,
+                            isEdit: 1,
+                            isView: 0,
+                            companyId: company.companyId,
+                            user: 'staffadmin',
+                            companySelected:this.iscompanyselected
+                          }" skipLocationChange>
+                          <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <!-- Mobile View -->
+            </table>
+          </div>
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              Showing total
+              {{ pageHeaders.totalItems }} entries
+            </div>
+            <div class="p-2 bd-highlight">
+              <pagination-controls (pageChange)="onPageChange($event)" class="my-pagination"></pagination-controls>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isMobileView">
+          <div class="card-body">
+
+            <!-- Page Size Dropdown -->
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <label>Rows</label>
+                <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                  <option value="10">10</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                </select>
+                <button class="btn btn-primary btn-sm ms-1" (click)="exportToExcelWithImages()">Excel</button>
+              <button class="btn btn-primary btn-sm ms-1" (click)="exportToCSV()">CSV</button>
+              </div>
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <input type="text" [(ngModel)]="mobileViewData.searchQuery" id="searchQuery" placeholder="Search" />
+              </div>
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <button (click)="searchtable()"><i class="fa fa-search"></i></button>
+                <button class="btn btn-primary" style="margin-left: 2px;" (click)="clearSearch()">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              </div>
+
+            </div>
+
+
+            <!-- List View -->
+            <div class="list-group">
+              <a *ngFor="let company of prohibitedList" class="list-group-item list-group-item-action prohibited-card">
+                <div class="row mb-2">
+
+                  <div *ngIf="isStaffAdmin" class="col-12"><strong>Company:</strong> {{ company.companyName }}</div>
+                  <div class="col-12"><strong>Item ID:</strong> {{ company.itemId }}</div>
+                  <div class="col-12"><strong>Description:</strong> {{ company.shortDescription }}</div>
+                  <div class="col-12"><strong>Location:</strong> {{ company.location }}</div>
+
+                  <div class="col-12 my-2" *ngIf="company.thumbnailUrl">
+                    <img [src]="company.thumbnailUrl" (click)="loadOriginalImage(company)" alt="Item Image"
+                      style="max-width: 100px; height: auto; border-radius: 6px; cursor: pointer;" />
+                  </div>
+
+                  <div class="col-12"><strong>Request Comment:</strong> {{ company.description }}</div>
+                  <div class="col-12"><strong>Request Date:</strong>
+                    {{ company.submittedDate ? (company.submittedDate | date : 'MM/dd/yyyy') : '' }}
+                  </div>
+                  <div class="col-12"><strong>Approval Date:</strong>
+                    {{ company.approvedDate ? (company.approvedDate | date : 'MM/dd/yyyy') : '' }}
+                  </div>
+                  <div class="col-12"><strong>Status:</strong> {{ company.status }}</div>
+
+                  <!-- Comment Box -->
+                  <div class="col-12 mt-2">
+                    <strong>Approval Comment:</strong>
+                    <div *ngIf="isAuthsigner || (isStaffAdmin && company.status !== 'Approval Pending')">
+                      <p class="form-control" style="height: auto; min-height: 80px;">
+                        {{ company.comment }}
+                      </p>
+                    </div>
+                    <div *ngIf="isStaffAdmin && company.status === 'Approval Pending'">
+                      <textarea class="form-control" [(ngModel)]="company.comment" rows="3"
+                        placeholder="Enter Comments"></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="col-12 mt-3 d-flex flex-wrap gap-2">
+
+                    <button *ngIf="isAuthsigner && company.status === 'Approval Pending'" class="btn btn-danger btn-sm"
+                      (click)="deleteCompany(company.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+
+                    <button *ngIf="isStaffAdmin && company.status === 'Approval Pending'" class="btn btn-success btn-sm"
+                      (click)="handleCommentAction(company, 'Approved')">
+                      Approve
+                    </button>
+
+                    <button *ngIf="isStaffAdmin && company.status === 'Removal Pending'" class="btn btn-primary btn-sm"
+                      (click)="openEditProhibited(company)">
+                      Review
+                    </button>
+
+                    <button *ngIf="isStaffAdmin && company.status === 'Approval Pending'" class="btn btn-danger btn-sm"
+                      (click)="handleCommentAction(company, 'Addition Rejected')">
+                      Reject
+                    </button>
+
+                    <button
+                      *ngIf="isAuthsigner && (company.status === 'Approved' || company.status === 'Removal Rejected')"
+                      class="btn btn-danger btn-sm" (click)="openEditProhibited(company)">
+                      <i class="bi bi-trash" title="Delete"></i>
+                    </button>
+
+                    <button *ngIf="isAuthsigner && company.showlabelReject" class="btn btn-warning btn-sm"
+                      [routerLink]="['/admin/addeditprohibiteditem']" [queryParams]="{
+                      recordId: company.id,
+                      isEdit: 1,
+                      isView: 0,
+                      companyId: company.companyId
+                    }" skipLocationChange>
+                      <i class="bi bi-pencil" title="Edit"></i>
+                    </button>
+
+                    <button *ngIf="isStaffAdmin && company.status !== 'Removed'" class="btn btn-warning btn-sm"
+                      [routerLink]="['/admin/addeditprohibiteditem']" [queryParams]="{
+                      recordId: company.id,
+                      isEdit: 1,
+                      isView: 0,
+                      companyId: company.companyId,
+                      user: 'staffadmin',
+                      companySelected:this.iscompanyselected
+                    }" skipLocationChange>
+                      <i class="bi bi-pencil" title="Edit"></i>
+                    </button>
+
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Pagination -->
+            <ngb-pagination [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize"
+              [collectionSize]="pageHeaders.totalItems" [maxSize]="1" (pageChange)="onPageChange($event)">
+              <ng-template ngbPaginationPrevious>Prev</ng-template>
+              <ng-template ngbPaginationNext>Next</ng-template>
+            </ngb-pagination>
+
+            <!-- Entry Count -->
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total {{ pageHeaders.totalItems }} entries
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+        <!-- Modal -->
+        <div class="custom-modal" *ngIf="isModalOpen" (click)="closeModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <span class="close-btn" (click)="closeModal()">&times;</span>
+            <img [src]="selectedImage" alt="Full Image" />
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <ng-template #template>
+          <!-- <div class="modal-header" style="color: primary">
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="closemodel()"
+            ></button> -->
+
+          <div class="modal-body text-center">
+            <p class="fs-5 fw-semibold mt-3 mb-4">
+              Do not remove item until you have received an approval from
+              <strong>SBO</strong>.
+            </p>
+
+            <button class="btn btn-outline-primary" type="button" (click)="closemodel(); confirmStatusChange1()">
+              OK, Got It
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #templatedelete>
+          <div class="modal-header">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.close()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fs-5">Are you sure you want to delete this record?</p>
+
+            <button class="btn btn-danger me-2" (click)="confirmDelete()">
+              Yes
+            </button>
+            <button class="btn btn-secondary" (click)="modalRef?.close()">
+              No
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #templateApproved>
+          <div class="modal-header">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.close()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fs-5">
+              Are you sure you want to <strong>Approve</strong> the PI request?
+            </p>
+
+            <button class="btn btn-success me-2" (click)="confirmStatusChange()">
+              Yes
+            </button>
+            <button class="btn btn-secondary" (click)="modalRef?.close()">
+              No
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #templateReject>
+          <div class="modal-header">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.close()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fs-5">
+              Are you sure you want to <strong>Reject</strong> the PI request?
+            </p>
+
+            <button class="btn btn-success me-2" (click)="confirmStatusChange()">
+              Yes
+            </button>
+            <button class="btn btn-secondary" (click)="modalRef?.close()">
+              No
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #statusTemplateApproved>
+          <div class="modal-header">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.close()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fs-5">
+              Are you sure you want to <strong>Approve rejection</strong>?
+            </p>
+            <button class="btn btn-success me-2" (click)="confirmStatusChange1()">
+              Yes
+            </button>
+            <button class="btn btn-secondary" (click)="modalRef?.close()">
+              No
+            </button>
+          </div>
+        </ng-template>
+
+        <ng-template #statusTemplateReject>
+          <div class="modal-header">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef?.close()"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fs-5">
+              Are you sure you want to <strong>Reject rejection</strong>?
+            </p>
+            <button class="btn btn-success me-2" (click)="confirmStatusChange1()">
+              Yes
+            </button>
+            <button class="btn btn-secondary" (click)="modalRef?.close()">
+              No
+            </button>
+          </div>
+        </ng-template>
+
+        <div class="modal fade" tabindex="-1" #modal2 id="myModal" style="display: none">
+          <div class="modal-dialog" style="max-width: 500px; min-height: 500px">
+            <div class="modal-content">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">
+                  Request Removal of a Prohibited Item
+                </h4>
+                <button type="button" class="btn-close" (click)="closeprohibited()"></button>
+              </div>
+
+              <!-- Modal Body -->
+              <div class="modal-body" *ngIf="selectedItem">
+                <!-- Row 1 -->
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <p>
+                      <strong>Company:</strong> {{ selectedItem?.companyName }}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Description:</strong>
+                      {{ selectedItem?.shortDescription }}
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Item ID:</strong>
+                      {{ selectedItem?.itemId }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <p>
+                      <textarea class="form-control" placeholder="Enter Comment" name="removalComment" rows="4"
+                        style="resize: vertical" [(ngModel)]="selectedItem.removalComment"></textarea>
+                    </p>
+                  </div>
+                </div>
+                <hr />
+
+                <!-- Footer Buttons -->
+                <div class="modal-footer">
+                  <button *ngIf="isAuthsigner" class="btn btn-primary" (click)="moveForRemove('Removal Pending')">
+                    Submit
+                  </button>
+
+                  <button *ngIf="isStaffAdmin" type="button" class="btn btn-success btn-sm"
+                    (click)="moveForRemove('Removed')">
+                    Approve
+                  </button>
+                  <button *ngIf="isStaffAdmin" type="button" class="btn btn-danger btn-sm"
+                    (click)="moveForRemove('Removal Rejected')">
+                    Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

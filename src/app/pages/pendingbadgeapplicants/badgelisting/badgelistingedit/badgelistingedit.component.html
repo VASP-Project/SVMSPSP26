@@ -1,0 +1,623 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12">
+          <span
+            style="
+              font-size: 25px;
+              color: #003594;
+              font-weight: bold;
+              margin-left: 18px;
+            "
+            >Badge Accountability Audit</span
+          >
+          <button
+            type="button"
+            [routerLink]="['/admin/badgelisting']"
+            class="btn btn-primary mt-2"
+            style="float: right; margin-right: 18px"
+          >
+            Back
+          </button>
+        </div>
+        <br />
+        <div class="cadr-body">
+          <form
+            #formData="ngForm"
+            (ngSubmit)="addbadgeAudit(formData)"
+            *ngIf="
+              (badgeauditinfo.status == 'DRAFT' && isEdit == 1) || isEdit == 0
+            "
+          >
+            <div class="row" style="margin-left: 5px; margin-right: 5px">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <input
+                    type="hidden"
+                    id="id"
+                    [(ngModel)]="badgeauditinfo.id"
+                    name="id"
+                    #id="ngModel"
+                  />
+                  <label>Audit Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="auditName"
+                    required
+                    [(ngModel)]="badgeauditinfo.auditName"
+                    name="auditName"
+                    #auditName="ngModel"
+                    [readonly]="isView == 1"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label>Audit Type</label>
+                  <ng-select
+                    appendTo="body"
+                    id="auditType"
+                    #select
+                    [items]="auditTypes"
+                    bindLabel="label"
+                    placeholder="Select Option"
+                    bindValue="value"
+                    [(ngModel)]="badgeauditinfo.auditType"
+                    appearance="outline"
+                    name="auditType"
+                    (change)="showAuditType(); setDirtyFlag()"
+                    [disabled]="isView == 1"
+                  >
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-1 pr-md-1 pl-md-1">
+                <div class="form-group">
+                  <label>Audit %</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="auditPercent"
+                    required
+                    [(ngModel)]="badgeauditinfo.auditPercent"
+                    name="auditPercent"
+                    [readonly]="isAudit || isView == 1"
+                    #auditPercent="ngModel"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-3 pr-md-1 pl-md-1">
+                <div class="form-group">
+                  <label> Audit Start Date </label>
+                  <div class="input-group">
+                    <input
+                      class="form-control"
+                      type="text"
+                      (click)="fromDate.toggle()"
+                      ngbDatepicker
+                      #fromDate="ngbDatepicker"
+                      [(ngModel)]="fromToDates.fromDate"
+                      name="fromDate"
+                      placeholder="mm/dd/yyyy"
+                    />
+                    <button
+                      class="btn btn-outline-secondary bi bi-calendar4"
+                      (click)="fromDate.toggle()"
+                      type="button"
+                    ></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 pr-md-1 pl-md-1">
+                <div class="form-group">
+                  <label>Audit Completion Date </label>
+                  <div class="input-group">
+                    <input
+                      class="form-control"
+                      type="text"
+                      (click)="toDate.toggle()"
+                      ngbDatepicker
+                      #toDate="ngbDatepicker"
+                      [(ngModel)]="fromToDates.toDate"
+                      name="toDate"
+                      placeholder="mm/dd/yyyy"
+                    />
+                    <button
+                      class="btn btn-outline-secondary bi bi-calendar4"
+                      (click)="toDate.toggle()"
+                      type="button"
+                    ></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row" style="margin-left: 5px; margin-right: 5px">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Audit Description</label>
+                  <textarea
+                    class="form-control"
+                    placeholder="Enter Audit Description"
+                    id="auditDescription"
+                    name="auditDescription"
+                    [(ngModel)]="badgeauditinfo.auditDescription"
+                    [readonly]="isView == 1"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div
+                *ngIf="this.badgeauditinfo.auditType == 'Targeted Audit'"
+                class="col-md-6 pl-md-1"
+              >
+                <div class="form-group" id="filterAll">
+                  <label>Select Company </label>
+                  <ng-multiselect-dropdown
+                    name="selectedCompany"
+                    [data]="allCompanyList"
+                    [(ngModel)]="selectedCompany"
+                    [settings]="dropdownSettings"
+                    (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)"
+                    [ngModelOptions]="{ standalone: true }"
+                    [disabled]="isView == 1"
+                  ></ng-multiselect-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-4 mb-2">
+              <div class="col-md-4"></div>
+              <div
+                *ngIf="isView != 1"
+                class="col-md-4"
+                style="text-align: center"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  *ngIf="isEdit == 0"
+                  [disabled]="!formData.form.valid"
+                >
+                  Save
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-secondary"
+                  style="margin-left: 3px"
+                  *ngIf="isEdit == 1"
+                >
+                  Update
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary ml-3"
+                  style="margin-left: 3px"
+                  (click)="launch()" skipLocationChange
+                >
+                  Launch Audit
+                </button>
+                <button
+                  type="button"
+                  (click)="hideaddform()"
+                  style="margin-left: 3px"
+                  class="btn btn-fill btn-danger ml-3"
+                >
+                  Close
+                </button>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </form>
+
+          <div *ngIf="badgeauditinfo.status == 'CLOSED' || badgeauditinfo.status == 'LAUNCHED'">
+            <div class="row" style="margin-left: 15px; margin-right: 5px">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label
+                    ><strong>
+                      Name : {{ badgeauditinfo.auditName }}</strong
+                    ></label
+                  >
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label
+                    ><strong>
+                      Type : {{ badgeauditinfo.auditType }}</strong
+                    ></label
+                  >
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label
+                    ><strong
+                      >Audit % : {{ badgeauditinfo.auditPercent }}</strong
+                    ></label
+                  >
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row" style="margin-left: 15px; margin-right: 5px">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label
+                    ><strong>
+                      Audit Start Date :
+                      {{ badgeauditinfo.auditFromDate | date: "MM/dd/yyyy" }}</strong
+                    ></label
+                  >
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label
+                    ><strong>
+                      Audit End Date :
+                      {{ badgeauditinfo.auditToDate | date: "MM/dd/yyyy" }}</strong
+                    ></label
+                  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label><strong>Audit Description</strong></label>
+                  <textarea
+                    class="form-control"
+                    placeholder="Enter Audit Description"
+                    id="auditDescription"
+                    name="auditDescription"
+                    [(ngModel)]="badgeauditinfo.auditDescription"                    
+                  ></textarea>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-primary" (click)="launchUpdate()">
+                  Save
+                </button>
+              </div>
+            </div>
+
+            <div class="row mt-4 mb-2" *ngIf="badgeauditinfo.status == 'DRAFT'">
+              <div class="col-md-4"></div>
+              <div
+                *ngIf="isView != 1"
+                class="col-md-4"
+                style="text-align: center"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  *ngIf="isEdit == 0"
+                  [disabled]="!formData.form.valid"
+                >
+                  Save
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-secondary"
+                  style="margin-left: 3px"
+                  *ngIf="isEdit == 1"
+                >
+                  Update
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary ml-3"
+                  style="margin-left: 3px"
+                  (click)="launch()"
+                >
+                  Launch Audit
+                </button>
+                <button
+                  type="button"
+                  (click)="hideaddform()"
+                  style="margin-left: 3px"
+                  class="btn btn-fill btn-danger ml-3"
+                >
+                  Close
+                </button>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </div>
+          
+          <br />
+          <div *ngIf="isEdit == 1">
+            <div class="col-md-12">
+              <span
+                style="
+                  text-align: center;
+                  font-size: 22px;
+                  color: #003594;
+                  font-weight: bold;
+                  margin-left: 18px;
+                "
+              >
+                Badge Audit Employees</span
+              >
+              <button
+              *ngIf="badgeauditinfo.status == 'DRAFT'"
+                type="button"
+                class="btn btn-primary"
+                style="float: right; margin-right: 18px"
+                (click)="refresh()"
+              >
+                Refresh Badge List
+              </button>
+            </div>
+            <br />
+
+            <div>
+              <div class="table-responsive">
+                <div class="d-flex bd-highlight">
+                  <div class="p-2 flex-grow-1 bd-highlight">
+                    <select
+                      [(ngModel)]="queryParam.pageSize"
+                      (change)="onPageSizeChange()"
+                      id="pageSize"
+                    >
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="200">200</option>
+                    </select>
+                  </div>
+                  <div class="p-2 bd-highlight">
+                    <input
+                      type="text"
+                      [(ngModel)]="queryParam.searchQuery"
+                      placeholder="Search"
+                      id="searchQuery"
+                    
+                    />
+                  </div>
+                  <button (click)="searchtable()"><i class="fa fa-search"></i></button>
+                </div>
+
+                <table
+                  class="table table-bordered table-striped"
+                  id="dt1"
+                >
+                  <thead class="text-primary">
+                    <tr style="background-color: #484D56; color: white">
+                      <th>
+                        Company Name<i
+                          (click)="onSortClick($event, 'CompanyName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        First Name
+                        <i
+                          (click)="onSortClick($event, 'FirstName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Last Name
+                        <i
+                          (click)="onSortClick($event, 'LastName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>Badge Number</th>
+                      <th>Badge Color</th>
+                      <th>Issuance Date</th>
+                      <th>Expiration Date</th>
+                      <th>Escort Icon</th>
+                      <th>Access Level</th>
+                      <th>Drivers Icon</th>
+                      <th>Custom Seal</th>
+                      <th>Last Audit</th>
+                      <th>Status</th>
+                      <th>Accountability</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let item of launchbadgeauditlist
+                          | paginate
+                            : {
+                                itemsPerPage: pageHeaders.pageSize,
+                                currentPage: pageHeaders.pageNumber,
+                                totalItems: pageHeaders.totalItems
+                              }
+                      "
+                    >
+                      <td>{{ item.company }}</td>
+                      <td>{{ item.firstName }}</td>
+                      <td>{{ item.lastName }}</td>
+                      <td>{{ item.badgeNumber }}</td>
+                      <td>{{ item.badgeColor }}</td>
+                      <td>{{ item.issuanceDate | date: "MM/dd/yyyy" }}</td>                   
+                      <td>{{ item.expirationDate | date: "MM/dd/yyyy" }}</td>
+                      <td>{{ item.escortIcon }}</td>
+                      <td>{{ item.accessLevel }}</td>
+                      <td>{{ item.driversIcon }}</td>
+                      <td>{{ item.customSeal }}</td>
+                      <td>
+                        {{
+                          item.lastAudit == "1900-01-01T00:00:00"
+                            ? ""
+                            : (item.lastAudit | date: "MM/dd/yyyy")
+                        }}
+                      </td>
+                      <td>{{item.refreshStatus}}</td>
+                      <td>
+                        {{
+                          item.empStatus == 0 && item.status != 'ACTIVE' && item.refreshStatus != 'ACTIVE'?'Unaccountable'
+                                              :item.empStatus == 0?'Pending'
+                                              :item.empStatus == 1?'Accountable'
+                                              :item.empStatus == 2?'Unaccountable'
+                                              :item.empStatus == 4?'Accountable'
+                                              :item.empStatus == 5?'Unaccountable'
+                                              :item.empStatus == 6?'Accountable'
+                                              :item.empStatus == 7?'Unaccountable'
+                                              :'Returned' 
+
+                          
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            
+              <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  Showing total
+                  <!-- {{ pageHeaders.pageNumber }} to
+                  {{ pageHeaders.pageSize }} of -->
+                  {{ pageHeaders.totalItems }} entries
+                </div>
+                <div class="p-2 bd-highlight">
+                  <pagination-controls
+                    (pageChange)="onPageChange($event)"
+                    class="my-pagination"
+                  ></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--<div *ngIf="(windowRef?.innerWidth < 768)">
+            <div class="card-body">
+              <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  <label>Rows</label>
+                  <select [(ngModel)]="queryParam.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+                <!-- <div class="bd-highlight">
+                  <input type="text" [(ngModel)]="queryParam.searchQuery" id="searchQuery" placeholder="Search" />
+                </div>
+                <button (click)="searchtable()" class="btn btn-primary" style="margin-left:5px;"><i
+                    class="bi bi-search"></i></button>
+                <span class="btn btn-primary" style="margin-left:2px;" (click)="clearSearch()">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </span> -->
+              <!--</div>
+              <div class="list-group">
+                <a *ngFor="let item of launchbadgeauditlist; 
+                    trackBy: identify; index as i; " skipLocationChange
+                  class="list-group-item list-group-item-action">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;"> Company Name:</span>
+                      {{ item.company }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">First Name:</span>
+                      {{ item.firstName }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Last Name:</span>
+                      {{ item.lastName }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Badge Number:</span>
+                      {{ item.badgeNumber }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Badge Color:</span>
+                      {{ item.badgeColor }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Issuance Date:</span>
+                      {{ item.issuanceDate | date: "MM/dd/yyyy" }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Expiration Date:</span>
+                      {{ item.expirationDate | date: "MM/dd/yyyy" }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Escort Icon:</span>
+                      {{ item.escortIcon }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Access Level:</span>
+                      {{ item.accessLevel }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Drivers Icon:</span>
+                      {{ item.driversIcon }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Custom Seal:</span>
+                      {{ item.customSeal }}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Last Audit:</span>
+                      {{
+                      item.lastAudit == "1900-01-01T00:00:00"
+                      ? ""
+                      : (item.lastAudit | date: "MM/dd/yyyy")
+                      }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Status:</span>
+                      {{item.refreshStatus}}
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Accountability:</span>
+                      {{
+                      item.empStatus == 0 && item.status != 'ACTIVE' && item.refreshStatus != 'ACTIVE'?''
+                      :item.empStatus == 0?'Pending'
+                      :item.empStatus == 1?'Accountable'
+                      :item.empStatus == 2?'Unaccountable'
+                      :item.empStatus == 4?'Accountable'
+                      :item.empStatus == 5?'Unaccountable'
+                      :item.empStatus == 6?'Accountable'
+                      :item.empStatus == 7?'Unaccountable'
+                      :'Returned'
+
+
+                      }}
+                    </div>
+                    <div class="col-md-4">
+
+                    </div>
+                  </div>
+                </a>
+                <ngb-pagination [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize"
+                  [collectionSize]="pageHeaders.totalItems" [maxSize]="1" (pageChange)="onPageChange($event)">
+                  <ng-template ngbPaginationPrevious>Prev</ng-template>
+                  <ng-template ngbPaginationNext>Next</ng-template>
+                </ngb-pagination>
+              </div>
+              <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  Showing total
+                  {{ pageHeaders.totalItems }} entries
+                </div>
+              </div>
+            </div>
+          </div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

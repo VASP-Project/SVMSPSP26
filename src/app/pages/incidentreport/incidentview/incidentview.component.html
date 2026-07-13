@@ -1,0 +1,1497 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3 class="card-title" style="padding-left: 10px;">Incident Record</h3>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-5 pr-md-1">
+              <div>
+                <strong> Incident Type </strong>
+              </div>
+              <div>
+                <label>
+                  {{ this.inciTypeName }}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-3">
+              <div>
+                <strong> Incident No. #: </strong> {{this.incidentinfo.incidentRecordNo}}
+              </div>
+            </div>
+          </div>
+          <ng-container>
+            <div class="card">
+              <div class="card-body">
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Additional Type </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.additionalType }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Facility</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.incidentFacilityName}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Door/Gate Number</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.incidentDoorName}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Date Occurred</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.dateOccurred | date: 'MM/dd/yyyy'}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Time Occurred</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.newTimeOccurred }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1" *ngIf="showTextForLocation">
+                    <div>
+                      <strong> Other </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.otherLocationTextvalue }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Media Attention ? </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.mediaAttention}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> TSA Checkpoint Closure ?</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.tsacheckpointClosure}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Evacuation ? </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.evacuation}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-11 pr-md-1">
+                    <strong> Description of Evacuation </strong>
+                  </div>
+                  <div >
+                    <label  >
+                      {{ incidentinfo.evacuationDescription }}</label>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Assoc. NOV/COU Report</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.associatedNovreport}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Assoc. INSP Report</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.associatedInspreport}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Associated OPD Report</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.associatedOpdreport}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Reporting Agency</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.reportingAgencyName}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Involved Agencies</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.involvedAgencyName}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> TSA Coordination Center Notified?</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.tsaNotifiedValue}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1" *ngIf="showOtherRepo">
+                    <div>
+                      <strong> Other Reporting Agency </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.otherReportingvalue}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 5px;">
+                  <div class="col-md-3 pr-md-1" *ngIf="showOtherInvol">
+                    <div>
+                      <strong> Other Involved Agencies</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.otherInvolvedvalue}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> AOA Perimeter Breach Classification</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.perimeterBreachName}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Additional Details</strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{ incidentinfo.additionalDetails}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container>
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">INCIDENT SUMMARY</span>
+              </h1>
+            </div>
+            <div class="card"style="margin-bottom: 5px;">
+              <div class="card-body" style="padding-bottom: 0; padding-top: 2px;">
+                <div class="row" style="padding-top: 2px;">
+                  <div class="col-md-11 pr-md-1">
+                    <label  >
+                      {{ incidentinfo.incidentSummary }}
+                    </label>
+                  </div>
+                  <!-- <div class="col-md-11 pr-md-1">
+                    <strong>Incident Summary </strong>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container>
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">INCIDENT NOTIFICATIONS</span>
+              </h1>
+            </div>                
+            <div *ngFor="let event of this.incidentinfo.notificationList;">
+              <div class="card" style="margin-bottom: 5px;">
+                <div class="card-body" style="padding-bottom: 0; padding-top: 2px;">
+                  <div class="row">
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Official(s) Notified</strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{ event.officialNotified}}
+                        </label>
+                      </div>
+                    </div>                
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Date Notified</strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{ event.notifiedDate  | date: "MM/dd/yyyy"}}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Time Notified</strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{ event.newTime }}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Notified by</strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{ event.notifiedBy}}
+                        </label>
+                      </div>
+                    </div>                
+                  </div>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">
+                <div class=" form-group">
+                  <span class="badge bg-primary" style="font-size: 1rem;
+                   " (click)="showIncidentIndividual(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentEvent"></i>
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentEvent"></i>
+                    CHRONOLOGY OF INVESTIGATION 
+                  </span>
+                </div>
+              </div>                  
+            </div>
+            <div *ngIf="this.isIncidentEvent">
+              <div *ngFor="let event of this.incidentinfo.incidentEvents;">
+                <div class="card" style="margin-bottom: 5px;">
+                  <div class="card-body" style="padding-bottom: 0; padding-top: 2px;">
+                    <div class="row">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Event Type</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.eventTypeName}}
+                          </label>
+                        </div>
+                      </div>                
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Date of Event</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.eventDate  | date: "MM/dd/yyyy"}}
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Time of Event</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.newTime }}
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> SEMS User</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.userName}}
+                          </label>
+                        </div>
+                      </div>   
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Event Details</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.eventDetails}}
+                          </label>
+                        </div>
+                      </div>             
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div> 
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">
+                <div class=" form-group">
+                  <span class="badge bg-primary" style="font-size: 1rem;
+                   " (click)="showIncidentIndividual(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentIndividual"></i>
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentIndividual"></i>
+                    INDIVIDUAL(S) INVOLVED
+                  </span>
+                </div>
+              </div>                  
+            </div>
+            <div *ngIf="this.isIncidentIndividual">
+              <div *ngFor="let event of this.incidentinfo.incidentIndividuals;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Individual TypeName</strong>
+                        </div>
+                        <div>
+                          <label>
+                            {{ event.individualTypeName}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1" *ngIf="showTextForIndividualType">
+                        <div>
+                          <strong> Other Type</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.otherIndividualTypevalue}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Last Name</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.lastName}}
+                          </label>
+                        </div>                          
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> First Name</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.firstName}}
+                          </label>
+                        </div>                          
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Middle Name</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.middleName}}
+                          </label>
+                        </div>                          
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Alias/Nickname</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.nickName}}
+                          </label>
+                        </div>                       
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> DOB</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.birthDate | date: 'MM/dd/yyyy'}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Gender</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.gender }}
+                           </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Street Address </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.streetAddress }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Apartment/Unit #</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.apartment }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> City</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.city }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> State/Province</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.state }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Zip Code</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.zip }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Alternate Address </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.alternateAddress }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Apartment/Unit #</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.altApartment }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> City</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.altCity }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> State/Province</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.altState }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Zip Code</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.altZip }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Country</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.countryName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Primary Phone (cell)</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.primaryPhone }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Alternate Phone or email</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.altPhone }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> DL #</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.dl }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> DL Issuing State</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.dlissuingStateName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> DL Expiration Date</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.dlexpiringDate | date:'MM/dd/yyyy' }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Other ID (Type)</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.otherTypeId }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Other ID #</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.otherId }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Expiration Date</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.expirationDate | date:'MM/dd/yyyy' }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Detained by LEO?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.detainedbyLeo == true?'Yes' : 'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong>Arrested by LEO?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.arrestedbyLeo == true?'Yes' : 'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong>If arrested, Immediate Disposition?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.arrestedDisposition }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                  
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Cleared to Fly?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.flyCleared == true?'Yes' : 'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong>ONT+ Do Not Issue Referral?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.referralIssue == true?'Yes' : 'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong>Additional Information</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.additionalInformation }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>                                                    
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showIncidentPassenger(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentPassenger"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentPassenger"></i>
+                    AIRLINE / AIRCRAFT / SCHEDULED PASSENGER INFORMATION
+                  </span>                              
+                </div>
+              </div>
+            </div>            
+            <div *ngIf="this.isIncidentPassenger">
+              <div *ngFor="let event of this.incidentinfo.incidentPassengerInformation;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Airline</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.airlineName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> A/C Type</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.acTypeName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Flight #</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.flight }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Destination</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.destination }}
+                          </label>
+                        </div>                        
+                      </div>                  
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Terminal</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.terminalName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Gate</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.gate }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Flight(s) Delayed?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.isFlightDelayed == 1?'Yes':'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> If Yes, How Long?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.delayedTime }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Passenger Missed Flight?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.isMissedFlight==1?'Yes':'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Scheduled Departure Time</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.scheduledDepartureTime }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Actual Departure Time</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.actualDepartureTime }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+                <hr>              
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showProhabitedItems(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isProhabteditemsshow"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isProhabteditemsshow"></i>
+                    PROHIBITED ITEMS DISCOVERED
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isProhabteditemsshow">
+              <div *ngFor="let event of this.incidentinfo.incidentProhibitedItems;">
+                <div class="card" style="margin-bottom: 5px;">
+                  <div class="card-body">
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Explosives</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.explosivesName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Guns</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.gunsName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Sharp Objects</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.sharpObjectsName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Incendiaries</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.incendiariesName }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Disabling</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.disablingName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Method of Detection</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.detectionMethodName }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Item Description/Additional Information</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.itemDescription }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Photo(s) Taken</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.isPhotoTaken == 1?'Yes':'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Photo(s) Attached?</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{ event.isPhotoAttach== 1?'Yes':'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>       
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showFirearmInfo(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isFirearminformation"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isFirearminformation"></i>
+                    FIREARMS INFORMATION
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isFirearminformation">
+              <div *ngFor="let event of this.incidentinfo.incidentFirearmInformation">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Firearm Loaded</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.isFirearmLoaded=='1'?'Yes':'No'}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Make </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.make }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Model</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.model }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Caliber</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.caliber}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Location Discovered</strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.locationDiscovered}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>            
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showVehcleInfo(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isVehicleinformation"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isVehicleinformation"></i>
+                    MOTOR VEHICLE INFORMATION
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isVehicleinformation">
+              <div *ngFor="let event of this.incidentinfo.incidentVehicleInformation;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Type </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.type}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Make </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.makeVehicle}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Model </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.modelVehicle}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Color </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.color}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Year </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.year}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> License State </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.licenseStateName}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> License # </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.license}}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Photo(s) Taken </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.isPhotoTaken == 1?'Yes':'No'}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Photo(s) Attached? </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.isPhotoAttach == 1?'Yes':'No'}}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showAtachInfo(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isAttachInfo"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isAttachInfo"></i>
+                    ATTACHMENTS
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isAttachInfo">
+              <div *ngFor="let event of  this.incidentinfo.incidentAttachments;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Type </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.typeName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> CCTV Retained </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.isCctvretained =='1'?'Yes':'No' }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Retained CCTV Location, file name, etc. </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            <span (click)="downloadFile(event.id, event.uniqueName)" style="color: blue; cursor: pointer;">
+                              {{event.fileName }}
+                            </span> 
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showHotwash(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isHotwashInfo"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isHotwashInfo"></i>
+                    HOTWASH & ROOT CAUSE ANALYSIS
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isHotwashInfo">
+              <div *ngFor="let event of this.incidentinfo.incidentHotWash">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Hot-wash date and time </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.hotwashDate | date: "MM/dd/yyyy" }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-3 pr-md-1">
+                        <div>
+                          <strong> Attendees </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.attendeesName }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-6 pr-md-1">
+                        <div>
+                          <strong> Hotwash Topics </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.hotwashTopicName }}
+                          </label>
+                        </div>                        
+                      </div>
+                      <div class="col-md-6 pr-md-1">
+                        <div>
+                          <strong> Root Cause </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.rootCauseName }}
+                          </label>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 5px;">
+                      <div class="col-md-6 pr-md-1">
+                        <div>
+                          <strong> Additional Information </strong>
+                        </div>
+                        <div  >
+                          <label>
+                            {{event.additionalInfo }}
+                          </label>
+                        </div>                        
+                      </div>                      
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <ng-container>
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Date </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{incidentinfo.dateReview | date:"MM/dd/yyyy"}}
+                      </label>
+                    </div>                        
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Time </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{incidentinfo.newTimeReview }}
+                      </label>
+                    </div>                        
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Airport Official </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{incidentinfo.airportOfficial }}
+                      </label>
+                    </div>                        
+                  </div>
+                  <div class="col-md-3 pr-md-1">
+                    <div>
+                      <strong> Update </strong>
+                    </div>
+                    <div  >
+                      <label>
+                        {{incidentinfo.updateReview}}
+                      </label>
+                    </div>                        
+                  </div> 
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container>
+            <div class="row">
+              <div class="col-md-12 pr-md-1">                              
+                <div class=" form-group" >                                
+                  <span class="btn btn-primary" style="
+                  font-size: 1rem; padding-top: 0; padding-bottom: 0;"  (click)="showReview(1)">
+                    <i class="bi bi-caret-down-fill" *ngIf="this.isReviewInfo"></i> 
+                    <i class="bi bi-caret-right-fill" *ngIf="!this.isReviewInfo"></i>
+                    REVIEWING OFFICIAL
+                  </span>                              
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isReviewInfo">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Incident Status </strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{incidentinfo.incidentStatus}}
+                        </label>
+                      </div>                        
+                    </div> 
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Date Approved </strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{incidentinfo.dateApproved | date:"MM/dd/yyyy"}}
+                        </label>
+                      </div>                        
+                    </div> 
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Approving Official </strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{incidentinfo.approvingOfficial }}
+                        </label>
+                      </div>                        
+                    </div>
+                    <div class="col-md-3 pr-md-1">
+                      <div>
+                        <strong> Comment </strong>
+                      </div>
+                      <div  >
+                        <label>
+                          {{incidentinfo.returnedComment }}
+                        </label>
+                      </div>                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="card-footer noprint" style="text-align: center;">
+          <button type="button" onClick="window.print();"  class="btn btn-fill btn-primary">
+            Print
+          </button>
+          <button class=" btn btn-fill btn-danger" type="button"  style="margin-left:2px;" (click)="GetIncidentDetails()" id="btnClose">Close</button>  
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

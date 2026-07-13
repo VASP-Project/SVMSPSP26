@@ -1,0 +1,750 @@
+<div class="content">
+  <!-- <div class=" col-sm-6 text-left" *ngIf="!isShow">
+      <h2 class="">Under Construction</h2>
+    </div> -->
+
+  <div class="row">
+    <div class="col-md-4" style="text-align: center;">
+      <div class="card btn " (click)="showCitationData()" 
+        style="border-style: solid; border-color: black;border-radius: 5px; background-color: #E98056;">
+        <h3 style="margin: 0px; color: white;"><strong > CITATIONS </strong></h3>
+      </div>
+
+    </div>
+
+    <div class="col-md-4" style="text-align: center;">
+      <div class="card btn" (click)="showInspectionData()" 
+        style="border-style: solid; border-color: black;border-radius: 5px; background-color: #484D56;">
+        <h3 style="margin: 0px; color: white;"><strong >INSPECTIONS </strong></h3>
+      </div>
+    </div>
+
+    <div class="col-md-4" style="text-align: center;">
+      <div class="card btn" (click)="showIncidentData()" 
+        style="border-style: solid; border-color: black;border-radius: 5px; background-color: #7B913B;">
+        <h3 style="margin: 0px; color: white;"><strong>INCIDENT</strong></h3>
+      </div>
+    </div>
+  </div>
+
+  <div  [hidden]="!showCitation">
+    <div class="row" *ngIf="isShow">
+      <div class="col-md-5">
+        <div class="card">
+          <!-- <div class="card mycardbox"> -->
+          <div class="card-title">Citations Bird's Eye View as of today
+            
+            <div class="row" style="padding-top: 5px;">
+              <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+                <button type="button" class="btn " style="border-radius: 20px; background-color:  #58B0BB;color: white;" (click)="hideOverdue()">All</button>
+                
+                <button type="button" class="btn" style="border-radius: 20px;background-color:  #58B0BB; color: white;" (click)="hideOverduenov()">Overdue</button>
+              </div>
+
+              <!-- <div class="col-md-6" style="text-align: center;">
+                <div class="card btn "  (click)="hideOverdue()" 
+                    style="border-style: solid; border-color: black;border-radius: 5px; background-color: #ED2C85;">
+                    <h3 style="margin: 0px; color: white;"><span >Citation </span></h3>
+                    
+                </div>
+              </div>
+              <div class="col-md-6" style="text-align: center;">
+                <div class="card btn" (click)="hideOverduenov()" 
+                  style="border-style: solid; border-color: black;border-radius: 5px; background-color: #235FA2;">
+                  <h3 style="margin: 0px; color: white;"><span >Overdue </span></h3>
+                </div>
+          
+              </div> -->
+            </div>
+            <div [hidden]="showhideOverdue">
+              <span style="font-size: 18px; color: black;" >Total Citations: {{this.totalcitations}}</span>
+            </div>
+            <div *ngIf="showhideOverdue">
+              <span style="font-size: 18px; color: black;" >Total Overdue Citations: {{this.totaloverduecitations}}</span>
+            </div>
+            <!-- <div *ngIf="showhideOverdue">
+              <span style="font-size: 18px; color: black;" >Total OverDue Citations: {{this.totaloverduecitations}}</span>
+              <button class="btn btn-sm" (click)="hideOverdue()" 
+                style="border-style: solid; border-color: black;border-radius: 5px; background-color: #003594;float: right; margin-right: 18px">
+                <h4 style="margin: 0px; color: white;"><span [class.fontcolor]="showhideOverdue">Back </span></h4>
+              </button>
+            </div> -->
+
+          
+        </div>
+          <!-- <div class="card-body" style="height: 326px;"> -->
+            <div [hidden]="showhideOverdue" >
+              <div class="card-body" style="height: 580px;">
+                <div class="row">
+                  <canvas class="mypiechart" baseChart [data]="pieChartData" [colors]="pieChartColors"
+                    [labels]="pieChartLabels" [chartType]="pieChartType" [options]="pieChartOptions"
+                    [legend]="pieChartLegend" [plugins]="pieChartPlugins" height="200px">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          
+            <div *ngIf="showhideOverdue">
+              <div class="card-body" style="height: 580px;">
+                <div class="row">
+                  <canvas class="mypiechart" baseChart [data]="overduepieChartData" [colors]="overduepieChartColors"
+                    [labels]="overduepieChartLabels" [chartType]="overduepieChartType" [options]="overduepieChartOptions"
+                    [plugins]="overduepieChartPlugins" [legend]="overduepieChartLegend" height="200px">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+
+          
+
+          <!-- </div> -->
+        </div>
+      </div>
+
+      <div class="col-md-7">
+        <div class="card">
+          <div class="card-title">
+            Citations by Company &nbsp;&nbsp;
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-2" style="padding: 5px;"
+                [ngClass]="selectedCompanyCriteria == 'all' ? 'col-md-2' : 'col-md-4'">
+                <div class="form-group">
+                  <strong>Companies</strong>
+                  <!-- <select id="limit" class="form-control" 
+                  style="border: 1px solid #adadad; border-radius: 5px; height: 36px;" [(ngModel)]="selectedCompanyCriteria">
+                  <option value="top 5">Top 5</option>
+                  <option value="top 10">Top 10</option>
+                  <option value="all">All</option>
+                </select> -->
+
+                  <ng-select appendTo="body" id="limit" #select [items]="companies" bindLabel="label"
+                    placeholder="Select" bindValue="value" [(ngModel)]="selectedCompanyCriteria" appearance="outline"
+                    name="limit">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-5" style="padding: 5px;" *ngIf="selectedCompanyCriteria == 'all'">
+                <strong> Search by Company</strong>
+                <div class="form-group" id="filterAll">
+                  <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                  <ng-multiselect-dropdown [placeholder]="'Select Company'"
+                    [settings]="companyDropdownSettingsForLineChart" [data]="allCompanyListForLineChart"
+                    [(ngModel)]="selectedCompanyListForLineChart" (onSelect)="onCompanySelectForLineChart($event)"
+                    (onDeSelect)="onCompanyDeselectForLineChart($event)"
+                    (onSelectAll)="onSelectAllCompaniesForLineChart($event)"
+                    (onDeSelectAll)="onDeSelectAllCompaniesForLineChart($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+              <div class="col-md-3" style="padding: 5px;"
+                [ngClass]="selectedCompanyCriteria == 'all' ? 'col-md-3' : 'col-md-5'">
+                <div class="form-group">
+                  <strong>Trends by</strong>
+                  <!-- <select id="trend" class="form-control"
+                  style="border: 1px solid #adadad; border-radius: 5px; height: 36px;" [(ngModel)]="selectedTrend">									  
+                  <option value="7d">Last 7 Days</option>
+                  <option value="15d">Last 15 Days</option>
+                  <option value="1m">Last 1 Month</option>
+                  <option value="3m">Last 3 Months</option>
+                  <option value="6m">Last 6 Months</option>
+                  <option value="1y">Last 1 Year</option>
+                </select> -->
+
+                  <ng-select appendTo="body" id="trend" #select [items]="trendsBy" bindLabel="label"
+                    placeholder="Select" bindValue="value" [(ngModel)]="selectedTrend" appearance="outline"
+                    name="trend">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-2" style="padding: 5px;">
+                <div class="form-group">
+                  <br>
+                  <button class="btn btn-primary" (click)="GetDataForLineChartByTrends()">
+                    Get Data
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div style="display: block;" *ngIf="lineChartData.length > 0">
+              <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" height="199px"
+                [options]="lineChartOptions" [legend]="lineChartLegend" [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+            </div>
+
+            <div *ngIf="lineChartData.length == 0" style="height: 326px;">No data found</div>
+            <!-- <div class="text-center">{{this.year}}</div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <div class="card-title">
+          Citations by Company &nbsp;&nbsp;
+        </div>
+        <div class="card-body" style="height: 400px;">
+          <!-- DDL for duration -->
+          <div class="row">
+            <div class="col-md-12" style="margin-bottom: 10px">
+              <div class="row">
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <strong> Search by Company</strong>
+                    <div class="form-group" id="filterAll">
+                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                      <!-- <input [(ngModel)]="filterString" class="form-control" (ngModelChange)="onFilterChange()" /> -->
+                      <ng-multiselect-dropdown [placeholder]="'Select Company'" [data]="allCompanyList"
+                        [(ngModel)]="selectedCompanyList" [settings]="companyDropdownSettings"
+                        (onSelect)="onCompanySelect($event)" (onDeSelect)="onCompanyDeselect($event)"
+                        (onSelectAll)="onSelectAllCompanies($event)" (onDeSelectAll)="onDeSelectAllCompanies($event)">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-md-3 pl-md-1">
+                  <div class="form-group">
+                    <strong> From Date </strong>
+                    <!-- <input type="text" class="form-control" id="fromDate" name="fromDate" [(ngModel)]="fromDate"
+                    placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+                    <input class="form-control" type="text" (click)="fromDate.toggle()" ngbDatepicker
+                      #fromDate="ngbDatepicker" [(ngModel)]="dashboardDates.fromDate" name="this.fromDate"
+                      placeholder="mm/dd/yyyy" />
+                  </div>
+                </div>
+                <div class="col-md-3 pl-md-1">
+                  <div class="form-group">
+                    <strong> To Date </strong>
+                    <!-- <input type="text" class="form-control" id="toDate" name="toDate" [(ngModel)]="toDate"
+                    placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+                    <input class="form-control" type="text" (click)="toDate.toggle()" ngbDatepicker
+                      #toDate="ngbDatepicker" [(ngModel)]="dashboardDates.toDate" name="this.toDate"
+                      placeholder="mm/dd/yyyy" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5 pl-md-1">
+                  <div class="form-group">
+                    <strong> Violation Type </strong>
+                    <ng-multiselect-dropdown [placeholder]="'Select Violation Type'" [data]="allViolationTypes"
+                      [(ngModel)]="selectedViolationTypes" [settings]="violationTypeDropdownSettings"
+                      (onSelect)="onViolationTypeSelect($event)" (onDeSelect)="onViolationTypeDeselect($event)"
+                      (onSelectAll)="onSelectAllViolationTypes($event)"
+                      (onDeSelectAll)="onDeSelectAllViolationTypes($event)">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+                <div class="col-md-5 pl-md-1">
+                  <div class="form-group">
+                    <strong> Citation Reason </strong>
+                    <ng-multiselect-dropdown [placeholder]="'Select Citation Reason'" [data]="allCitationReasonsToBind"
+                      [(ngModel)]="selectedCitationReasons" [settings]="citationReasonDropdownSettings"
+                      (onSelect)="onCitationReasonSelect($event)" (onDeSelect)="onCitationReasonDeselect($event)"
+                      (onSelectAll)="onSelectAllCitationReasons($event)"
+                      (onDeSelectAll)="onDeSelectAllCitationReasons($event)">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+                <div class="col-md-2 pl-md-1">
+                  <div class="form-group">
+                    <br>
+                    <button class="btn btn-primary" (click)="GetTableData()">
+                      Get Data
+                    </button>
+                    <button class="btn btn-primary" style="margin-left: 5px;" (click)="ExportTableDataToCSV()"
+                      *ngIf="lineChartDataTable.length > 0">
+                      CSV
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <strong *ngIf="lineChartDataTable.length > 0">Monthly Citation Summary</strong>
+                  <div class=" table-responsive" style="overflow: auto;">
+                    <table class="table table-stripped" id="dtCitationData" *ngIf="lineChartDataTable.length > 0">
+                      <tr>
+                        <th *ngFor="let label of tableDataLabels" style="color: black !important;">{{label.replace('-', ' ')}}</th>
+                      </tr>
+                      <tr *ngFor="let d of filtered">
+                        <td *ngFor="let label of tableDataLabels; let j=index" (click)="openModal(template,d, j)">
+                          {{d && d.data[j]}}</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div *ngIf="lineChartDataTable.length == 0">No data found</div>
+                </div>
+              </div>
+              <!-- <button class="btn btn-primary" (click)="randomize()">Click to change values</button> -->
+            </div>
+            <!-- <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-2 pl-md-1">
+                <div class="form-group">
+                  <strong> Search by Company</strong>
+                  <div class="form-group" id="filterAll">
+                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                    <input [(ngModel)]="filterString" class="form-control" (ngModelChange)="onFilterChange()" />
+                  </div>
+                </div>
+    
+              </div>
+              <div class="col-md-3 pl-md-1">
+                <div class="form-group">
+                  <strong> From Date </strong>
+                  <input type="text" class="form-control" id="violatorBirthDate" name="violatorBirthDate"
+                    placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" />
+                </div>
+              </div>
+              <div class="col-md-3 pl-md-1">
+                <div class="form-group">
+                  <strong> To Date </strong>
+                  <input type="text" class="form-control" id="violatorBirthDate" name="violatorBirthDate"
+                    placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" />
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1">
+                <div class="form-group">
+                  <strong> Violation Type </strong>
+                  <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [data]="dropdownList"
+                    [(ngModel)]="selectedItems" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+            </div>                  
+          </div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #template let-modal>
+      <!-- <div class="modal-content" style="width: 900px;"> -->
+      <div>
+        <div class="modal-header">
+          <h3 class="modal-title pull-left card-title">Citation for Company: {{this.selectedcompayName}} for month of
+            {{this.selectedMonth.replace('-', ' ')}}</h3>
+          <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"> -->
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modal.close('Save click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="width:auto;">
+          <div class="table-responsive" style="overflow: auto;">
+            <table class="table table-bordered table-striped table-hover" id="dt1">
+              <thead style="background-color:#484D56; text-align: center;">
+                <tr>
+                  <th colspan="3">
+                    Citations per Violation Type and Citation Reasons
+                  </th>
+                  <th colspan="7">
+                    Citation Statuses
+                  </th>
+                </tr>
+                <tr style="background-color:#484D56; text-align: center;">
+                  <!-- <th>Violation</th>
+                  <th>Citation</th>
+                  <th>Open</th>
+                  <th>Submitted</th>
+                  <th>Inprocess</th>
+                  <th>Pending Completion</th>
+                  <th>Closed</th> -->
+                  <th *ngFor="let label of monthlyCitationDetailsLabels">{{label}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let val of monthlyCitationDetails">
+                  <td>{{val.violationType}}</td>
+                  <td>{{val.citationReason}}</td>
+                  <td class="text-center">{{val.citationCount}}</td>
+                  <td class="text-center">{{val.openCitationCount}}</td>
+                  <td class="text-center">{{val.submittedCitationCount}}</td>
+                  <td class="text-center">{{val.returnedToIssuerCitationCount}}</td>
+                  <td class="text-center">{{val.inprocessCitationCount}}</td>
+                  <td class="text-center">{{val.returnedToASCitationCount}}</td>
+                  <td class="text-center">{{val.pendingCitationCount}}</td>
+                  <td class="text-center">{{val.closedCitationCount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <div *ngIf="showInsp">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <strong> From Date </strong>
+                  <div class="input-group">
+                    <input class="form-control" type="text" (click)="fromDateInsp.toggle()" ngbDatepicker
+                      #fromDateInsp="ngbDatepicker" [(ngModel)]="fromToDates.fromDateInsp" name="fromDateInsp"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDateInsp.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class=" col-md-2">
+                <div class=" form-group">
+                  <strong> To Date </strong>
+                  <div class="input-group">
+                    <input class="form-control" type="text" (click)="toDateInsp.toggle()" ngbDatepicker
+                      #toDateInsp="ngbDatepicker" [(ngModel)]="fromToDates.toDateInsp" name="this.toDateInsp"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDateInsp.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 mt-3">
+                <span class="btn btn-primary me-1 btn-sm" (click)="basicSearch()"
+                  style="text-align: center; float: left;">
+                  <i class="bi bi-search"></i>&nbsp;</span>
+
+                <span class="btn btn-primary btn-sm" (click)="clearSearch()" style="text-align: left; float: left;">
+                  <i class="bi bi-arrow-clockwise"></i> &nbsp;</span>
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+
+            <div (click)="onExpandAll()">
+              <div class="row">
+                <div class="col-md-2" style="padding: 6px ;
+                  color: white;background-color: #58B0BB; 
+                 margin-top: 5px;">
+
+                <span *ngIf="!on" style="font-size: 16px; padding-left: 5px;"><strong>Expand All</strong></span>
+                <span *ngIf="on" style="font-size: 16px; padding-left: 5px;"><strong>Collapse All</strong></span>
+                <i *ngIf="!on" class="pull-right fa fa-chevron-down" style="float: right;padding: 5px;"></i>
+                <i *ngIf="on" class="pull-right fa fa-chevron-up" style="float: right;padding: 5px;"></i>
+                </div>
+              </div>
+              <div *ngIf="on">
+                <div *ngFor="let inspectionCategory of inspectionDashBoard;let indexOfelement=index;"
+                  style="border: black;">
+                  <div class="row" style="background-color: #1BA1CA; border-style: solid; border: 1px; margin-top: 5px;"
+                    (click)="onclickCateory(inspectionCategory.id,indexOfelement)">
+                    <div class="col-md-4">
+                      <div style="padding: 6px ;
+                                  color: white;border-block-end: unset;">
+                        <span style="font-size: 16px;"><strong>{{inspectionCategory.inspectionCategory}}</strong></span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div style="padding: 6px ;">
+                        <span style="color: white;">
+                          <strong>Completed: {{inspectionCategory.completedHours}} Hours </strong> 
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div style="padding: 6px ;">
+                        <span style="color: white;">
+                          <strong>{{inspectionCategory.completedActiveCount}} Activities </strong> 
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div style="padding: 5px ;">
+                        <span style="color: white;">
+                          <strong>Required: {{inspectionCategory.requirementHours}}</strong>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-1" style="color: white;padding: 6px;">
+                      
+                        <i *ngIf="!inspectionCategory.isVisible" class="pull-right fa fa-chevron-down"
+                          style="float: right;padding: 5px;"></i>
+                        <i *ngIf="inspectionCategory.isVisible" class="pull-right fa fa-chevron-up"
+                          style="float: right;padding: 5px;"></i>
+                     
+                    </div>
+                  </div>
+                  <div style="padding: 0px;">
+                    <div
+                      *ngFor="let inspectionDisplayName of inspectionCategory.inspectionDisplayNameWithCompany;let indexelement=index;">
+                      <div class="row" style="padding: 0px; background-color: #c5c5c5;
+                                      border-right-color: black;border-right-style: solid;border-right-width: thin; 
+                                      border-left-color: black;border-left-style: solid;border-left-width: thin;
+                                      border-bottom-color: black;border-bottom-style: solid;border-bottom-width: thin;"
+                        (click)="onclickDisplayName(indexOfelement,indexelement)">
+                        <div class="col-md-4">
+                          <div style=" padding: 5px;">
+                            <strong style="font-size: 15px; ">{{inspectionDisplayName.displayName}}</strong>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div style="padding: 6px; border-block-end: unset;">
+                            {{inspectionDisplayName.calculatedHours}} Hours {{inspectionDisplayName.calculatedMinutes}}
+                            Minutes                            
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div style="padding: 6px; border-block-end: unset;">
+                            {{inspectionDisplayName.calculatedActiveCount}} 
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          
+                        </div>
+                        <div class="col-md-1"style="padding: 6px; " >
+                          
+                            <i *ngIf="!inspectionDisplayName.isComVisible" class="pull-right fa fa-chevron-down"
+                              style="float: right;padding: 5px;"></i>
+                            <i *ngIf="inspectionDisplayName.isComVisible" class="pull-right fa fa-chevron-up"
+                              style="float: right;padding: 5px;"></i>
+                          
+                        </div>
+                      </div>
+                      <div>
+                        <div *ngFor="let inspectionCompanys of inspectionDisplayName.inspectionCompanys;">
+                          <div class="row" style="padding: 0px;border: 1px; border-style: solid;"
+                            (click)="onclickDisplayName(indexOfelement,indexelement)">
+                            <div class="col-md-4">
+                              <div style=" padding: 5px;">
+                                <strong style="font-size: 15px; ">Company Name:
+                                </strong>{{inspectionCompanys.companyName}}
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <span style="padding: 6px; margin-right: 15px;">
+                                {{inspectionCompanys.hours}} Hours {{inspectionCompanys.minutes}} Minutes
+                              </span>
+                            </div>
+                            <div class="col-md-2">
+                              <div style="padding: 6px; border-block-end: unset;">
+                                {{inspectionCompanys.activeCount}} 
+                              </div>                               
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!on">
+              <div *ngFor="let inspectionCategory of inspectionDashBoard;let indexOfelement=index;"
+                style="border: black;">
+                <div class="row" style="background-color: #1BA1CA; border-style: solid; border: 1px; margin-top: 5px;"
+                  (click)="onclickCateory(inspectionCategory.id,indexOfelement)">
+                  <div class="col-md-4">
+                    <div style="padding: 6px ;
+                      color: white;border-block-end: unset;">
+                      <span style="font-size: 16px;"><strong>{{inspectionCategory.inspectionCategory}}</strong></span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div style="padding: 6px ;">
+                      <span style="color: white;">
+                        <strong>Completed:  {{inspectionCategory.completedHours}}  Hours </strong>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div style="padding: 6px ;">
+                      <span style="color: white;">
+                        <strong>{{inspectionCategory.completedActiveCount}} Activities </strong> 
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div style="padding: 5px ;">
+                      <span style="color: white;">
+                        <strong>Required: {{inspectionCategory.requirementHours}}</strong>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-1"style="padding: 6px; color:white" >
+                    
+                      <i *ngIf="!inspectionCategory.isVisible" class="pull-right fa fa-chevron-down"
+                        style="float: right;padding: 5px;"></i>
+                      <i *ngIf="inspectionCategory.isVisible" class="pull-right fa fa-chevron-up"
+                        style="float: right;padding: 5px;"></i>
+                    
+                  </div>
+                </div>
+
+                <div *ngIf="inspectionCategory.isVisible" style="padding: 0px;">
+                  <div
+                    *ngFor="let inspectionDisplayName of inspectionCategory.inspectionDisplayNameWithCompany;let indexelement=index;">
+                    <div class="row" style="padding: 0px; background-color: #c5c5c5;
+                          border-right-color: black;border-right-style: solid;border-right-width: thin; 
+                          border-left-color: black;border-left-style: solid;border-left-width: thin;
+                          border-bottom-color: black;border-bottom-style: solid;border-bottom-width: thin;"
+                      (click)="onclickDisplayName(indexOfelement,indexelement)">
+                      <div class="col-md-4">
+                        <div style=" padding: 5px;">
+                          <strong style="font-size: 15px; ">{{inspectionDisplayName.displayName}}</strong>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div style="padding: 6px; border-block-end: unset;">
+                          {{inspectionDisplayName.calculatedHours}} Hours {{inspectionDisplayName.calculatedMinutes}}
+                          Minutes
+
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div style="padding: 6px; border-block-end: unset;">
+                          {{inspectionDisplayName.calculatedActiveCount}} 
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        
+                      </div>
+                      <div class="col-md-1"style="padding: 6px; ">
+                        
+                          <i *ngIf="!inspectionDisplayName.isComVisible" class="pull-right fa fa-chevron-down"
+                            style="float: right;padding: 5px;"></i>
+                          <i *ngIf="inspectionDisplayName.isComVisible" class="pull-right fa fa-chevron-up"
+                            style="float: right;padding: 5px;"></i>
+                        
+                      </div>
+                    </div>
+                    <div *ngIf="inspectionDisplayName.isComVisible">
+                      <div *ngFor="let inspectionCompanys of inspectionDisplayName.inspectionCompanys;">
+                        <div class="row" style="padding: 0px;border: 1px; border-style: solid;"
+                          (click)="onclickDisplayName(indexOfelement,indexelement)">
+                          <div class="col-md-4">
+                            <div style=" padding: 5px;">
+                              <strong style="font-size: 15px; ">Company Name:
+                              </strong>{{inspectionCompanys.companyName}}
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <span style="padding: 6px; margin-right: 15px;">
+                              {{inspectionCompanys.hours}} Hours {{inspectionCompanys.minutes}} Minutes
+                            </span>
+                          </div>
+                          <div class="col-md-2">
+                            <div style="padding: 6px; border-block-end: unset;">
+                              {{inspectionCompanys.activeCount}} 
+                            </div>                               
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div [hidden]="!showIncident">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="card">
+          <!-- <div class="card mycardbox"> -->
+          <div class="card-title">Incident Bird's Eye View as of today        
+            <span style="font-size: 18px; color: black;" >Total Incidents: {{this.totalincidents}}</span>               
+          </div>
+          <div class="card-body" style="height: 450px;">
+            <div class="row">
+              <canvas class="mypiechart" baseChart [data]="incidentpieChartData" [colors]="incidentpieChartColors"
+                [labels]="incidentpieChartLabels" [chartType]="incidentpieChartType" [options]="incidentpieChartOptions"
+                [legend]="incidentpieChartLegend" [plugins]="incidentpieChartPlugins" height="200px">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="card">
+          <div class="card-title">
+            Incident by Types &nbsp;&nbsp;
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-2" style="padding: 5px;"
+                >
+                <div class="form-group">
+                  <strong>Incident Types</strong>                
+
+                  <ng-select appendTo="body" id="limit" #select [items]="companies" bindLabel="label"
+                    placeholder="Select" bindValue="value" [(ngModel)]="selectedIncidentTypeCriteria" appearance="outline"
+                    name="limit">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-5" style="padding: 5px;" *ngIf="selectedIncidentTypeCriteria == 'all'">
+                <strong> Search by Incident</strong>
+                <div class="form-group" id="filterAll">
+                  <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                  <ng-multiselect-dropdown [placeholder]="'Select Incident'"
+                    [settings]="incidentDropdownSettingsForLineChart" [data]="incidentTypeList"
+                    [(ngModel)]="selectedIncidentTypeForLinehart" (onSelect)="onIncidentSelectForLineChart($event)"
+                    (onDeSelect)="onIncidentDeselectForLineChart($event)"
+                    (onSelectAll)="onSelectAllIncidentsForLineChart($event)"
+                    (onDeSelectAll)="onDeSelectAllIncidentsForLineChart($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+              <div class="col-md-3" style="padding: 5px;"
+                [ngClass]="selectedIncidentTypeCriteria == 'all' ? 'col-md-3' : 'col-md-5'">
+                <div class="form-group">
+                  <strong>Trends by</strong>               
+
+                  <ng-select appendTo="body" id="trend" #select [items]="trendsBy" bindLabel="label"
+                    placeholder="Select" bindValue="value" [(ngModel)]="selectedTrend" appearance="outline"
+                    name="trend">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-2" style="padding: 5px;">
+                <div class="form-group">
+                  <br>
+                  <button class="btn btn-primary" (click)="GetIncidentDataForLineChartByTrends()">
+                    Get Data
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div style="display: block;" *ngIf="incidentlineChartData.length > 0">
+              <canvas baseChart [datasets]="incidentlineChartData" [labels]="incidentlineChartLabels" height="199px"
+                [options]="incidentlineChartOptions" [legend]="incidentlineChartLegend" [chartType]="incidentlineChartType"
+                (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+            </div>
+
+            <div *ngIf="incidentlineChartData.length == 0" style="height: 326px;">No data found</div>           
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=" content">
+      <div class="card Data">
+          <div class="card-body bodyData">
+              <!-- <canvas class="canvasImg" #canvas></canvas> -->
+          </div>
+      </div>
+  </div>
+  </div>
+
+  <div >
+
+  </div>
+</div>

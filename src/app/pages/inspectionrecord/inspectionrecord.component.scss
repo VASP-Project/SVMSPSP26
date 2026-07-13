@@ -1,0 +1,90 @@
+.Closed {
+  // color:white;
+  background-color: #cacaca;
+}
+.PendingCompletion {
+  background-color: #ffa726;
+}
+.InProcess {
+  background-color: #93ed89;
+}
+.Submitted {
+  background-color: yellow;
+}
+.openColor {
+  background-color: white;
+}
+
+
+table { 
+  width: 100% !important; 
+  border-collapse: collapse !important; 
+}
+@media all and (max-width:768px) {
+  .eventTable tr {    display: table;  width:100%;    }               
+  .eventTable td {    display: table-row; }           
+}
+
+.mythColor {
+  color: black;
+  background-color: #003594;
+}
+.row {
+  padding: 0 10px 0 10px;
+}
+
+.header-3
+{
+  font-size: 1.4rem;
+  color: #003594 !important;
+}
+
+.buttonDisabled
+ {
+ cursor:text !important; text-decoration: none !important; 
+ background: transparent;
+ color: red;
+ 
+ } 
+
+ 
+.buttonDisabled:hover
+{
+cursor:text !important; text-decoration: none !important; 
+background: transparent;
+color: red;
+
+} 
+
+.showDoors
+{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  max-width:100px;
+  cursor: default;
+}
+
+table.dataTable td {
+  border-bottom: 1px solid 111;
+}
+.list-group-item{
+  padding: 5px;
+  }
+  .card-body{
+    padding: 5px;
+  }
+  
+  .page-item{
+    display:none;
+  }
+  .page-item:nth-child(1){
+    display:block;
+  }
+  .page-item:last-child{
+    display:block;
+  }
+// table.dataTable {
+//    border-collapse: separate;
+//    empty-cells: hide;
+// }

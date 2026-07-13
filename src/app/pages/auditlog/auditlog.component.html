@@ -1,0 +1,1466 @@
+<div class=" content">    
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Audit Logs</h3>
+                </div>
+                <form #formData="ngForm">
+                    <div>
+                        <div class="row" style="padding-left: 16px;">
+                            <div class="col-md-3 pr-md-1">
+                                <div class="form-group">
+                                    <strong> Select Type </strong>
+                                    <!-- <select class="form-control" (change)="setType(auditType)" id="auditType" #name="ngModel" 
+                                    name="auditType" [(ngModel)]="auditType">
+                                        <option disabled selected value="0">Select</option>
+                                        <option value="citation">NOV/COU</option>
+                                        <option value="inspection">Inspection</option>
+                                        <option value="securityClearance">Security Clearance</option>
+                                    </select> -->
+    
+                                    <ng-select
+                                      appendTo="body"
+                                      id="auditType"
+                                      #select
+                                      [items]="auditTypes"
+                                      bindLabel="type"
+                                      placeholder="Select Type"
+                                      bindValue="value"
+                                      [(ngModel)]="auditType"
+                                      appearance="outline"
+                                      name="auditType"
+                                      required
+                                      (change)="setType(auditType)"
+                                    >
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-2 pr-md-1 pl-md-1">
+                                <div class="form-group">
+                                    <strong> Data to be displayed for days </strong>
+                                    <input type="number" class="form-control" id="days" [(ngModel)]="days"
+                                        name="days" #name="ngModel"/>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-1 pr-md-1 pl-md-1" style="margin-top: 20px;">
+                                <div class="form-group">
+                                    <span class="btn btn-primary" (click)="selectTable()">Show</span>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-1 pr-md-1 pl-md-1">
+                                <div class="form-group" *ngIf="this.isCitation">
+                                    <strong> CIT # </strong>
+                                    <select id="citationId" #Id="ngModel" class="form-control" 
+                                    [(ngModel)]="citationId" name="citationId">
+                                        <option selected value="0">Select CIT #</option>
+                                        <option [ngValue]="k.id" *ngFor="let k of allCitationsId">
+                                            {{k.novNo}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group" *ngIf="this.isInspection">
+                                    <strong> Inspection # </strong>
+                                    <select id="inspectionId" #Id="ngModel" class="form-control" 
+                                    [(ngModel)]="inspectionId" name="inspectionId">
+                                        <option selected value="0">Select Inspection #</option>
+                                        <option [ngValue]="k.id" *ngFor="let k of allInspectionsId">
+                                            {{k.inspectionRecordNo}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-2 pr-md-1 pl-md-1">
+                                <div class="form-group">
+                                    <strong> Updated By </strong>
+                                    <input class="form-control" placeholder="Updated By" type="text" [(ngModel)]="updatedBy"
+                                        name="updatedBy" />
+                                </div>
+                            </div> -->
+                            <div class="col-md-2 pr-md-1 pl-md-1">
+                                <div class="form-group">
+                                    <strong> From Date </strong>
+                                    <!-- <input class="form-control" type="date" [(ngModel)]="fromDate" name="fromDate" /> -->
+                                    <!-- <input type="text" class="form-control" id="fromDate" [(ngModel)]="fromDate"
+                                        name="fromDate" #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                                        [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+    
+                                        <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="fromDate.toggle()"
+                                        ngbDatepicker
+                                        #fromDate="ngbDatepicker"
+                                        [(ngModel)]="audit.fromDate"
+                                        name="fromDate"
+                                        placeholder="mm/dd/yyyy"
+                                        required                           
+                                      />
+                                </div>
+                            </div>
+                            <div class=" col-md-2 pr-md-1 pl-md-1">
+                                <div class=" form-group">
+                                    <strong> To Date </strong>
+                                    <!-- <input class="form-control" type="date" [(ngModel)]="toDate" name="toDate" /> -->
+    
+                                    <!-- <input type="text" class="form-control" id="toDate" [(ngModel)]="toDate" name="toDate"
+                                        #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                                        [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+                                    
+                                        <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="toDate.toggle()"
+                                        ngbDatepicker
+                                        #toDate="ngbDatepicker"
+                                        [(ngModel)]="audit.toDate"
+                                        name="this.toDate"
+                                        placeholder="mm/dd/yyyy"  
+                                        required                       
+                                      />
+                                </div>
+                            </div>
+                            <div class=" col-md-2 pl-md-1" style="margin-top: 20px;">
+                                <div class=" form-group">
+                                    <button class="btn btn-primary" (click)="selectTable();searchList(this.fromDate,this.toDate)" [disabled]="!formData.form.valid">
+                                        <i class="tim-icons icon-zoom-split"></i> Search </button>
+                                    <!-- <span class="btn btn-primary" (click)="selectTable();searchList(this.fromDate,this.toDate)">
+                                        <i class="tim-icons icon-zoom-split"></i> Search </span> -->
+                                    <!-- <span class="btn btn-primary" (click)="clearList()" style="margin-left:2px;">
+                                        <i class="tim-icons icon-refresh-02"></i> Clear</span> -->
+                                    <!-- <span class="btn btn-success" onClick="window.print();">
+                                        <i class="tim-icons icon-refresh-02"></i> Print</span> -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body" [hidden]="!this.showCitationTable">
+                            <div class="table-responsive">
+                                <table id="dt1" class="table table-bordered table-striped table-hover " datatable
+                            [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" >
+                            <thead>
+                                <tr style="background-color:#484D56">
+                                    <th>CIT #</th>
+                                    <th>CIT Type</th>
+                                    <th>Case Status</th>
+                                    <th>Updated By</th>
+                                    <th>Updated Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let statusDetails of citationdetailsStatusFromDb"
+                                    (click)="openModal(template,template1, statusDetails.citationId, statusDetails.id, statusDetails.type)"
+                                    style="cursor: pointer">
+                                    <!-- (click)="$event.preventDefault(); $event.stopPropagation();" -->
+                                    <td>
+                                        <!-- [attr.rowspan]="statusDetails.citationIdSpan"
+                                        *ngIf="statusDetails.citationIdSpan" -->
+                                        {{ statusDetails.novNo }}
+                                    </td>
+                                    <td>{{statusDetails.type}}</td>
+                                    <td> {{statusDetails.caseStatus}}</td>
+                                    <td> {{statusDetails.updatedBy}}</td>
+                                    <td> {{statusDetails.updatedDate | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            </div>
+                            
+                        </div>
+    
+                        <div class="card-body" [hidden]="!this.showInspectionTable">
+                            <div class="table-responsive">
+                                <table id="dt2" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions1" [dtTrigger]="dtTrigger1" >
+                                <thead>
+                                    <tr style="background-color:#484D56">
+                                        <th>Inspection No.</th>                                  
+                                        <th>Case Status</th>
+                                        <th>Updated By</th>
+                                        <th>Updated Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let statusDetails of inspectionetailsStatusFromDb"
+                                        (click)="openModalInspection(template2,statusDetails.inspectionId,statusDetails.id)"
+                                        style="cursor: pointer">
+                                        <!-- (click)="$event.preventDefault(); $event.stopPropagation();" -->
+                                        <td>
+                                            <!-- [attr.rowspan]="statusDetails.citationIdSpan"
+                                            *ngIf="statusDetails.citationIdSpan" -->
+                                            {{ statusDetails.inspectionRecordNo }}
+                                        </td>                                    
+                                        <td> {{statusDetails.caseStatus}}</td>
+                                        <td> {{statusDetails.updatedBy}}</td>
+                                        <td> {{statusDetails.updatedDate | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+                        
+                        <div class="card-body" [hidden]="!this.showIncidentTable">
+                            <div class="table-responsive">
+                                <table id="dt6" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions5" [dtTrigger]="dtTrigger5" >
+                                <thead>
+                                    <tr style="background-color:#484D56">                            
+                                        <th>Incident No.</th>                                  
+                                        <th>Incident Status</th>
+                                        <th>Updated By</th>
+                                        <th>Updated Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let incident of incidentdetailsStatusFromDb" 
+                                    (click)="openModalIncident(template3,incident.incidentId,incident.id)"
+                                        style="cursor: pointer">   
+                                        <td>{{incident.incidentRecordNo}}</td> 
+                                        <td>{{incident.incidentStatusDisplay }}</td>                   
+                                        <td> {{incident.incidentUpdatedBy}}</td>                                        
+                                        <td> {{incident.updatedDate | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+
+                        <div class="card-body" [hidden]="!this.showSecurityClearanceTable">
+                            <div class="table-responsive">
+                                <table id="dt3" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions2" [dtTrigger]="dtTrigger2" >
+                                <thead>
+                                    <tr style="background-color:#484D56">                                                                    
+                                        <th style="width: 30%;">Action</th>
+                                        <th style="width: 30%;">Performed By</th>
+                                        <th style="width: 40%;">Action Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let statusDetails of securityClearanceFromDB" >                                                                   
+                                        <td> {{statusDetails.notifyOrDeny}}</td>
+                                        <td> {{statusDetails.notifyOrDenyByNames}}</td>
+                                        <td> {{statusDetails.notifyOrDenyDates | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+
+    
+                        <div class="card-body" [hidden]="!this.showBadgeVerificationTable">
+                            <div class="table-responsive">
+                                <table id="dt4" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions3" [dtTrigger]="dtTrigger3" >
+                                <thead>
+                                    <tr style="background-color:#484D56">                            
+                                        <th style="width: 30%;">Performed By</th>
+                                        <th style="width: 30%;">Entered Badge No.</th>
+                                        <th style="width: 40%;">Action Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let badge of badgeVerificationFromDB" >                             
+                                        <td> {{badge.firstName}}&nbsp;{{badge.lastName}}</td>
+                                        <td> {{badge.enteredBadgeNo}}</td>
+                                        <td> {{badge.checkingDate | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+                        
+                        <div class="card-body" [hidden]="!this.showSystemLogsTable">
+                            <div class="table-responsive">
+                                <table id="dt5" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions4" [dtTrigger]="dtTrigger4" >
+                                <thead>
+                                    <tr style="background-color:#484D56">                                                                    
+                                        <th style="width: 30%;">Action</th>
+                                        <th style="width: 30%;">Performed By</th>
+                                        <th style="width: 40%;">Action Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let statusDetails of systemLogsFromDB" >                                                                   
+                                        <td> {{statusDetails.action}}</td>
+                                        <td> {{statusDetails.userName}}</td>
+                                        <td> {{statusDetails.actionDateTime | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+
+                        <div class="card-body" [hidden]="!this.showProhibitedAudit">
+                            <div class="table-responsive">
+                                <table id="dt7" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions6" [dtTrigger]="dtTrigger6" >
+                                <thead>
+                                    <tr style="background-color:#484D56">         
+                                        <th style="width: 10%;">Audit Id</th>                   
+                                        <th style="width: 20%;">Company</th>
+                                        <th style="width: 10%;">Audit No</th>
+                                        <th style="width: 30%;">Audited Date</th>
+                                        <th style="width: 30%;">Performed By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let prohibitedAudit of prohibiteAuditFromDB" >                             
+                                        <td> {{prohibitedAudit.id}}</td>
+                                        <td> {{prohibitedAudit.companyName }}</td>
+                                        <td> {{prohibitedAudit.auditNo}}</td>
+                                        <td> {{prohibitedAudit.auditedDateTime  | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                                        <td> {{prohibitedAudit.auditSubmittedBy }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+
+                        <div class="card-body" [hidden]="!this.showProhibitedDetails">
+                            <div class="table-responsive">
+                                <table id="dt8" class="table table-bordered table-striped table-hover" datatable
+                                [dtOptions]="dtOptions7" [dtTrigger]="dtTrigger7" >
+                                <thead>
+                                    <tr style="background-color:#484D56">                            
+                                        <th>Company</th>                                  
+                                        <th>Item ID</th>
+                                        
+                                        <th>Updated By</th>
+                                        <th>Updated Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let prohibiteditem of prohibitedDetailsFromDB" 
+                                    (click)="openModalProhibited(template4,prohibiteditem.prohibitedItemDetailsId,prohibiteditem.id)"
+                                        style="cursor: pointer">   
+                                        <td>{{prohibiteditem.companyName}}</td> 
+                                        <td>{{prohibiteditem.itemId }}</td>  
+                                          
+                                        <td> {{prohibiteditem.updatedBy}}</td>                                        
+                                        <td> {{prohibiteditem.updatedDate | date : 'MM/dd/yyyy HH:mm:ss'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>                        
+                        </div>
+                    </div>
+
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <ng-template #template let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title pull-left card-title">NOV #: {{currentRecord.novNo}}</h3>
+            <button type="button" class="close" style="float: right;" aria-label="Close" 
+            (click)="modal.close('Save click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table table-bordered table-striped table-hover" id="dt1">
+                <thead>
+                    <tr style="background-color:#484D56">
+                        <th>Field Name</th>
+                        <th *ngIf="previousRecord != undefined">Previous Value</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="previousRecord != undefined">
+                    <!-- <tr>
+                        <td colspan="3">
+                            <div class="scrollit">
+                                <table class="table table-bordered table-striped table-hover" *ngIf="previousRecord != undefined"> -->
+                    <tr
+                        [ngClass]="previousRecord.violatorFirstName == currentRecord.violatorFirstName ? 'openColor' : 'changeText'">
+                        <td>Violator First Name</td>
+                        <td>{{previousRecord.violatorFirstName}}</td>
+                        <td>{{currentRecord.violatorFirstName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violatorLastName == currentRecord.violatorLastName ? 'openColor' : 'changeText'">
+                        <td>Violator Last Name</td>
+                        <td>{{previousRecord.violatorLastName}}</td>
+                        <td>{{currentRecord.violatorLastName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violatorBirthDate == currentRecord.violatorBirthDate ? 'openColor' : 'changeText'">
+                        <td>Violator Birth Date</td>
+                        <td>{{previousRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.email == currentRecord.email ? 'openColor' : 'changeText'">
+                        <td>Email</td>
+                        <td>{{previousRecord.email}}</td>
+                        <td>{{currentRecord.email}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.phone == currentRecord.phone ? 'openColor' : 'changeText'">
+                        <td>Mobile/Text Phone Number</td>
+                        <td>{{previousRecord.phone}}</td>
+                        <td>{{currentRecord.phone}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violationDate == currentRecord.violationDate ? 'openColor' : 'changeText'">
+                        <td>Violation Date</td>
+                        <td>{{previousRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violationType == currentRecord.violationType ? 'openColor' : 'changeText'">
+                        <td>Violation Type</td>
+                        <td>{{previousRecord.violationType}}</td>
+                        <td>{{currentRecord.violationType}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.opdPoliceReport == currentRecord.opdPoliceReport ? 'openColor' : 'changeText'">
+                        <td>Incident Report</td>
+                        <td>{{previousRecord.opdPoliceReport}}</td>
+                        <td>{{currentRecord.opdPoliceReport}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.citationReason == currentRecord.citationReason ? 'openColor' : 'changeText'">
+                        <td>Citation Reason</td>
+                        <td>{{previousRecord.citationReason}}</td>
+                        <td>{{currentRecord.citationReason}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.address == currentRecord.address ? 'openColor' : 'changeText'">
+                        <td>Address</td>
+                        <td>{{previousRecord.address}}</td>
+                        <td>{{currentRecord.address}}</td>
+                    </tr>
+                    <tr [ngClass]="(previousRecord.city != currentRecord.city 
+                                    || previousRecord.state != currentRecord.state 
+                                    || previousRecord.zip != currentRecord.zip) ? 'changeText' : 'openColor'">
+                        <td>City/State/Zip</td>
+                        <td>{{previousRecord.city}}, {{previousRecord.state}}, {{previousRecord.zip}}
+                        </td>
+                        <td>{{currentRecord.city}}, {{currentRecord.state}}, {{currentRecord.zip}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.driversLicenseNo == currentRecord.driversLicenseNo ? 'openColor' : 'changeText'">
+                        <td>Drivers LicenseNo</td>
+                        <td>{{previousRecord.driversLicenseNo}}</td>
+                        <td>{{currentRecord.driversLicenseNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.licenseState == currentRecord.licenseState ? 'openColor' : 'changeText'">
+                        <td>License State</td>
+                        <td>{{previousRecord.licenseState}}</td>
+                        <td>{{currentRecord.licenseState}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.securityBadgeNo == currentRecord.securityBadgeNo ? 'openColor' : 'changeText'">
+                        <td>Security BadgeNo</td>
+                        <td>{{previousRecord.securityBadgeNo}}</td>
+                        <td>{{currentRecord.securityBadgeNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.companyName == currentRecord.companyName ? 'openColor' : 'changeText'">
+                        <td>Company Name</td>
+                        <td>{{previousRecord.companyName}}</td>
+                        <td>{{currentRecord.companyName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.mvopPermitNo == currentRecord.mvopPermitNo ? 'openColor' : 'changeText'">
+                        <td>MVOP PermitNo</td>
+                        <td>{{previousRecord.mvopPermitNo}}</td>
+                        <td>{{currentRecord.mvopPermitNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.vehicleLicenseNo == currentRecord.vehicleLicenseNo ? 'openColor' : 'changeText'">
+                        <td>Vehicle LicenseNo</td>
+                        <td>{{previousRecord.vehicleLicenseNo}}</td>
+                        <td>{{currentRecord.vehicleLicenseNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.vehicleState == currentRecord.vehicleState ? 'openColor' : 'changeText'">
+                        <td>Vehicle State</td>
+                        <td>{{previousRecord.vehicleState}}</td>
+                        <td>{{currentRecord.vehicleState}}</td>
+                    </tr>
+
+                    <tr
+                        [ngClass]="previousRecord.vehicleYear == currentRecord.vehicleYear ? 'openColor' : 'changeText'">
+                        <td>Vehicle Year</td>
+                        <td>{{previousRecord.vehicleYear}}</td>
+                        <td>{{currentRecord.vehicleYear}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.vehicleMakeModel == currentRecord.vehicleMakeModel ? 'openColor' : 'changeText'">
+                        <td>Vehicle MakeModel</td>
+                        <td>{{previousRecord.vehicleMakeModel}}</td>
+                        <td>{{currentRecord.vehicleMakeModel}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.witnessName == currentRecord.witnessName ? 'openColor' : 'changeText'">
+                        <td>Witness Name</td>
+                        <td>{{previousRecord.witnessName}}</td>
+                        <td>{{currentRecord.witnessName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.witnessBadgeNo == currentRecord.witnessBadgeNo ? 'openColor' : 'changeText'">
+                        <td>Witness BadgeNo</td>
+                        <td>{{previousRecord.witnessBadgeNo}}</td>
+                        <td>{{currentRecord.witnessBadgeNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.summaryOfViolation == currentRecord.summaryOfViolation ? 'openColor' : 'changeText'">
+                        <td>Summary Of Violation</td>
+                        <td>{{previousRecord.summaryOfViolation}}</td>
+                        <td>{{currentRecord.summaryOfViolation}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.novNotes == currentRecord.novNotes ? 'openColor' : 'changeText'">
+                        <td>NOV Notes</td>
+                        <td>{{previousRecord.novNotes}}</td>
+                        <td>{{currentRecord.novNotes}}</td>
+                    </tr>
+                    <tr>
+                        <td>Chronology of Investigation</td>
+                        <td>{{previousRecord.eventStatus}}</td>
+                         <td>{{currentRecord.eventStatus}}</td>                        
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.isBadgeConfiscated == currentRecord.isBadgeConfiscated ? 'openColor' : 'changeText'">
+                        <td>Badge Confiscated</td>
+                        <td>{{previousRecord.isBadgeConfiscated}}</td>
+                        <td>{{currentRecord.isBadgeConfiscated}}</td>
+                    </tr>
+
+                    <tr
+                        [ngClass]="previousRecord.badgeSuspendedDate == currentRecord.badgeSuspendedDate ? 'openColor' : 'changeText'">
+                        <td>Badge Suspended Date</td>
+                        <td>{{previousRecord.badgeSuspendedDate | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.badgeSuspendedDate | date : 'MM/dd/yyyy' }}</td>
+                    </tr>
+
+                    <tr
+                        [ngClass]="previousRecord.remedialTrainingAssignedDate == currentRecord.remedialTrainingAssignedDate ? 'openColor' : 'changeText'">
+                        <td>Corrective Action Completion Deadline</td>
+                        <td>{{previousRecord.remedialTrainingAssignedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                        <td>{{currentRecord.remedialTrainingAssignedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+
+                    <tr
+                        [ngClass]="previousRecord.remedialTrainingCompletionDate == currentRecord.remedialTrainingCompletionDate ? 'openColor' : 'changeText'">
+                        <td>Corrective Action Completion Date</td>
+                        <td>{{previousRecord.remedialTrainingCompletionDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                        <td>{{currentRecord.remedialTrainingCompletionDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.remedialTraining == currentRecord.remedialTraining ? 'openColor' : 'changeText'">
+                        <td>Corrective Actions </td>
+                        <td>
+                            <div *ngFor="let k of previousRemedialTrainings; let i = index;">
+                                {{i + 1}}) {{k}}
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngFor="let k of currentRemedialTrainings; let i = index;">
+                                {{i + 1}}) {{k}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.otherTraining == currentRecord.otherTraining ? 'openColor' : 'changeText'">
+                        <td>Other Trainings </td>
+                        <td>{{previousRecord.otherTraining}}
+                        </td>
+                        <td>
+                            {{currentRecord.otherTraining}}
+                        </td>
+                    </tr>
+
+                    <!-- <tr [ngClass]="previousRecord.badgeReactivatedDate == currentRecord.badgeReactivatedDate ? 'openColor' : 'changeText'">
+                        <td>Badge Reactivated Date</td>
+                        <td>{{previousRecord.badgeReactivatedDate | date : 'MM/dd/yyyy hh:mm:ss a'}}
+                        </td>
+                        <td>{{currentRecord.badgeReactivatedDate | date : 'MM/dd/yyyy hh:mm:ss a'}}</td>
+                    </tr> -->
+                    <tr
+                        [ngClass]="previousRecord.badgeDeactivatedDate == currentRecord.badgeDeactivatedDate ? 'openColor' : 'changeText'">
+                        <td>Badge Revoked Date</td>
+                        <td>{{previousRecord.badgeDeactivatedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                        <td>{{currentRecord.badgeDeactivatedDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.additionalNotes == currentRecord.additionalNotes ? 'openColor' : 'changeText'">
+                        <td>Additional Notes</td>
+                        <td>{{previousRecord.additionalNotes}}</td>
+                        <td>{{currentRecord.additionalNotes}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.adminFine == currentRecord.adminFine ? 'openColor' : 'changeText'">
+                        <td>Admin Fine</td>
+                        <td>{{previousRecord.adminFine == true?"Yes":"No"}}</td>
+                        <td>{{currentRecord.adminFine== true?"Yes":"No"}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.faa == currentRecord.faa ? 'openColor' : 'changeText'">
+                        <td>FAA</td>
+                        <td>{{previousRecord.faa}}</td>
+                        <td>{{currentRecord.faa}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.tsa == currentRecord.tsa ? 'openColor' : 'changeText'">
+                        <td>TSA</td>
+                        <td>{{previousRecord.tsa}}</td>
+                        <td>{{currentRecord.tsa}}</td>
+                    </tr>
+                    <tr [ngClass]="previousRecord.eligible == currentRecord.eligible ? 'openColor' : 'changeText'">
+                        <td>Eligible</td>
+                        <td>{{previousRecord.eligible}}</td>
+                        <td>{{currentRecord.eligible}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.dateOfDisclosure == currentRecord.dateOfDisclosure ? 'openColor' : 'changeText'">
+                        <td>Date Of Disclosure</td>
+                        <td>{{previousRecord.dateOfDisclosure | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.dateOfDisclosure | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.isCorrectiveActionCompleted == currentRecord.isCorrectiveActionCompleted ? 'openColor' : 'changeText'">
+                        <td>Corrective Action Completed</td>
+                        <td>{{previousRecord.isCorrectiveActionCompleted}}</td>
+                        <td>{{currentRecord.isCorrectiveActionCompleted}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.correctiveActionCompletedDate == currentRecord.correctiveActionCompletedDate ? 'openColor' : 'changeText'">
+                        <td>Corrective Action Completed Date</td>
+                        <td>{{previousRecord.correctiveActionCompletedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                        <td>{{currentRecord.correctiveActionCompletedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+                    <!-- </table>
+                            </div>
+                        </td>
+                    </tr> -->
+                </tbody>
+
+                <tbody *ngIf="previousRecord == undefined">
+                    <tr>
+                        <td>Violator First Name</td>
+                        <td>{{currentRecord.violatorFirstName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Violator Last Name</td>
+                        <td>{{currentRecord.violatorLastName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Violator Birth Date</td>
+                        <td>{{currentRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{currentRecord.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile/Text Phone Number</td>
+                        <td>{{currentRecord.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Violation Date</td>
+                        <td>{{currentRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Violation Type</td>
+                        <td>{{currentRecord.violationType}}</td>
+                    </tr>
+                    <tr>
+                        <td>Incident Report</td>
+                        <td>{{currentRecord.opdPoliceReport}}</td>
+                    </tr>
+                    <tr>
+                        <td>Citation Reason</td>
+                        <td>{{currentRecord.citationReason}}</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>{{currentRecord.address}}</td>
+                    </tr>
+                    <tr>
+                        <td>City/State/Zip</td>
+                        <td>{{currentRecord.city}}, {{currentRecord.state}}, {{currentRecord.zip}}</td>
+                    </tr>
+                    <tr>
+                        <td>Drivers LicenseNo</td>
+                        <td>{{currentRecord.driversLicenseNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>License State</td>
+                        <td>{{currentRecord.licenseState}}</td>
+                    </tr>
+                    <tr>
+                        <td>Security BadgeNo</td>
+                        <td>{{currentRecord.securityBadgeNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Company Name</td>
+                        <td>{{currentRecord.companyName}}</td>
+                    </tr>
+                    <tr>
+                        <td>MVOP PermitNo</td>
+                        <td>{{currentRecord.mvopPermitNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vehicle LicenseNo</td>
+                        <td>{{currentRecord.vehicleLicenseNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vehicle State</td>
+                        <td>{{currentRecord.vehicleState}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Vehicle Year</td>
+                        <td>{{currentRecord.vehicleYear}}</td>
+                    </tr>
+                    <tr>
+                        <td>Vehicle MakeModel</td>
+                        <td>{{currentRecord.vehicleMakeModel}}</td>
+                    </tr>
+                    <tr>
+                        <td>Witness Name</td>
+                        <td>{{currentRecord.witnessName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Witness BadgeNo</td>
+                        <td>{{currentRecord.witnessBadgeNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Summary Of Violation</td>
+                        <td>{{currentRecord.summaryOfViolation}}</td>
+                    </tr>
+                    <tr>
+                        <td>NOV Notes</td>
+                        <td>{{currentRecord.novNotes}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Badge Confiscated</td>
+                        <td>{{currentRecord.isBadgeConfiscated == 1 ?"Yes":"No"}}</td>
+                    </tr>
+                    <tr>
+                        <td>Badge Suspended Date</td>
+                        <td>{{currentRecord.badgeSuspendedDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Corrective Action Completion Deadline</td>
+                        <td>{{currentRecord.remedialTrainingAssignedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Corrective Action Completion Date</td>
+                        <td>{{currentRecord.remedialTrainingCompletionDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Corrective Action</td>
+                        <td>
+                            <div *ngFor="let k of currentRemedialTrainings; let i = index;">
+                                {{i + 1}}) {{k}}
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Badge Reactivated Date</td>
+                        <td>{{currentRecord.badgeReactivatedDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Badge Revoked Date</td>
+                        <td>{{currentRecord.badgeDeactivatedDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>additionalNotes</td>
+                        <td>{{currentRecord.additionalNotes}}</td>
+                    </tr>
+                    <tr>
+                        <td>FAA</td>
+                        <td>{{currentRecord.faa}}</td>
+                    </tr>
+                    <tr>
+                        <td>TSA</td>
+                        <td>{{currentRecord.tsa}}</td>
+                    </tr>
+                    <tr>
+                        <td>Eligible</td>
+                        <td>{{currentRecord.eligible}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date Of Disclosure</td>
+                        <td>{{currentRecord.dateOfDisclosure | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Corrective Action Completed</td>
+                        <td>{{currentRecord.isCorrectiveActionCompleted}}</td>
+                    </tr>
+                    <tr>
+                        <td>Corrective Action Completed Date</td>
+                        <td>{{currentRecord.correctiveActionCompletedDate | date : 'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Issued By</td>
+                        <td>{{currentRecord.issuedBy}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </ng-template>
+    <ng-template #template1 let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title pull-left card-title">COU #: {{currentRecord.novNo}}</h3>
+            <button type="button" class="close" style="float: right;" aria-label="Close" 
+            (click)="modal.close('Save click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table table-bordered table-striped table-hover" id="dt1">
+                <thead>
+                    <tr style="background-color:#484D56">
+                        <th>Field Name</th>
+                        <th *ngIf="previousRecord != undefined">Previous Value</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="previousRecord != undefined">
+                    <!-- <tr>
+                        <td colspan="3">
+                            <div class="scrollit">
+                                <table class="table table-bordered table-striped table-hover" *ngIf="previousRecord != undefined"> -->
+                    <tr
+                        [ngClass]="previousRecord.violatorFirstName == currentRecord.violatorFirstName ? 'openColor' : 'changeText'">
+                        <td>First Name</td>
+                        <td>{{previousRecord.violatorFirstName}}</td>
+                        <td>{{currentRecord.violatorFirstName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violatorLastName == currentRecord.violatorLastName ? 'openColor' : 'changeText'">
+                        <td>Last Name</td>
+                        <td>{{previousRecord.violatorLastName}}</td>
+                        <td>{{currentRecord.violatorLastName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violatorBirthDate == currentRecord.violatorBirthDate ? 'openColor' : 'changeText'">
+                        <td>Date of Birth</td>
+                        <td>{{previousRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.email == currentRecord.email ? 'openColor' : 'changeText'">
+                        <td>Email</td>
+                        <td>{{previousRecord.email}}</td>
+                        <td>{{currentRecord.email}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.email == currentRecord.email ? 'openColor' : 'changeText'">
+                        <td>Mobile/Text Phone Number</td>
+                        <td>{{previousRecord.phone}}</td>
+                        <td>{{currentRecord.phone}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violationDate == currentRecord.violationDate ? 'openColor' : 'changeText'">
+                        <td>Counseling Date</td>
+                        <td>{{previousRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.violationType == currentRecord.violationType ? 'openColor' : 'changeText'">
+                        <td>Counseling Type</td>
+                        <td>{{previousRecord.violationType}}</td>
+                        <td>{{currentRecord.violationType}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecord.citationReason == currentRecord.citationReason ? 'openColor' : 'changeText'">
+                        <td>Counseling Reason</td>
+                        <td>{{previousRecord.citationReason}}</td>
+                        <td>{{currentRecord.citationReason}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecord.securityBadgeNo == currentRecord.securityBadgeNo ? 'openColor' : 'changeText'">
+                        <td>Security BadgeNo</td>
+                        <td>{{previousRecord.securityBadgeNo}}</td>
+                        <td>{{currentRecord.securityBadgeNo}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecord.companyName == currentRecord.companyName ? 'openColor' : 'changeText'">
+                        <td>Company Name</td>
+                        <td>{{previousRecord.companyName}}</td>
+                        <td>{{currentRecord.companyName}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecord.summaryOfViolation == currentRecord.summaryOfViolation ? 'openColor' : 'changeText'">
+                        <td>Counseling Summary</td>
+                        <td>{{previousRecord.summaryOfViolation}}</td>
+                        <td>{{currentRecord.summaryOfViolation}}</td>
+                    </tr> 
+                </tbody>
+
+                <tbody *ngIf="previousRecord == undefined">
+                    <tr>
+                        <td>First Name</td>
+                        <td>{{currentRecord.violatorFirstName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td>{{currentRecord.violatorLastName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td>{{currentRecord.violatorBirthDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{currentRecord.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile/Text Phone Number</td>
+                        <td>{{currentRecord.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Counseling Date</td>
+                        <td>{{currentRecord.violationDate | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Counseling Type</td>
+                        <td>{{currentRecord.violationType}}</td>
+                    </tr>                   
+                    <tr>
+                        <td>Counseling Reason</td>
+                        <td>{{currentRecord.citationReason}}</td>
+                    </tr>         
+                    <tr>
+                        <td>Security BadgeNo</td>
+                        <td>{{currentRecord.securityBadgeNo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Company Name</td>
+                        <td>{{currentRecord.companyName}}</td>
+                    </tr>                 
+                    <tr>
+                        <td>Counseling Summary</td>
+                        <td>{{currentRecord.summaryOfViolation}}</td>
+                    </tr>                
+                 
+                    <tr>
+                        <td>Issued By</td>
+                        <td>{{currentRecord.issuedBy}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </ng-template>
+
+    <ng-template #template2 let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title pull-left card-title">Inspection Record No #: {{currentRecordInsp.inspectionRecordNo}}</h3>
+            <button type="button" class="close" style="float: right;" aria-label="Close" 
+            (click)="modal.close('Save click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table table-bordered table-striped table-hover" id="dt2">
+                <thead>
+                    <tr style="background-color:#484D56">
+                        <th>Field Name</th>
+                        <th *ngIf="previousRecordInsp != undefined">Previous Value</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="previousRecordInsp != undefined">
+                    <!-- <tr>
+                        <td colspan="3">
+                            <div class="scrollit">
+                                <table class="table table-bordered table-striped table-hover" *ngIf="previousRecordInsp != undefined"> -->
+                    <tr
+                        [ngClass]="previousRecordInsp.inspType == currentRecordInsp.inspType ? 'openColor' : 'changeText'">
+                        <td>Inspection Type</td>
+                        <td>{{previousRecordInsp.inspType}}</td>
+                        <td>{{currentRecordInsp.inspType}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordInsp.inspFacility == currentRecordInsp.inspFacility ? 'openColor' : 'changeText'">
+                        <td>Inspection Facility</td>
+                        <td>{{previousRecordInsp.inspFacility}}</td>
+                        <td>{{currentRecordInsp.inspFacility}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordInsp.inspectionDate == currentRecordInsp.inspectionDate ? 'openColor' : 'changeText'">
+                        <td>Inspection Date</td>
+                        <td>{{previousRecordInsp.inspectionDate | date : 'MM-dd-yyyy'}}</td>
+                        <td>{{currentRecordInsp.inspectionDate | date : 'MM-dd-yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordInsp.inspectionTime == currentRecordInsp.inspectionTime ? 'openColor' : 'changeText'">
+                        <td>Start Time</td>
+                        <td>{{previousRecordInsp.inspectionTime | date : 'HH:mm'}}</td>
+                        <td>{{currentRecordInsp.violationDate | date :  'HH:mm'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordInsp.hours == currentRecordInsp.hours ? 'openColor' : 'changeText'">
+                        <td>Duration (Hours)</td>
+                        <td>{{previousRecordInsp.hours}}</td>
+                        <td>{{currentRecordInsp.hours}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecordInsp.minutes == currentRecordInsp.minutes ? 'openColor' : 'changeText'">
+                        <td>Duration (Minutes)</td>
+                        <td>{{previousRecordInsp.minutes}}</td>
+                        <td>{{currentRecordInsp.minutes}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecordInsp.inspectionFinding == currentRecordInsp.inspectionFinding ? 'openColor' : 'changeText'">
+                        <td>Inspection Finding</td>
+                        <td>{{previousRecordInsp.inspectionFinding}}</td>
+                        <td>{{currentRecordInsp.inspectionFinding}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordInsp.inspectionSummary == currentRecordInsp.inspectionSummary ? 'openColor' : 'changeText'">
+                        <td>Inspection Summary</td>
+                        <td>{{previousRecordInsp.inspectionSummary}}</td>
+                        <td>{{currentRecordInsp.inspectionSummary}}</td>
+                    </tr>                   
+                    <tr
+                        [ngClass]="previousRecordInsp.inspectionNOV == currentRecordInsp.inspectionNOV ? 'openColor' : 'changeText'">
+                        <td>Nov Required</td>
+                        <td>{{previousRecordInsp.inspectionNOV}}</td>
+                        <td>{{currentRecordInsp.inspectionNOV}}</td>
+                    </tr> 
+                </tbody>
+
+                <tbody *ngIf="previousRecordInsp == undefined">
+                    <tr>
+                        <td>Inspection Type</td>
+                        <td>{{currentRecordInsp.inspType}}</td>
+                    </tr>
+                    <tr>
+                        <td>Inspection Facility</td>
+                        <td>{{currentRecordInsp.inspFacility}}</td>
+                    </tr>
+                    <tr>
+                        <td>Inspection Date</td>
+                        <td>{{currentRecordInsp.inspectionDate | date : 'MM-dd-yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Start Time</td>
+                        <td>{{currentRecordInsp.inspectionTime }}</td>
+                    </tr>
+                    <tr>
+                        <td>Duration (Hours)</td>
+                        <td>{{currentRecordInsp.hours}}</td>
+                    </tr>                   
+                    <tr>
+                        <td>Duration (Minutes)</td>
+                        <td>{{currentRecordInsp.minutes}}</td>
+                    </tr>         
+                    <tr>
+                        <td>Inspection Finding</td>
+                        <td>{{currentRecordInsp.inspectionFinding}}</td>
+                    </tr>
+                    <tr>
+                        <td>Inspection Summary</td>
+                        <td>{{currentRecordInsp.inspectionSummary}}</td>
+                    </tr>                 
+                    <tr>
+                        <td>Nov Required</td>
+                        <td>{{currentRecordInsp.inspectionNOV}}</td>
+                    </tr>                
+                 
+                    <tr>
+                        <td>Issued By</td>
+                        <td>{{currentRecordInsp.issuedBy}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </ng-template>
+
+    <ng-template #template3 let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title pull-left card-title">Incident Record No #: {{currentRecordIncident.incidentRecordNo}}</h3>
+            <button type="button" class="close" style="float: right;" aria-label="Close" 
+            (click)="modal.close('Save click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table table-bordered table-striped table-hover" id="dt2">
+                <thead>
+                    <tr style="background-color:#484D56">
+                        <th>Field Name</th>
+                        <th *ngIf="previousRecordIncident != undefined">Previous Value</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="previousRecordIncident != undefined">
+                    <tr
+                        [ngClass]="previousRecordIncident.incidentType == currentRecordIncident.incidentType ? 'openColor' : 'newchange'">
+                        <td>Incident Type</td>
+                        <td>{{previousRecordIncident.incidentType}}</td>
+                        <td>{{currentRecordIncident.incidentType}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.additionalType == currentRecordIncident.additionalType ? 'openColor' : 'newchange'">
+                        <td>Additional Type</td>
+                        <td>{{previousRecordIncident.additionalType}}</td>
+                        <td>{{currentRecordIncident.additionalType}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.locationName == currentRecordIncident.locationName ? 'openColor' : 'newchange'">
+                        <td>Location</td>
+                        <td>{{previousRecordIncident.incidentDoorName}}</td>
+                        <td>{{currentRecordIncident.incidentDoorName}}</td>
+                    </tr>
+
+                    <tr *ngIf ="previousRecordIncident.otherLocationTextvalue != null"
+                        [ngClass]="previousRecordIncident.otherLocationTextvalue == currentRecordIncident.otherLocationTextvalue ? 'openColor' : 'newchange'">
+                        <td>Other Location</td>
+                        <td>{{previousRecordIncident.otherLocationTextvalue}}</td>
+                        <td>{{currentRecordIncident.otherLocationTextvalue}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.dateOccurred == currentRecordIncident.dateOccurred ? 'openColor' : 'newchange'">
+                        <td>Date Occurred</td>
+                        <td>{{previousRecordIncident.dateOccurred | date : 'MM/dd/yyyy'}}</td>
+                        <td>{{currentRecordIncident.dateOccurred | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.newTimeOccurred == currentRecordIncident.newTimeOccurred ? 'openColor' : 'newchange'">
+                        <td>Time Occurred</td>
+                        <td>{{previousRecordIncident.newTimeOccurred}}</td>
+                        <td>{{currentRecordIncident.newTimeOccurred}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.mediaAttention == currentRecordIncident.mediaAttention ? 'openColor' : 'newchange'">
+                        <td>Media Attention ?</td>
+                        <td>{{previousRecordIncident.mediaAttention == true?'Yes':'No'}}</td>
+                        <td>{{currentRecordIncident.mediaAttention == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.tsacheckpointClosure == currentRecordIncident.tsacheckpointClosure? 'openColor' : 'newchange'">
+                        <td>TSA Checkpoint Closure?</td>
+                        <td>{{previousRecordIncident.tsacheckpointClosure == true?'Yes':'No'}}</td>
+                        <td>{{currentRecordIncident.tsacheckpointClosure == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.evacuation == currentRecordIncident.evacuation ? 'openColor' : 'newchange'">
+                        <td>Evacuation</td>
+                        <td>{{previousRecordIncident.evacuation == true?'Yes':'No'}}</td>
+                        <td>{{currentRecordIncident.evacuation == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.evacuationDescription == currentRecordIncident.evacuationDescription ? 'openColor' : 'newchange'">
+                        <td>Description of Evacuation</td>
+                        <td>{{previousRecordIncident.evacuationDescription}}</td>
+                        <td>{{currentRecordIncident.evacuationDescription}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.associatedNovreport == currentRecordIncident.associatedNovReport ? 'openColor' : 'newchange'">
+                        <td>Assoc. NOV/COU Report</td>
+                        <td>{{previousRecordIncident.associatedNovReport}}</td>
+                        <td>{{currentRecordIncident.associatedNovReport}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.associatedInspreport == currentRecordIncident.associatedInspReport ? 'openColor' : 'newchange'">
+                        <td>Assoc. INSP Report</td>
+                        <td>{{previousRecordIncident.associatedInspReport}}</td>
+                        <td>{{currentRecordIncident.associatedInspReport}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.associatedOpdreport == currentRecordIncident.associatedOpdReport ? 'openColor' : 'newchange'">
+                        <td>Associated OPD Report</td>
+                        <td>{{previousRecordIncident.associatedOpdReport}}</td>
+                        <td>{{currentRecordIncident.associatedOpdReport}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.reportingAgencyName == currentRecordIncident.reportingAgencyName ? 'openColor' : 'newchange'">
+                        <td>Reporting Agency</td>
+                        <td>{{previousRecordIncident.reportingAgencyName}}</td>
+                        <td>{{currentRecordIncident.reportingAgencyName}}</td>
+                    </tr>
+                    <tr *ngIf="previousRecordIncident.otherReportingvalue != null"
+                        [ngClass]="previousRecordIncident.otherReportingvalue == currentRecordIncident.otherReportingvalue ? 'openColor' : 'newchange'">
+                        <td>Other Reporting Agency</td>
+                        <td>{{previousRecordIncident.otherReportingvalue}}</td>
+                        <td>{{currentRecordIncident.otherReportingvalue}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.involvedAgencyName == currentRecordIncident.involvedAgencyName ? 'openColor' : 'newchange'">
+                        <td>Involved Agencies</td>
+                        <td>{{previousRecordIncident.involvedAgencyName}}</td>
+                        <td>{{currentRecordIncident.involvedAgencyName}}</td>
+                    </tr>
+                    <tr *ngIf="previousRecordIncident.otherInvolvedvalue != null"
+                        [ngClass]="previousRecordIncident.otherInvolvedvalue == currentRecordIncident.otherInvolvedvalue ? 'openColor' : 'newchange'">
+                        <td>Involved Agencies</td>
+                        <td>{{previousRecordIncident.otherInvolvedvalue}}</td>
+                        <td>{{currentRecordIncident.otherInvolvedvalue}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.perimeterBreachName == currentRecordIncident.perimeterBreachName ? 'openColor' : 'newchange'">
+                        <td>AOA Perimeter Breach Classification</td>
+                        <td>{{previousRecordIncident.perimeterBreachName}}</td>
+                        <td>{{currentRecordIncident.perimeterBreachName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.additionalDetails == currentRecordIncident.additionalDetails ? 'openColor' : 'newchange'">
+                        <td>Additional Details</td>
+                        <td>{{previousRecordIncident.additionalDetails}}</td>
+                        <td>{{currentRecordIncident.additionalDetails}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordIncident.incidentSummary == currentRecordIncident.incidentSummary ? 'openColor' : 'newchange'">
+                        <td>Incident Summary</td>
+                        <td>{{previousRecordIncident.incidentSummary}}</td>
+                        <td>{{currentRecordIncident.incidentSummary}}</td>
+                    </tr>
+                    
+                </tbody>
+                <tbody *ngIf="previousRecordIncident == undefined">
+                    <tr>
+                        <td>Incident Type</td>
+                        <td>{{currentRecordIncident.incidentType}}</td>
+                    </tr>
+                    <tr>
+                        <td>Additional Type</td>
+                        <td>{{currentRecordIncident.additionalType}}</td>
+                    </tr>
+                    <tr>
+                        <td>Location </td>
+                        <td>{{currentRecordIncident.incidentDoorName}}</td>
+                    </tr>
+                    <tr *ngIf="currentRecordIncident.otherLocationTextvalue != null">
+                        <td>Other Location </td>
+                        <td>{{currentRecordIncident.otherLocationTextvalue }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date Occurred </td>
+                        <td>{{currentRecordIncident.dateOccurred | date : 'MM/dd/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Time Occurred </td>
+                        <td>{{currentRecordIncident.newTimeOccurred }}</td>
+                    </tr>
+                    <tr>
+                        <td>Media Attention ? </td>
+                        <td>{{currentRecordIncident.mediaAttention == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr>
+                        <td>TSA Checkpoint Closure? </td>
+                        <td>{{currentRecordIncident.tsacheckpointClosure == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Evacuation</td>
+                        <td>{{currentRecordIncident.evacuation == true?'Yes':'No'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Description of Evacuation </td>
+                        <td>{{currentRecordIncident.evacuationDescription }}</td>
+                    </tr>
+                    <tr>
+                        <td>Assoc. NOV/COU Report</td>
+                        <td>{{currentRecordIncident.associatedNovReport }}</td>
+                    </tr>
+                    <tr>
+                        <td>Assoc. INSP Report </td>
+                        <td>{{currentRecordIncident.associatedInspReport }}</td>
+                    </tr>
+                    <tr>
+                        <td>Associated OPD Report </td>
+                        <td>{{currentRecordIncident.associatedOpdReport }}</td>
+                    </tr>
+                    <tr>
+                        <td>Reporting Agency </td>
+                        <td>{{currentRecordIncident.reportingAgencyName }}</td>
+                    </tr>
+                    <tr *ngIf="currentRecordIncident.otherReportingvalue != null">
+                        <td>Other Reporting Agency </td>
+                        <td>{{currentRecordIncident.otherReportingvalue }}</td>
+                    </tr>
+                    <tr>
+                        <td>Involved Agencies </td>
+                        <td>{{currentRecordIncident.involvedAgencyName }}</td>
+                    </tr>
+                    <tr *ngIf="currentRecordIncident.otherInvolvedvalue != null">
+                        <td>Other Involved Agencies </td>
+                        <td>{{currentRecordIncident.otherInvolvedvalue }}</td>
+                    </tr>
+                    <tr>
+                        <td>AOA Perimeter Breach Classification</td>
+                        <td>{{currentRecordIncident.perimeterBreachName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Additional Details</td>
+                        <td>{{currentRecordIncident.additionalDetails }}</td>
+                    </tr>
+                    <tr>
+                        <td>Incident Summary</td>
+                        <td>{{currentRecordIncident.incidentSummary }}</td>
+                    </tr>
+                    
+                </tbody>
+
+            </table>
+
+        </div>
+    </ng-template>
+
+     <ng-template #template4 let-modal>
+        <div class="modal-header">
+            <h3 class="modal-title pull-left card-title">Prohibited Item #: {{currentRecordProhibited.itemId}}</h3>
+            <button type="button" class="close" style="float: right;" aria-label="Close" 
+            (click)="modal.close('Save click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body table-responsive">
+            <table class="table table-bordered table-hover" id="dt2">
+                <thead>
+                    <tr style="background-color:#484D56">
+                        <th>Field Name</th>
+                        <th *ngIf="previousRecordProhibited != undefined">Previous Value</th>
+                        <th>Current Value</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="previousRecordProhibited != undefined">
+                    <tr
+                        [ngClass]="previousRecordProhibited.companyName == currentRecordProhibited.companyName ? 'openColor' : 'newchange'">
+                        <td>Company</td>
+                        <td>{{previousRecordProhibited.companyName}}</td>
+                        <td>{{currentRecordProhibited.companyName}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.itemId == currentRecordProhibited.itemId ? 'openColor' : 'newchange'">
+                        <td>Item ID</td>
+                        <td>{{previousRecordProhibited.itemId}}</td>
+                        <td>{{currentRecordProhibited.itemId}}</td>
+                    </tr>
+                    
+                  
+                    <tr
+                        [ngClass]="previousRecordProhibited.shortDescription == currentRecordProhibited.shortDescription? 'openColor' : 'newchange'">
+                        <td>Description</td>
+                        <td>{{previousRecordProhibited.shortDescription}}</td>
+                        <td>{{currentRecordProhibited.shortDescription}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.location == currentRecordProhibited.location ? 'openColor' : 'newchange'">
+                        <td>Location</td>
+                        <td>{{previousRecordProhibited.location}}</td>
+                        <td>{{currentRecordProhibited.location}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.description == currentRecordProhibited.description? 'openColor' : 'newchange'">
+                        <td>Comment</td>
+                        <td>{{previousRecordProhibited.description}}</td>
+                        <td>{{currentRecordProhibited.description}}</td>
+                    </tr>
+                     <!-- <tr
+                        [ngClass]="previousRecordProhibited.submittedBy == currentRecordProhibited.submittedBy ? 'openColor' : 'newchange'">
+                        <td>Submitted By</td>
+                        <td>{{previousRecordProhibited.submittedBy}}</td>
+                        <td>{{currentRecordProhibited.submittedBy}}</td>
+                    </tr> -->
+                    
+                    
+                    <tr
+                        [ngClass]="previousRecordProhibited.submittedDate == currentRecordProhibited.submittedDate ? 'openColor' : 'newchange'">
+                        <td>Request Date</td>
+                        <td>{{previousRecordProhibited.submittedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                        <td>{{currentRecordProhibited.submittedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.approvedDate == currentRecordProhibited.approvedDate ? 'openColor' : 'newchange'">
+                        <td>Approval Date</td>
+                        <td>{{previousRecordProhibited.approvedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                        <td>{{currentRecordProhibited.approvedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                    </tr>
+                     <tr
+                        [ngClass]="previousRecordProhibited.status == currentRecordProhibited.status ? 'openColor' : 'newchange'">
+                        <td>Status</td>
+                        <td>{{previousRecordProhibited.status}}</td>
+                        <td>{{currentRecordProhibited.status}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.comment == currentRecordProhibited.comment ? 'openColor' : 'newchange'">
+                        <td>Approval Comment</td>
+                        <td>{{previousRecordProhibited.comment}}</td>
+                        <td>{{currentRecordProhibited.comment}}</td>
+                    </tr>
+                    <tr
+                        [ngClass]="previousRecordProhibited.removalComment == currentRecordProhibited.removalComment ? 'openColor' : 'newchange'">
+                        <td>Removal Comment</td>
+                        <td>{{previousRecordProhibited.removalComment}}</td>
+                        <td>{{currentRecordProhibited.removalComment}}</td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="previousRecordProhibited == undefined">
+                    <tr>
+                        <td>Company</td>
+                        <td>{{currentRecordProhibited.companyName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Item ID</td>
+                        <td>{{currentRecordProhibited.itemId}}</td>
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+                        <td>{{currentRecordProhibited.shortDescription}}</td>
+                    </tr>
+                   <tr>
+                        <td>Location</td>
+                        <td>{{currentRecordProhibited.location}}</td>
+                    </tr>
+                    <tr>
+                        <td>Comment</td>
+                        <td>{{currentRecordProhibited.description}}</td>
+                    </tr>
+                    <tr>
+                        <td>Request Date</td>
+                        <td>{{currentRecordProhibited.submittedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                    </tr>
+                      <tr>
+                        <td>Approve Date</td>
+                        <td>{{currentRecordProhibited.approvedDate | date:"MM/dd/yyyy HH:mm:ss"}}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>{{currentRecordProhibited.status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Approval Comment</td>
+                        <td>{{currentRecordProhibited.comment}}</td>
+                    </tr>
+                    <tr>
+                        <td>Removal Comment</td>
+                        <td>{{currentRecordProhibited.removalComment}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </ng-template>
+    
+
+</div>

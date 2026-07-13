@@ -1,0 +1,657 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12" >
+          <span
+            style="
+              font-size: 25px;
+              color: #003594;
+              font-weight: bold;
+              margin-left: 18px;
+            "
+          >
+            Badge Accountability
+          </span>
+          <button
+            type="button"
+            [routerLink]="['/admin/badgelisting']"
+            class="btn btn-primary mt-2"
+            style="float: right; margin-right: 18px"
+          >
+            Back
+          </button>
+          <button *ngIf="isSubmitDetails" type="button" class="btn btn-primary mt-2" 
+            style="float: right; margin-right: 2px;" (click) = "submitaudit()">Submit
+          </button>
+          
+        </div>
+        <div class="row" style="margin-left: 20px;margin-right: 20px;">
+          <div class="col-md-4">
+            <label><strong>TOTAL : {{badgeAuditAuthCountViewModel.issued}}</strong></label
+            ><br />
+            <label><strong>ACTIVE : {{badgeAuditAuthCountViewModel.active}}</strong></label
+            ><br />
+            <label><strong>ACCOUNTABLE : {{badgeAuditAuthCountViewModel.accountableConfirmed}}</strong></label
+              ><br />
+            <label><strong>UNACCOUNTABLE : {{badgeAuditAuthCountViewModel.unaccountableConfirmed }}</strong></label
+            ><br />
+            <label><strong>UNACCOUNTABLE (%) : {{badgeAuditAuthCountViewModel.percentUnaccountable }} %</strong></label>
+          </div>
+          <div class="col-md-3" style="border-style: double">
+            <label style="color: red; font-size: large; font-weight: bold"
+              ><strong>Active Audit : {{badgeauditinfo.auditName}}</strong></label
+            ><br />
+           
+              <label>Start Date : {{badgeauditinfo.auditFromDate | date: "MM/dd/yyyy" }}</label><br />
+              <label>Deadline : {{badgeauditinfo.auditToDate | date: "MM/dd/yyyy" }}</label><br />
+              <!-- <label>Completion Date : {{badgeauditinfo.auditToDate | date: "MM/dd/yyyy" }}</label><br /> -->
+           
+              <div class="row">
+                <div class="col-md-6">Confirmed : {{ badgeAuditAuthCountViewModel.totalConfirmed }} </div>
+                <div class="col-md-6">Pending : {{ badgeAuditAuthCountViewModel.pending }}</div>
+                <!-- <div class="col-md-4">Deactivated</div> -->
+              </div>
+              <!-- <div class="row">
+                <div class="col-md-6">
+                  {{ badgeAuditAuthCountViewModel.totalConfirmed }}
+                </div>
+                <div class="col-md-6">
+                  {{ badgeAuditAuthCountViewModel.pending }}
+                </div>
+                 <div class="col-md-4">
+                  {{ badgeAuditAuthCountViewModel.deactivated }}
+                </div>
+              </div> -->
+            
+          </div>
+
+          <div class="col-md-3" >
+            <div class="form-group" style="font-size:15px;">
+              <label><strong>Notes</strong> </label>
+             
+              <textarea 
+                [rows]="6"
+                class="form-control"
+                id="authSignerComment"
+                placeholder="Enter Authsigner Comment"
+                name="authSignerComment"
+                #authSignerComment = "ngModel"
+                [(ngModel)]="badgeauditcompany.authSignerComment"
+               
+               ></textarea>
+               
+                             
+              
+            </div>
+          </div>
+          <div class="col-md-1" >
+            <button class="btn btn-primary" style="margin-top: 50px;margin-left: 20px " (click)="authComment()">
+              Save
+            </button>
+          </div>
+          
+        </div>
+
+        <br />
+        <div *ngIf="(windowRef?.innerWidth >= 768)">
+          <div class="cadr-body">
+            <div *ngIf="isView == 1">
+              <div class="table-responsive">
+                <div class="d-flex bd-highlight">
+                  <div class="p-2 flex-grow-1 bd-highlight">
+                    <label>Rows</label>
+                    <select
+                      [(ngModel)]="queryParam.pageSize"
+                      (change)="onPageSizeChange()"
+                      id="pageSize"
+                    >
+                      <option value="10">10</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="200">200</option>
+                    </select>
+                  </div>
+                  <div class="p-2 flex-grow-1 bd-highlight">
+                   <label>Show:  </label>
+                    <select
+                      [(ngModel)]="queryParam.selectedValue"
+                      (change)="onSelectedValueChange()"
+                      id="selectedValue"
+                                          
+                    >
+                      <option value="All">All</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Pending">Pending</option>
+  
+                    </select>
+                  </div>
+                  <button *ngIf = "badgeauditinfo.auditType !='Random Audit'" type="button" class="btn btn-primary btn-sm" 
+                    style="float: right;margin-right: 18px;" (click)="refresh()" >Refresh Badge List
+                  </button>
+                  <div class="p-2 bd-highlight">
+                    <input
+                      type="text"
+                      [(ngModel)]="queryParam.searchQuery"
+                      id="searchQuery"
+                      placeholder="Search"
+                      
+                    />
+                  </div>
+                  <button (click)="searchtable()"><i class="fa fa-search"></i></button>
+                </div>
+  
+                <table
+                  class="table table-bordered table-striped table-hover"
+                  id="dt1"
+                >
+                  <thead class="text-primary">
+                    <tr style="background-color: #484D56; color: white">
+                      <th>
+                        Company Name
+                        <i
+                          (click)="onSortClick($event, 'Company')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      
+                      <th>
+                        First Name
+                        <i
+                          (click)="onSortClick($event, 'FirstName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Last Name
+                        <i
+                          (click)="onSortClick($event, 'LastName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Badge Number
+                        <i
+                          (click)="onSortClick($event, 'BadgeNo')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Badge Color
+                        <i
+                          (click)="onSortClick($event, 'BadgeColor')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Issuance 
+                        <i
+                          (click)="onSortClick($event, 'IssuanceDate')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Expiration <i
+                          (click)="onSortClick($event, 'ExpirationDate')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Escort 
+                        <i
+                          (click)="onSortClick($event, 'EscortIcon')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>Access Level</th>                    
+                      <th>Drivers Icon</th>
+                      <th>Custom Seal</th>
+                      <!-- <th>Status</th> -->
+                      <th>Status</th>
+                      <!-- <th>
+                        Issued Keys
+                        <i
+                          (click)="onSortClick($event, 'IssuedKey')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th> -->
+                      
+                      
+                      <!-- <th>Unaccountable Reason</th>
+                      <th>Unaccountable Comment</th>
+                      <th>Unaccountable Date</th> -->
+                      <th>Accountable</th>
+                      <th>Unaccountable</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let item of launchbadgeauditlist
+                          | paginate
+                            : {
+                                itemsPerPage: pageHeaders.pageSize,
+                                currentPage: pageHeaders.pageNumber,
+                                totalItems: pageHeaders.totalItems
+                              };
+                        let i = index
+                      "
+                    >
+                      <td>{{ item.company }}</td>
+                      <td>{{ item.firstName }}</td>
+                      <td>{{ item.lastName }}</td>
+                      <td>{{ item.badgeNumber }}</td>
+                      <td>{{ item.badgeColor }}</td>
+                      <td>{{ item.issuanceDate | date: "MM/dd/yyyy" }}</td>
+                      <td>{{ item.expirationDate | date: "MM/dd/yyyy" }}</td>
+                      <td>{{ item.escortIcon }}</td>
+                      <td>{{ item.accessLevel }}</td>
+                      <td>{{ item.driversIcon }}</td>
+                      <td>{{ item.customSeal }}</td>      
+                      <!-- <td>{{ item.status }}</td>      -->
+                      <td>{{ item.refreshStatus }}</td>              
+                      <td>
+                        <button
+                          *ngIf="!item.accountable && !item.isSubmitted &&  item.empStatus != 6 &&
+                          ((item.status  == 'ACTIVE' && item.refreshStatus == 'ACTIVE') || (item.status  == 'ACTIVE' && item.refreshStatus != 'ACTIVE') 
+                          || (item.status  != 'ACTIVE' && item.refreshStatus == 'ACTIVE'))"
+                          type="button"
+                          class="btn btn-primary ml-3 btn-sm"
+                          
+                          (click)="confirm(item)"
+                        >
+                          ACCOUNTABLE
+                        </button>
+                        <!-- <button
+                          *ngIf="item.accountable"
+                          type="button"
+                          class="btn btn-success ml-3"
+                          style="margin-left: 3px"
+                          [disabled]
+                        >
+                          CONFIRMED
+                        </button> -->
+                        <label *ngIf="item.accountable &&  item.empStatus== 1 || item.empStatus == 4 || item.empStatus == 6"  
+                                style="color: #06d79c; padding: 5px; font-size: larger;">                    
+                         <strong> CONFIRMED</strong>
+                        </label>
+                      </td>
+                      <td>
+                        <button
+                        *ngIf = "item.empStatus !== 2  && !item.isSubmitted  && item.empStatus != 5  && item.empStatus != 7
+                        && ((item.status  == 'ACTIVE' && item.refreshStatus == 'ACTIVE') || (item.status  == 'ACTIVE' && item.refreshStatus != 'ACTIVE')
+                        || (item.status  != 'ACTIVE' && item.refreshStatus == 'ACTIVE'))  "
+                          type="button"
+                          class="btn btn-danger btn-sm"
+                          
+                          (click)="showemployee(template, item)"
+                        >
+                          UNACCOUNTABLE
+                        </button>
+                        <!-- <button
+                        *ngIf = "item.empStatus == 2"
+                          type="button"
+                          class="btn btn-danger ml-3"
+                          style="margin-left: 3px"
+                          (click)="showemployee(template, item)"
+                        >
+                          CONFIRMED
+                        </button> -->
+                        
+                        <label *ngIf="item.empStatus ==2 || item.empStatus == 5 || item.empStatus == 7"  
+                                style="color: #ef5350; padding: 5px; font-size: larger;" (click)="showunaccountable(unaccountabletemplate, item)">                     
+                         <strong> CONFIRMED</strong>
+                        </label>
+                      </td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+              <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  Showing total
+                  <!-- {{ pageHeaders.pageNumber }} to
+                  {{ pageHeaders.pageSize }} of -->
+  
+                  {{ pageHeaders.totalItems }} entries
+                </div>
+                <div class="p-2 bd-highlight">
+                  <pagination-controls
+                    (pageChange)="onPageChange($event)"
+                    class="my-pagination"
+                  ></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+        </div>
+        
+        <div *ngIf="(windowRef?.innerWidth < 768)">
+          <div class="card-body"> 
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <label>Rows</label>
+                <select
+                  [(ngModel)]="queryParam.pageSize"
+                  (change)="onPageSizeChange()"
+                  id="pageSize"
+                >
+                  <option value="10">10</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="200">200</option>
+                </select>
+              </div>
+              <div class="p-2 flex-grow-1 bd-highlight">
+               <label>Show:  </label>
+                <select
+                  [(ngModel)]="queryParam.selectedValue"
+                  (change)="onSelectedValueChange()"
+                  id="selectedValue"                     
+                >
+                  <option value="All">All</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Pending">Pending</option>
+
+                </select>
+              </div>
+              <button *ngIf = "badgeauditinfo.auditType !='Random Audit'" type="button" class="btn btn-primary btn-sm" (click)="refresh()" >Refresh Badge List
+              </button>
+            </div> 
+            <!--<div class="row">
+              <div class="col">
+                <input type="text" [(ngModel)]="queryParam.searchQuery" id="searchQuery" placeholder="Search" />
+              </div>
+              <div class="col">
+                <button class="btn btn-primary" (click)="searchtable()"><i class="bi bi-search"></i></button>
+                <span class="btn btn-primary" style="margin-left:2px;" (click)="clearSearch()">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </span>
+              </div>
+            </div>  -->
+            <div class="list-group" style="margin-top: 5px;">
+              <div *ngFor="let item of launchbadgeauditlist | paginate
+              : {
+                  itemsPerPage: pageHeaders.pageSize,
+                  currentPage: pageHeaders.pageNumber,
+                  totalItems: pageHeaders.totalItems
+                };
+                trackBy: identify; index as i; "
+                skipLocationChange class="list-group-item list-group-item-action">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Company Name:</span>
+                    {{ item.company }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;" > First Name:</span>
+                    {{ item.firstName }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;"> Last Name:</span>
+                    {{ item.lastName }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;"> Badge Number:</span>
+                    {{ item.badgeNumber }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Badge Color:</span>
+                    {{ item.badgeColor }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Issuance :</span>
+                    {{ item.issuanceDate | date: "MM/dd/yyyy" }}
+                  </div>
+              
+                </div> 
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Expiration:</span>
+                    {{ item.expirationDate | date: "MM/dd/yyyy" }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;" > Escort:</span>
+                    {{ item.escortIcon }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;"> Access Level:</span>
+                    {{ item.accessLevel }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Drivers Icon:</span>
+                    {{ item.driversIcon }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;" > Custom Seal:</span>
+                    {{ item.customSeal }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;"> Status:</span>
+                    {{ item.refreshStatus }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Accountable:</span>
+                      <button *ngIf="!item.accountable && !item.isSubmitted &&  item.empStatus != 6 &&
+                                                ((item.status  == 'ACTIVE' && item.refreshStatus == 'ACTIVE') || (item.status  == 'ACTIVE' && item.refreshStatus != 'ACTIVE') 
+                                                || (item.status  != 'ACTIVE' && item.refreshStatus == 'ACTIVE'))" type="button"
+                        class="btn btn-primary ml-3 btn-sm" (click)="confirm(item)">
+                        ACCOUNTABLE
+                      </button>
+                      <label *ngIf="item.accountable &&  item.empStatus== 1 || item.empStatus == 4 || item.empStatus == 6"
+                        style="color: #06d79c; padding: 5px; font-size: larger;">
+                        <strong> CONFIRMED</strong>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;" > Unaccountable:</span>
+                      <button
+                      *ngIf = "item.empStatus !== 2  && !item.isSubmitted  && item.empStatus != 5  && item.empStatus != 7
+                      && ((item.status  == 'ACTIVE' && item.refreshStatus == 'ACTIVE') || (item.status  == 'ACTIVE' && item.refreshStatus != 'ACTIVE')
+                      || (item.status  != 'ACTIVE' && item.refreshStatus == 'ACTIVE'))  "
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        
+                        (click)="showemployee(template, item)"
+                      >
+                        UNACCOUNTABLE
+                      </button>
+                      <label *ngIf="item.empStatus ==2 || item.empStatus == 5 || item.empStatus == 7"  
+                              style="color: #ef5350; padding: 5px; font-size: larger;" (click)="showunaccountable(unaccountabletemplate, item)">                     
+                       <strong> CONFIRMED</strong>
+                      </label>
+                    </div>
+                </div>
+              </div> 
+              <ngb-pagination [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize" [collectionSize]="pageHeaders.totalItems"
+              [maxSize]="1" (pageChange)="onPageChange($event)">
+              <ng-template ngbPaginationPrevious>Prev</ng-template>
+              <ng-template ngbPaginationNext>Next</ng-template>
+            </ngb-pagination>
+            </div>
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total
+                {{ pageHeaders.totalItems }} entries
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #unaccountabletemplate>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title" style="font-weight:bold;">
+      {{ selectedBadgeEmp.firstName }}&nbsp;{{ selectedBadgeEmp.lastName }}
+    </h4>
+    <button type="button" class="close" aria-label="Cancel" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label><strong> Unaccountable Reason :  </strong></label> {{selectedBadgeEmp. deactivatedReason}}
+    <br>
+    <label> <strong> Comment : </strong></label> {{ selectedBadgeEmp.comment }} 
+    <br>
+    <label><strong> Reason Date : </strong></label> {{ selectedBadgeEmp.unaccountableDate | date: "MM/dd/yyyy" }}
+    <br>
+    <label><strong> Badge Recovered: </strong></label> {{ this.badgeRecovered  }}
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Badge Accountability - {{ selectedBadgeEmp.firstName }}&nbsp;
+      {{ selectedBadgeEmp.lastName }}<br>(Badge No.
+      {{ selectedBadgeEmp.badgeNo }} )
+    </h4>
+    <button type="button" class="close" aria-label="Cancel" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label style="text-align: center; font-size: 15px;" 
+      >You have selected unaccountable, Do you wish to continue?</label
+    >
+    <div class="row">
+      <div class="col-md-12">
+        <label style="font-size: 15px;"> Unaccountable Reason </label> 
+        <ng-select
+         [appendTo]="'body'"
+          id="deactivatedReason_{{ i }}"
+          #select
+          [items]="deactivatedReasons"
+          bindLabel="label"
+          placeholder="Select Option"
+          bindValue="value"
+          [(ngModel)]="selectedBadgeEmp.deactivatedReason"
+          appearance="outline"
+         
+        >
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label style="font-size: 15px;"> Reason Date </label> 
+          <div class="input-group">              
+              <input
+              class="form-control"
+              type="text"
+              (click)="unaccountableDate.toggle()"
+              ngbDatepicker
+              #unaccountableDate="ngbDatepicker"
+              [(ngModel)]="fromToDates.unaccountableDate"
+              name="unaccountableDate"
+              placeholder="mm/dd/yyyy" 
+             
+                    
+            />
+            <button class="btn btn-outline-secondary bi bi-calendar4"  (click)="unaccountableDate.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label  style="font-size: 15px;">Comment</label>
+         
+            
+              <input type="text" class="form-control" id="comment" #comment = "ngModel"
+               [(ngModel)]="selectedBadgeEmp.comment" name="comment"
+                >   
+            
+         
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mt-2">
+        <div class="form-group">
+            <label for="checkbox" style="font-size: 15px;">Badge Recovered</label> 
+         <div class="form-check">
+           <!--  <label class="form-check-label">
+              <input
+                class="form-check-input checkbox-size"
+                type="checkbox"
+                [checked]="selectedBadgeEmp.badgeRecovered"
+                [(ngModel)]="selectedBadgeEmp.badgeRecovered"
+                [ngModelOptions]="{ standalone: true }"
+                style="font-size: 20px; margin-left: 5px;"
+              />&nbsp;
+              <span class="form-check-sign">
+                <span class="check"> </span>
+              </span>
+            </label>-->
+            <label class="switch">
+              <input name="active_{{selectedBadgeEmp.badgeRecovered}}" type="checkbox" [(ngModel)]="selectedBadgeEmp.badgeRecovered"   />
+              <span class="slider square small"></span>
+          </label>
+          </div> 
+          
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12 mt-2">
+        <button class="btn btn-danger" (click)="updateEmp()">
+          Ok
+        </button>
+        <button class="btn btn-primary" style="margin-left: 5px;" (click)="close()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<button
+type="button"
+style="display: none"
+id="btnModal"
+class="btn btn-primary"
+(click)="openModal(templateauth)"
+></button>
+
+<ng-template #templateauth let-modal>
+  <div class="modal-body" style="text-align: center">
+    <label style="font-size: 1.4rem; font-weight: 500"
+      >{{ this.authAuditMsg }}
+    </label>
+    <br />
+    <div style="text-align: right">
+      <button
+        type="button"
+        class="btn btn-primary"
+        id="btnAcknowledge"
+        (click)="modal.close('Save click');saveAck();"
+      >
+        Acknowledge
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+ 
+

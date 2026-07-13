@@ -1,0 +1,76 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class=" card-title">Reference Category</h3>
+                </div>
+                <div *ngIf="!view">
+                    <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="hidden" id="id" [(ngModel)]="category.id" name="id" #id="ngModel">
+                                    <label>Reference Category</label>
+                                    <input type="text" class="form-control" id="referenceCategory" required
+                                        [(ngModel)]="category.referenceCategory" name="referenceCategory"
+                                        #referenceCategory="ngModel">                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                <label>Order By</label>
+                                    <ng-select
+                                    appendTo="body"
+                                    id="referenceSortOrderId"
+                                    #select
+                                    [items]="allSortOrdersNames"
+                                    bindLabel="sortOrder"
+                                    bindValue="id"
+                                    [(ngModel)]="category.referenceSortOrderId"
+                                    appearance="outline"
+                                    name="referenceSortOrderId" 
+                                    required=""                       
+                                >
+                                </ng-select>  
+                                </div>
+                            </div>
+                          </div>
+                        <div class="form-group" style="margin-top: 5px;">
+                            <button type="submit" class="btn btn-success" [disabled]="!formData.form.valid">Save</button>
+                            <button type="button" (click)="hideaddform()" style="margin-left: 2px; "
+                            class=" btn btn-fill btn-danger">Close</button>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div *ngIf="view">
+                <div class="col-md-12">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="hidden" id="id" [(ngModel)]="category.id" name="id" #id="ngModel">
+                            <strong>Reference Category: </strong>
+                            <label>{{category.referenceCategory}}</label>
+                            <!-- <label>{{category.id}}</label> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 5px;">
+                    <button type="button" (click)="hideaddform()"
+                    class=" btn btn-fill btn-danger">Close</button>
+                </div>
+
+
+            </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

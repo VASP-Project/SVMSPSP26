@@ -1,0 +1,77 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12">
+          <h3 class="card-title">Query Manager</h3>
+          <button [routerLink]="['/admin/queryviewer']" class="btn btn-primary" *ngIf="addQuery"
+            style="float: right; margin-right: 18px" [queryParams]="{ isEdit: 0}" skipLocationChange>
+            Add Query
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            id="dt1">
+            <thead>
+              <tr style="background-color: #484D56; color: white">
+                <th style="width: 15%;">Description</th>
+                <th style="width: 60%;" *ngIf="addQuery">Query</th>
+                <th style="width: 5%;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let query of querieslist">
+                <td> {{ query.name }} </td>
+
+                <td *ngIf="addQuery"> {{ query.query }} </td>
+
+                <td>
+                  <button *ngIf="!addQuery" class="btn btn-success" (click)="RunQuery(query.id)" skipLocationChange>
+                    Run
+                  </button>
+                  <button *ngIf="addQuery" (click)="RunQuery(query.id)" class="btn btn-warning btn-sm">
+                    <span><i class="bi bi-pencil"></i></span>
+                  </button> &nbsp;
+                  <button *ngIf="addQuery" type="button" class="btn btn-danger btn-sm" (click)="deleteQuery(query.id)">
+                    <span><i class="bi bi-trash"></i>
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+      <div style="margin: auto; padding: 20px;">
+        <h2>Ask SQL Question</h2>
+        <label for="question">Question:</label>
+        <input type="text" id="question" [(ngModel)]="question" name="question" required class="form-control" />
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px;" (click)="onSubmit()">
+          Submit
+        </button>
+        <div *ngIf="response">
+          <h4>Generated SQL Query:</h4>
+          <pre>{{ response.query }}</pre>
+
+          <h4>Result:</h4>
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th *ngFor="let col of displayedColumns">{{ col }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of response.result">
+                <td *ngFor="let col of displayedColumns">{{ row[col] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

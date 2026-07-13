@@ -1,0 +1,59 @@
+<div class=" content">
+    <div class="card">
+        <div class="col-md-12">
+            <h3 class="card-title">Map</h3>
+        </div>
+        <div class="card-body">
+            <canvas  width="300" height="150" #canvas (click)="openModal(commenttemplate,$event)"></canvas>
+        </div>
+    </div>
+</div>
+
+<ng-template #commenttemplate>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" style="text-align: center;">
+            Incident location
+        </h4>
+        <button type="button" class="close" aria-label="Cancel" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row" style="text-align:center">
+            <div class="col-md-1"> <strong>X=</strong>
+            </div>
+            <div class="col-md-5">
+                <input type="text" [(ngModel)]="maps.x" placeholder="Coordinatex" readonly>
+            </div>
+            <div class="col-md-1"><strong>Y=</strong>
+            </div>
+            <div class="col-md-5">
+                <input type="text" [(ngModel)]="maps.y" placeholder="Coordinatey" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Incident Locations</label>                                           
+                <ng-select
+                    [appendTo]="'body'"
+                    id="incidentLocation"
+                    #select
+                    [items]="incidentLocationList"
+                    bindLabel="incidentLocation"
+                    placeholder="Select Incident Location"
+                    bindValue="id"
+                    [(ngModel)]="maps.incidentLocation"
+                    appearance="outline"
+                    name="incidentLocation"
+                    appearance="outline"
+                >
+                </ng-select> 
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="text-align:center;padding-top: 5px;">
+                <button type="submit" class="btn btn-success" (click)="savePlace()">Save</button>
+            </div>
+        </div>
+    </div>
+  </ng-template>

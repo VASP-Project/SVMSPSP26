@@ -1,0 +1,141 @@
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <form class="card" #formData="ngForm" (ngSubmit)="saveUser(formData)" autocomplete="off" novalidate>
+          <!--  fake fields are a workaround for chrome/opera autofill getting the wrong fields -->
+          <input id="username" style="display: none;" type="text" name="fakeusernameremembered" />
+          <input id="password" style="display: none;" type="password" name="fakepasswordremembered" />
+         
+          <div class="col-md-6" *ngIf="isEdit">
+            <h3 class="card-title">My Profile</h3>
+          </div>
+  
+          <div class="card-body">
+            <input type="hidden" id="id" [(ngModel)]="this.User.id" name="id" #name="ngModel" value="" />
+            <div class="row">
+            
+           
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label> First Name </label>
+                  <input class="form-control" placeholder="First Name" type="text" [(ngModel)]="User.firstName"
+                    name="firstName" required [disabled]="isEdit" />
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label> Last Name </label>
+                  <input class="form-control" placeholder="Last Name" type="text" [(ngModel)]="User.lastName"
+                    name="lastName" required [disabled]="isEdit"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">             
+              <div class="col-md-6 pr-md-1 pt-md-2" >
+                <div class="form-group">
+                  <label for="exampleInputEmail1"> Email address </label>
+                  <input class="form-control" placeholder="email" type="email" [(ngModel)]="User.email" name="email"
+                    required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,9})+$" [disabled]="isEdit"
+                    autocomplete="new-email" />
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1 pt-md-2">
+                <div class="form-group">
+                  <label> Mobile Number </label>
+                  <!-- <input class="form-control" placeholder="Phone Number" type="text" [(ngModel)]="User.phoneNumber"
+                    name="phoneNumber" pattern="^((\\+91-?)|0)?[0-9]{10}$" required /> -->
+
+                    <input class="form-control"  type="text"   name="phoneNumber" id="phoneNumber" [(ngModel)]="User.phoneNumber" 
+                    (keypress)="formatUserPhoneNumber()"  maxlength="14" autocomplete="off" 
+                     [required]="this.User.userAuthenticationSms ? 'true' : 'false'">  
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 px-md-1 pt-md-4 ">
+                <div class="form-group" style="text-align: center;">
+                  <label for="checkbox">Two Factor Authentication </label>
+                 
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.User.isUserAuthenticated"
+                        [(ngModel)]="this.User.isUserAuthenticated"  [ngModelOptions]="{ standalone: true }"
+                        (click)="AuthenticationCheckBoxChange($event)"  
+                        style="font-size: 20px;" [disabled]="this.olduserAuthentication== null ? 'false' : this.olduserAuthentication != true ? 'false':'true'" 
+                         />&nbsp;
+                      <span class="form-check-sign">
+                        <span class="check"> </span>
+                      </span>
+                    </label>
+            
+                  </div>
+                </div>
+              </div>
+            
+              <div class="col-md-2 px-md-1 pt-md-4" *ngIf="this.User.isUserAuthenticated">
+                <div class="form-group" style="text-align: center;">
+                  <label for="checkbox"> Email Authentication </label>
+            
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.User.userAuthenticationEmail"                        
+                        (click)="UserCheckBoxChangeEmail($event)" style="
+                                                                  font-size: 20px;
+                                                              " />&nbsp;
+                      <span class="form-check-sign">
+                        <span class="check"> </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            
+              <div class="col-md-2 px-md-1 pt-md-4" *ngIf="this.User.isUserAuthenticated">
+                <div class="form-group" style="text-align: center;">
+                  <label for="checkbox"> SMS Authentication </label>
+            
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.User.userAuthenticationSms"                        
+                        (click)="UserCheckBoxChangeSms($event)" style="font-size: 20px;" />&nbsp;
+                      <span class="form-check-sign">
+                        <span class="check"> </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- <div class="col-md-2 px-md-1 pt-md-4" *ngIf="this.User.isUserAuthenticated">
+                <div class="form-group" style="text-align: center;">
+                  <label for="checkbox">Both</label>
+            
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.User.userAuthenticationBoth"
+                        [(ngModel)]="this.User.userAuthenticationBoth" [ngModelOptions]="{ standalone: true }"
+                        (click)="UserCheckBoxChange($event, 3)" style=" font-size: 20px; " />&nbsp;
+                      <span class="form-check-sign">
+                        <span class="check"> </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div> -->
+            
+            </div>
+           
+            <div style="text-align: center; padding-top: 10px;">
+              <button class="btn btn-fill btn-success" type="submit" [disabled]="!formData.form.valid">
+                Save
+              </button>
+              <button type="button" class="btn btn-fill btn-danger" style="margin-left:2px;" (click)="back()">
+                Close
+              </button>
+            </div>
+          </div>
+         
+        </form>
+      </div>
+    </div>
+  </div>

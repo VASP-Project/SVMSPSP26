@@ -1,0 +1,99 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Badge Report Settings</h3>
+                </div>
+                    <div class="col-md-12">
+                        <div>
+                            <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-5">
+                                        <div class="form-group">
+                                            <input type="hidden" id="id" [(ngModel)]="badgereportsettings.id" name="id" #id="ngModel">
+                                            <label>Reminder Days </label>
+                                            <input type="text" class="form-control" id="reminderDays" required
+                                                [(ngModel)]="badgereportsettings.reminderDays" name="reminderDays" #reminderDays="ngModel">                             
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12  col-md-5">
+                                        <div class="form-group">                                       
+                                            <label>Expiration period in days</label>
+                                            <input type="text" class="form-control" id="pickUpDays" required
+                                                [(ngModel)]="badgereportsettings.pickUpDays" name="pickUpDays" #pickUpDays="ngModel">                             
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-5">
+                                        <div class="form-group">                                       
+                                            <label>Show Record For Days</label>
+                                            <input type="text" class="form-control" id="showRecordFor" required
+                                                [(ngModel)]="badgereportsettings.showRecordFor" name="showRecordFor" #showRecordFor="ngModel">                             
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-5">
+                                        <div class="form-group">                                       
+                                            <label>Period to check updates for clearance report (in min)</label>
+                                            <input type="text" class="form-control" id="sprunMinutes" required
+                                            [(ngModel)]="badgereportsettings.sprunMinutes" name="sprunMinutes" #sprunMinutes="ngModel"> 
+                                        </div>                                      
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <div class="form-group" style="margin-top: 25px;">
+                                            <button type="submit" class="btn btn-success" [disabled]="!formData.form.valid">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+  
+                                <button [routerLink]="['/admin/badgereportaddedit']" class="btn btn-primary" 
+                                style="float: right; margin-right: 18px;"
+                                [queryParams]="{ isEdit: 0, isView: 0 }"> Add Email</button>
+                            </form>
+                      </div>
+                  </div>
+                <div>
+                    <div class="card-body">
+                        
+  
+                        <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color:#484D56;">
+                                    <th>Email</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let badgereport of badgereportemailsettings" class="pointerCursor"
+                                    (click)="viewBadgeReportSettings(badgereport.id)">
+                                    <td>{{badgereport.email}}</td>
+                                    <td>{{badgereport.type}}</td>
+                                    <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                        <div>
+                                            <button [routerLink]="['/admin/badgereportaddedit']" class="btn btn-warning btn-sm"
+                                                [queryParams]="{ id: badgereport.id, isEdit: 1, isView: 0 }">
+                                                  <span><i class="bi bi-pencil"></i>
+                                                </span></button>
+                                            &nbsp;
+  
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteBadgeReportEmailSettings(badgereport.id)">
+                                                <span><i class="bi bi-trash"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+    </div>
+  </div>

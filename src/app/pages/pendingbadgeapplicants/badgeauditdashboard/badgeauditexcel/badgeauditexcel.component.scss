@@ -1,0 +1,34 @@
+table {
+    border-collapse: collapse;
+    width: 90%;
+    font-size: 12px;
+    padding: 0px;
+    }
+
+    table, th {
+      color: black !important;
+      }  
+
+    table, td {
+    border: 1px solid black;
+    }                               
+
+    /* A4 Landscape*/
+    @page {
+        size: A4 landscape;                                                            
+    }
+
+   
+    @media print {
+        #print-section {
+          overflow-y: visible !important; 
+          position: relative;
+        }
+        .container {
+            display: inline;
+        }
+      }
+
+    body {
+        overflow: auto;
+}

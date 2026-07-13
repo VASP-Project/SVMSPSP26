@@ -1,0 +1,21 @@
+{
+    "API_URL": "http://localhost:54785/api/",
+    "HeaderText": "Hello, Welcome to the SAFE!",
+    "SecurityMessage": "Accept all terms and conditions",
+    "SecurityMessageAuth": "Acknowledge all terms and conditions",
+    "ClearanceDateText": "CLEARANCE DATE: The applicant must complete the badging process within 30 days of receiving a clearance date. Failure to complete the badging process within 30 days, to include security training & issuance, will require the applicant to be fingerprinted again before a badge can be issued. Should the 30-days period expire, an additional charge may be applicable for processing as additional security check.",
+    "AdvisoryText": "After verifying the correct badge number was submitted, you must deny access and immediately notify OPD Police Dispatch at 909-986-3371 or by dialing 911. Do not advise the individual of the badge verification result.",
+    "SessionTimeOutMinutes": "300",
+    "Adminfinepopup": "Test msg",
+    "SSO": "false",
+    "LoginMethod": "Okta",
+
+    "issuerOkta": "https://trial-7339616.okta.com/oauth2/default",
+    "clientIdOkta": "0oap8wns3cuexNelk697",
+    "redirectUriOkta": "http://localhost:4200/callback",
+    
+    "clientID": "4eb5a4c0-73b8-40d5-978c-c2019b28b147",
+    "authority": "https://login.microsoftonline.com/25dfd246-e2dd-437a-83ad-4463946e422e",    
+    "redirectUri": "http://localhost:4200/auth/callback",
+    "postLogoutRedirectUri": "http://localhost:4200"
+}

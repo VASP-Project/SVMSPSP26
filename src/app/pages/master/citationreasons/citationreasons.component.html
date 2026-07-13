@@ -1,0 +1,68 @@
+<div class="content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Citation Reasons</h3>
+                    <button type="button" class="btn btn-primary" style="float: right; margin-right: 18px;"
+                            [routerLink]="['/admin/citationreasonsedit']" [queryParams]="{ isEdit: 0, isView: 0 }">
+                            Add Citation Reason
+                        </button>
+                </div>
+                <div>
+                    <div class="card-body">
+                        <table id="dt1" class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                        [dtTrigger]="dtTrigger">
+                            <thead>
+                                <tr style="background-color: #484D56; color: white;">
+                                    <!-- <th>Id</th> -->
+                                    <th>Violation Type</th>
+                                    <th>Citation Reason</th>
+                                    <th style="width: 20%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let CitationReason of CitationReasons"
+                                    (click)="viewCitationreasons(CitationReason.id, 1)" class="pointerCursor">
+                                    <td > 
+                                        {{ CitationReason.violationType }}</td>
+                                    <td>{{ CitationReason.reason }}</td>
+                                    <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                        <div>
+                                            <button [routerLink]="['/admin/citationreasonsedit']"
+                                                class="btn btn-warning btn-sm"
+                                                [queryParams]="{ citatitionId: CitationReason.id, isEdit: 1, isView: 0 }">
+                                                <span><i class="bi bi-pencil"></i>
+                                                </span></button>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteCitationReasons(CitationReason.id)">
+                                                <span><i class="bi bi-trash"></i>
+                                                </span>
+                                            </button>
+                                            &nbsp; 
+                                            <label title="Status" class="switch" (click)="$event.stopPropagation()">
+                                               <!-- <input 
+                                                type="checkbox"
+                                                [checked]="violationType.status"
+                                               (change)="onToggle(violationType, $event)"  /> -->
+                                                
+
+                                            <input name="active_{{CitationReason.id}}" type="checkbox" [(ngModel)]="CitationReason.status"  (click)="CheckBoxChange($event,CitationReason.id)"  />
+                                            <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,58 @@
+{
+  "compileOnSave": false,
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
+  "compilerOptions": {
+    "baseUrl": "./",
+    "downlevelIteration": true,
+    "module": "esnext", // add this line PA
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "target": "es2015",
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@helpers/*": [
+        "src/app/_helpers/*"
+      ],
+      "@modules/*": [
+        "modules/*"
+      ],
+      "@angular/*": [
+        "../node_modules/@angular/*"
+      ],
+      // "@testing/*": [
+      //     "testing/*"
+      // ]
+    },
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/ngx-quill-editor/*",
+    "node_modules/@angular/*"
+  ],
+  //     "paths": {
+  //       "@angular/*": [
+  //        "../node_modules/@angular/*"
+  //      ],
+  //      "exceljs": [
+  //        "node_modules/exceljs/dist/exceljs.min"
+  //      ]
+  //  },
+}

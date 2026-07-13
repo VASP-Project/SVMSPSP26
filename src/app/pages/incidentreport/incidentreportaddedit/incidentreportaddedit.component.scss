@@ -1,0 +1,55 @@
+.displayselect{
+    display: block;
+  }
+  .Closed {
+    // color:white;
+    background-color: #cacaca;
+  }
+  .PendingCompletion {
+    background-color: #ffa726;
+  }
+  .InProcess {
+    background-color: #93ed89;
+  }
+  .Submitted {
+    background-color: yellow;
+  }
+  .openColor {
+    background-color: white;
+  }
+  .returnedToIssuerColor {
+    background-color: #faebd7;
+  }
+  .returnedToASColor {
+    background-color: #ff8c69;
+  }
+
+  .modal-body {
+    overflow-x: auto;
+  }
+  .buttonclr{
+    background-color: #81a9f1;
+  }
+
+  .filedisplay a img{
+    width: 40px;
+    height: 40px;
+  }
+
+  .filedisplays{
+    float:left;
+    overflow:auto;
+    margin:15px;
+    background-color: whitesmoke;
+    padding: 5px;
+    border: 1px silver solid;
+    border-radius: 5px;
+  }
+  #upload_button input[type=file] {
+    display:none;
+  }
+  // @media only screen and (min-width: 768px){
+  //   .buttonpadding {
+  //       padding-top:7px;
+  //   }
+  //   }

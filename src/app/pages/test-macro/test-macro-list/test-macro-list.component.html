@@ -1,0 +1,84 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">AWS Schedule</h3>
+                    <button [routerLink]="['/admin/testmacro']" *ngIf="isSuperAdmin || isTsaScheduler"
+                    class="btn btn-primary" style="float: right; margin-right: 18px;"
+                    [queryParams]="{ isEdit: 0, isView: 0 }"skipLocationChange> Add Schedule</button>
+                </div>
+                <div>
+                    <div class="card-body"> 
+                        <div class="table-responsive" >
+                            <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color: #484D56; color: white">
+                                    <th>ID</th>
+                                    <th>ID Holder</th>
+                                    <th>Access Points</th>
+                                    <th>Airport Category</th>
+                                    <th>Schedule Start Date</th>
+                                    <th>Shift Start Time</th>
+                                    <th>Shift Close Time</th>
+                                    <!-- <th>Submitted</th> -->
+                                    <th>Approved</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              
+                               <tr *ngFor="let item of inputParameters" class="pointerCursor"
+                               >
+                               <td>{{item.id}}</td>
+                               <td>{{item.apsNumber}}</td>
+                               <td>{{item.points}}</td>
+                               <td>{{item.category}}</td>
+                               <td>{{item.scheduleStartDate | date: 'MM/dd/yyyy'}}</td>
+                               <td>{{item.shiftStartTime}}</td>
+                               <td>{{item.shiftCloseTime}}</td>
+                               <!-- <td>{{item.isSubmitted == true?'Submitted':'Not submitted'}}</td> -->
+                               <!-- <td>{{item.isVerified == true?'Approved':'Not Approved'}}</td> -->
+                               <td>{{item.approvedDate | date:"MM/dd/yyyy"}}</td>
+                               <!-- <td (click)="$event.preventDefault(); $event.stopPropagation();" *ngIf="isSuperAdmin || isAWSScheduler || isStaffAdmin || isTsaUser">
+                                <div>
+                                        <a title="View" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                        skipLocationChange>View</a>
+                                </div>
+                            </td> -->
+                            <!-- <td (click)="$event.preventDefault(); $event.stopPropagation();" *ngIf="item.isVerified == true">
+                                <div>
+                                        <a title="View" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                        skipLocationChange>View</a>
+                                </div>
+                            </td>
+                            <td (click)="$event.preventDefault(); $event.stopPropagation();" *ngIf="isTsaApprover && item.isVerified != true">
+                                <div>
+                                        <a title="Review" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                        skipLocationChange>Review</a>
+                                </div>
+                            </td> -->
+                            
+                            <td>
+                                <a *ngIf="!isTsaApprover && item.isVerified == true" title="View" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                        skipLocationChange>View</a>
+                                <a *ngIf="!isTsaApprover && item.isVerified != true" title="view" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                        skipLocationChange>View</a>
+                                <a *ngIf="isTsaApprover && item.isVerified != true" title="Review" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                    skipLocationChange>Review</a>
+                                <a *ngIf="isTsaApprover && item.isVerified == true" title="view" [routerLink]="['/admin/testmacro']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
+                                    skipLocationChange>View</a>    
+                            </td>
+                           </tr>
+                            </tbody>
+                        </table>
+                        </div>              
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

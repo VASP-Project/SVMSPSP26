@@ -1,0 +1,32 @@
+.styled-table {
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 100%;
+  border: 1px solid #dddddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table th,
+.styled-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px 12px;
+  color: #333;
+}
+
+.styled-table thead tr {
+  background-color: #f3f3f3;
+  color: #333;
+  font-weight: bold;
+}
+
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+  cursor: default;
+}

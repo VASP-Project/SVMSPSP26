@@ -1,0 +1,86 @@
+<div class="content">
+        <div class=" row">
+            <div class=" col-md-12">
+                <div class=" card" >
+                    <!-- <br> -->
+                    <div class="col-md-12">
+                        <h3 class=" card-title">Citation Reason</h3>
+                    </div>
+                    <div *ngIf="!view">
+                        <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+                            <input type="hidden" id="id" [(ngModel)]="Citation.id" name="id" #id="ngModel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Violation Type</label>
+                                        <!-- <select id="violationTypeId" #Id="ngModel" class="form-control" 
+                                            [(ngModel)]="Citation.violationTypeId" name="violationTypeId" required>
+                                            <option disabled selected value>Select Violation Type</option>
+                                            <option [ngValue]="k.id" *ngFor="let k of allViolationTypes">
+                                                {{k.violationType}}
+                                            </option>
+                                        </select>    -->
+                                        
+                                        <ng-select
+                                            appendTo="body"
+                                            id="violationTypeId"
+                                            #select
+                                            [items]="allViolationTypes"
+                                            bindLabel="violationType"
+                                            placeholder="Select Violation Type"
+                                            bindValue="id"
+                                            [(ngModel)]="Citation.violationTypeId"
+                                            appearance="outline"
+                                            name="violationTypeId"                                            
+                                            required
+                                            
+                                            >
+                                            </ng-select>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+    
+                                        <label>Citation Reason</label>
+                                        <input type="text" class="form-control" id="CitationReason" required
+                                            [(ngModel)]="Citation.reason" name="CitationReason" #CitationReason="ngModel">                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 5px; ">
+                                <button type="submit" class="btn btn-success" [disabled]="!formData.form.valid">Save</button>
+                                <button type="button" (click)="hideaddform()" class=" btn btn-fill btn-danger" style="margin-left: 2px; ">Close</button>
+                            </div>
+                        </form>
+    
+                    </div>
+                    <div *ngIf="view">
+                            <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">                                            
+                                            <strong>Violation Type: </strong>
+                                            <label>{{Citation.violationType}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="hidden" id="id" [(ngModel)]="Citation.id" name="id" #id="ngModel">
+                                        <strong>Citation Reason: </strong>
+                                        <label>{{Citation.reason}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" (click)="hideaddform()" style="margin-top: 5px;"
+                                class=" btn btn-fill btn-danger">Close</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>

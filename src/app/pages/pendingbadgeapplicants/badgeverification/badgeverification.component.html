@@ -1,0 +1,460 @@
+<div class=" content">
+  <div class=" row">
+      <div class=" col-md-12">
+          <div class="card" >
+              <!-- <br> -->
+             <div class="row">
+              <!-- <div class="col-md-1 text-left"></div> -->
+              <div class="col-md-11 ">
+
+                  <h3 class="card-title" style="padding: 0;">Badge Verification</h3>
+              </div>
+             </div>
+
+              
+              <form #formData="ngForm" (ngSubmit)="GetBadgeVerificationDataByBadgeNoASCX(this.badgeNo)">
+                <div class="row" style="">
+                  <div class="col-md-1 text-left"></div>
+                  <div class="col-md-4 pr-md-1">
+                    <div class="form-group">
+                      <strong> Enter the Security Badge Number : </strong>
+                      <input class="form-control" placeholder="Security Badge Number" 
+                      id="badgeNo"  [(ngModel)]="badgeNo" name="badgeNo" tabindex="0" type="text" (keypress)="onBadgeNoChange($event)"
+                      [disabled]="this.isBadgeNoDisable" maxlength="15" #myInput/>
+                    </div>
+                  </div>
+                  <div class="col-md-1 pr-md-1 pull-left" style="margin-top: 22px; " [hidden]="hideSubmitButton">
+                    <button type="submit" class="btn btn-primary pull-right" style="border: 1px solid black; ">
+                      Submit
+                    </button>
+                  </div>
+                  <div class="col-md-1 pr-md-1 pull-left" style="margin-top: 22px; " [hidden]="!hideSubmitButton">
+                    <button type="button" class="btn btn-warning pull-right" style="border: 1px solid black; " (click)="clearFields()">
+                      Clear
+                    </button>
+                  </div>          
+                </div>
+
+                <!-- <div class="row" style="padding-left: 15px;">
+                  <div class="col-md-1 text-left"></div>
+                  <div class="col-md-2 mt-2" *ngIf="this.active" style="text-align: center;">
+                    <div class="centerDivGreen">
+                      Active Badge
+                    </div>
+                    <div class="col-md-1 text-left"></div>
+                    <div class="col-md-6">
+                      <div class="centerDivGray">
+                        Access Category
+                      </div>
+                    </div>
+                     
+                  </div>
+                 
+                  
+                  <div class="col-md-1 mt-2" *ngIf="this.inactive" style="text-align: center;">
+                    <div class="centerDivRed">
+                      DENY
+                    </div>
+                   
+                  </div>
+                </div> -->
+                <div class="row" style="">
+                  <div class="col-md-1 text-left"></div>
+                
+                  <div class="col-md-5 mt-2 " *ngIf="active">
+                    <div class="centerDivGreen">Active Badge</div>
+                  </div>
+                
+                  <!-- <div class="col-md-5 mt-2" style="margin: 0; padding: 0;" *ngIf="active">
+                    <p class="centerDivGray">Access Category</p>
+                  </div> -->
+                
+                 
+
+                  <div class="col-md-1 mt-2 " *ngIf="inactive">
+                    <div class="centerDivRed">DENY</div>
+                  </div>
+                </div>
+                
+
+                <div class="row" *ngIf="this.inactive" style=" padding-right: 16px;">
+                  <div class="col-md-12">
+                    <label class="fontSetting mt-2">{{ this.advisoryText }}</label>
+                  </div>
+                </div> 
+
+                <!-- <div class="card-body">
+                  <div class="row col-md-12">
+                    <h1>
+                      <span class="badge bg-primary" style="font-size: 1rem;">
+                        Security Badgeholder Information</span>
+                    </h1>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label> {{ badge.company }}</label>
+                      </div>
+                      <div>
+                        <strong> Company </strong>
+                      </div>
+                      
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label> {{ badge.firstName }}</label>&nbsp;
+                        <label> {{ badge.lastName }}</label>
+                      </div>
+                      <div>
+                        <strong> Name </strong>
+                      </div>
+                    </div>              
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label> {{ badge.badgeNumber }}</label>
+                      </div>
+                      <div>
+                        <strong> Badge Number </strong>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label> {{ badge.status }}</label>
+                      </div>
+                      <div>
+                        <strong> Status </strong>
+                      </div>
+                    </div>              
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label>
+                          {{ badge.badgeColor }}</label>
+                      </div>
+                      <div>
+                        <strong> Badge Color </strong>
+                      </div>
+                    </div>  
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label>
+                          {{ badge.expirationDate | date: "MM/dd/yyyy"}}</label>
+                      </div>
+                      <div>
+                        <strong> Expiration Date </strong>
+                      </div>
+                    </div>               
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5 pr-md-1">
+                      <div style="border-bottom: 1px solid black">
+                        <label >{{ badge.Escort }}</label>
+                      </div>                  
+                      <div>
+                        <strong> Escort </strong>
+                      </div>    
+                    </div>  
+                  </div>
+  
+                </div>  -->
+                <div class="card-body" *ngIf="this.showData">
+                  <!-- <div class="row">
+                    <div class="col-md-12 text-center">
+                      <h1>
+                        <span class="badge bg-primary" style="font-size: 1rem">
+                          Security Badgeholder Information
+                        </span>
+                      </h1>
+                    </div> 
+                  </div>-->
+      
+                  <div class="row">
+                    <div class="col-md-1 text-left "></div>
+                    <div class="col-md-5  ">
+                      <img 
+                      *ngIf="badge.Photograph" 
+                      [src]="'data:image/jpeg;base64,' + badge.Photograph" 
+                      class="img-fluid " 
+                      alt="User Photo" 
+                      width="170"
+                    />
+
+                    <h1>
+                      <span class="badge bg-primary mt-4" style="font-size: 1rem; height: inherit;">
+                        Badgeholder Information
+                      </span>
+                    </h1>
+                      <!-- <h4 class="mt-2">{{ badge.FirstName }} {{ badge.LastName }}</h4> -->
+
+                      <div class="mb-2 mt-2">
+                        <strong>Name : </strong>{{ badge.FirstName }} {{ badge.LastName }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Company : </strong> {{ badge.Company }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Badge Number : </strong> {{ badge.BadgeNumber }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Badge Color : </strong> {{ badge.BadgeColor }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Expiration Date : </strong>
+                        {{ badge.ExpirationDate | date : "MM/dd/yyyy" }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Escort Icon : </strong> {{ badge.EscortIcon == 1?"Yes":"No" }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Drivers Icon : </strong> {{ badge.DriversIcon == 1?"Yes":"No" }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Custom Seal : </strong> {{ badge.CustomSeal == 1?"Yes":"No" }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Status:</strong> {{ badge.Status }}
+
+                      </div>
+                      <!-- <div class="mb-2">
+                        <strong>Birth Date:</strong> {{ badge.BirthDate | date : "MM/dd/yyyy" }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Email Address:</strong> {{ badge.EmailAddress }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Mobile Number:</strong> {{ badge.MobileNumber }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Prox Number:</strong> {{ badge.ProxNumber }}
+                      </div>
+                      
+                      <div class="mb-2">
+                        <strong>Issuance Date</strong> {{ badge.IssuanceDate | date : "MM/dd/yyyy"}}
+                      </div> 
+                      
+                      <div class="mb-2">
+                        <strong>Status:</strong> {{ badge.Status }}
+
+                      </div>
+                      <div class="mb-2">
+                        <strong>Person Unique Id:</strong> {{ badge.PersonUniqueId }}
+                      </div> 
+                      <div class="mb-2">
+                        <strong>Street Address:</strong> {{ badge.StreetAddress }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>City:</strong> {{ badge.City }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>State:</strong> {{ badge.State }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>Drivers License No:</strong> {{ badge.DriversLicenseNo }}
+                      </div>
+                      <div class="mb-2">
+                        <strong>DL State:</strong> {{ badge.DlState }}
+                      </div>-->
+                      
+                    </div>
+
+                    
+      
+                   
+                        <!--<div class="col-md-4">
+                    
+                   <div class="mb-2">
+                        <strong>CBP Seal Color:</strong> {{ badge.SealColor }}
+                      </div> 
+                    </div> -->
+      
+                   
+                    <div class="col-md-5">
+                      <!-- <div class="col-md-2 mt-2"  style="text-align: center;"> -->
+                        <div class="centerDivGray">
+                          Access Category
+                        </div>
+                          <!-- <button type="button" class="btn btn-fill btn-success">ACTIVE</button> -->
+                      <!-- </div> -->
+                      <div class="mb-6">
+                        
+                        <!-- <strong>Access Category:</strong>  -->
+                        <div>
+                          <ng-container *ngIf="accessLevels && accessLevels.length > 0; else noAccess">
+                            <table class="table table-striped table-hover table-sm mt-2 table-custom-border">
+                              <tbody>
+                                <tr *ngFor="let access of accessLevels">
+                                  <td>{{ access.accessCategoryName }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </ng-container>
+                          
+                          
+                          
+                          <ng-template #noAccess>
+                            <label class="labelFonts"> No Access Levels </label>
+                          </ng-template>
+                        </div> 
+                      </div>
+                      
+                     
+                    </div>
+                    <div class="col-md-1 "></div>
+                  </div>
+                </div>
+
+                <!-- <div class="card-body" *ngIf="this.showData">
+                  <div class="row">
+                    <div class="row col-md-4">
+                      <h1>
+                        <span class="badge bg-primary" style="font-size: 1rem;">
+                          Security Badgeholder Information</span>
+                      </h1>
+                    </div>                    
+                  </div>
+                  
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <strong class="fonts"> Company: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.Company }}</label>
+                    </div>
+                    
+                    <div class="col-md-1"></div>                    
+                    <div class="col-md-2">
+                      <strong class="fonts"> Name: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.FirstName }}</label>&nbsp;
+                      <label class="labelFonts"> {{ badge.LastName }}</label>
+                    </div>             
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <strong class="fonts"> Badge Number: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.BadgeNumber }}</label>
+                    </div>
+                   
+                    <div class="col-md-1"></div>
+                    
+                    <div class="col-md-2">
+                      <strong class="fonts"> Status: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.Status }}</label>
+                    </div>          
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <strong class="fonts"> Badge Color: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.BadgeColor }}</label>
+                    </div> 
+                    
+                    <div class="col-md-1"></div>
+                    
+                    <div class="col-md-2">
+                      <strong class="fonts"> Expiration Date: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.ExpirationDate | date: "MM/dd/yyyy"}}</label>
+                    </div>            
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <strong class="fonts"> Escort: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.Escort }}</label>
+                    </div> 
+                    
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                      <strong class="fonts"> Driver: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.BadgeIcon }}</label>
+                    </div> 
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <strong class="fonts">CBP Seal Color: </strong>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="labelFonts"> {{ badge.SealColor}}</label>
+                    </div> 
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                      <strong class="fonts"> Access Level: </strong>
+                    </div>
+                  
+                    <div class="col-md-3">
+                      <ng-container *ngIf="accessLevels && accessLevels.length > 0; else noAccess">
+                        <ul class="labelFonts" style="list-style: none; padding-left: 0; margin-bottom: 0;">
+                          <li *ngFor="let access of accessLevels">{{ access.accessCategoryName  }}</li>
+                        </ul>
+                      </ng-container>
+                      <ng-template #noAccess>
+                        <label class="labelFonts"> No Access Levels </label>
+                      </ng-template>
+                    </div> 
+                  </div>
+
+                </div> -->
+
+              </form>
+               
+              
+              <!-- <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover" 
+                  datatable [dtOptions]="dtOptions"
+                      [dtTrigger]="dtTrigger" id="dt1">
+                      <thead>
+                          <tr style="background-color:#003594">
+                              <th>Company</th>                              
+                              <th>Last Name</th>
+                              <th>First Name</th>
+                              <th>Badge Number</th>
+                              <th>Status</th>
+                              <th>Badge Color</th>
+                              <th>Expiration Date</th>
+                              <th>Escort</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let badge of badgeVerificationList">
+                              <td>{{badge.company}}</td>
+                              <td>{{badge.lastName}}</td>
+                              <td>{{badge.firstName}}</td>
+                              <td>{{badge.badgeNumber}}</td>
+                              <td>{{badge.status}}</td>
+                              <td>{{badge.badgeColor}}</td>
+                              <td>{{badge.expirationDate}}</td>
+                              <td>{{badge.escort}}</td>                              
+                          </tr>
+                      </tbody>
+
+                  </table>                      
+                </div>                  
+              </div> -->        
+
+          </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,529 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <form
+        class="card"
+        #formData="ngForm"
+        (ngSubmit)="saveUser(formData)"
+        autocomplete="off"
+        novalidate
+      >
+        <!--  fake fields are a workaround for chrome/opera autofill getting the wrong fields -->
+        <input
+          id="username"
+          style="display: none"
+          type="text"
+          name="fakeusernameremembered"
+        />
+        <input
+          id="password"
+          style="display: none"
+          type="password"
+          name="fakepasswordremembered"
+        />
+        <div class="col-md-6" *ngIf="!isEdit">
+          <h3 class="card-title">Add User</h3>
+        </div>
+        <div class="col-md-6" *ngIf="isEdit">
+          <h3 class="card-title">Edit User</h3>
+        </div>
+
+        <div class="card-body">
+          <input
+            type="hidden"
+            id="id"
+            [(ngModel)]="this.User.id"
+            name="id"
+            #name="ngModel"
+            value=""
+          />
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label> Role </label>
+                <!-- <select (change)="onRoleChange($event)" id="roleid" #roleid="ngModel" class="form-control" required
+                  [(ngModel)]="User.roleId" name="roleid" required>
+                  <option disabled selected value>Select Role</option>
+                  <option [value]="k.id" [innerHtml]="k.displayName" *ngFor="let k of roleList">
+                  </option>
+                </select> -->
+
+                <ng-select
+                  appendTo="body"
+                  id="roleid"
+                  #select
+                  [items]="roleList"
+                  bindLabel="displayName"
+                  placeholder="Select Role"
+                  bindValue="id"
+                  [(ngModel)]="User.roleId"
+                  appearance="outline"
+                  name="roleid"
+                  required
+                  (change)="onRoleChange(this.User.roleId)"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-6 pr-md-1">
+              <!-- *ngIf="this.User.rolename == 'AuthSigner'" -->
+              <div class="form-group">
+                <label> Company </label>
+
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Company'"
+                  [data]="allCompanyList"
+                  [(ngModel)]="selectedCompany"
+                  [settings]="dropdownSettings"
+                  (onSelect)="onItemSelect($event)"
+                  (onSelectAll)="onSelectAll($event)"
+                  name="ddlCompany"
+                  #ddlCompany="ngModel"
+                ></ng-multiselect-dropdown>
+
+                <!-- <select
+                  id="companyid"
+                  #Id="ngModel"
+                  class="form-control"
+                  [(ngModel)]="User.companyId"
+                  name="companyid"
+                  required
+                >
+                  <option value="0" disabled>Select Company</option>
+                  <option [ngValue]="k.id" *ngFor="let k of allCompanyList">
+                    {{ k.companyName }}
+                  </option>
+                </select> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 pr-md-1 pt-md-2">
+              <div class="form-group">
+                <label for="exampleInputEmail1"> Email address </label>
+                <input
+                  class="form-control"
+                  placeholder="email"
+                  type="email"
+                  [(ngModel)]="User.email"
+                  name="email"
+                  required
+                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,9})+$"
+                  [disabled]="isEdit"
+                  autocomplete="new-email"
+                />
+              </div>
+            </div>
+            <div class="col-md-6 pl-md-1 pt-md-2">
+              <div
+                class="form-group"
+                *ngIf="!this.User.isADAuthenticated && !isEdit"
+              >
+                <label> Password </label>
+                <input
+                  class="form-control"
+                  placeholder="Password"
+                  type="password"
+                  [(ngModel)]="User.password"
+                  name="password"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+              <div
+                class="form-group"
+                *ngIf="!this.User.isADAuthenticated && isEdit"
+              >
+                <label> Password </label>
+                <input
+                  class="form-control"
+                  placeholder="Password"
+                  type="password"
+                  [(ngModel)]="User.newPassword"
+                  name="newPassword"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 pr-md-1 pt-md-2">
+              <div class="form-group">
+                <label> First Name </label>
+                <input
+                  class="form-control"
+                  placeholder="First Name"
+                  type="text"
+                  [(ngModel)]="User.firstName"
+                  name="firstName"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6 pl-md-1 pt-md-2">
+              <div class="form-group">
+                <label> Last Name </label>
+                <input
+                  class="form-control"
+                  placeholder="Last Name"
+                  type="text"
+                  [(ngModel)]="User.lastName"
+                  name="lastName"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 pr-md-1 pt-md-2">
+              <div class="form-group">
+                <label> Address </label>
+                <textarea
+                  rows="3"
+                  class="form-control"
+                  placeholder="Address"
+                  type="text"
+                  [(ngModel)]="User.address"
+                  name="address"
+                >
+                </textarea>
+              </div>
+            </div>
+            <!-- <div class="col-md-2 pl-md-1 pt-md-2">
+              <div class="form-group">
+                <label> Country Code </label>
+                
+                <ng-select
+                    appendTo="body"
+                    id="countryCode"
+                    #select
+                    [items]="countrycode"
+                    bindLabel="label"
+                    placeholder="Select Code"
+                    bindValue="value"
+                    [(ngModel)]="User.countryCode"
+                    appearance="outline"
+                    name="countryCode"
+                    
+                  >
+                  </ng-select>
+              </div>
+            </div> -->
+            <div class="col-md-6 pl-md-1 pt-md-2">
+              <div class="form-group">
+                <label> Mobile Number </label>
+                <!-- <input class="form-control" placeholder="Phone Number" type="text" [(ngModel)]="User.phoneNumber"
+                  name="phoneNumber" pattern="^((\\+91-?)|0)?[0-9]{10}$" required/> -->
+
+                <input
+                  class="form-control"
+                  type="text"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  [(ngModel)]="User.phoneNumber"
+                  (keypress)="formatUserPhoneNumber()"
+                  maxlength="14"
+                  [required]="
+                    this.User.userAuthenticationSms ? 'true' : 'false'
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 pt-md-2">
+              <div class="form-group">
+                <label for="checkbox"> Active Directory Authenticated </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isADAuthenticated"
+                      [(ngModel)]="this.User.isADAuthenticated"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="CheckBoxChange($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- Username -->
+            <div class="col-md-3 pl-md-1 pt-md-2">
+              <div class="form-group" *ngIf="this.User.isADAuthenticated">
+                <label> User Name </label>
+                <input
+                  class="form-control"
+                  placeholder="AD User Name"
+                  type="text"
+                  [(ngModel)]="User.adUserName"
+                  name="adUserName"
+                  required
+                />
+                <!--  this.saveReason(citationReason, formData); -->
+              </div>
+            </div>
+            <div
+              *ngIf="!isConcessionaireUser || isAuthsigner"
+              class="col-md-3 pt-md-2"
+            >
+              <div class="form-group">
+                <label for="checkbox">Badge Audit Privilege </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isBadgeAudit"
+                      [(ngModel)]="this.User.isBadgeAudit"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="CheckBoxChangeBadgeAudit($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="!isConcessionaireUser || isAuthsigner"
+              class="col-md-3 pt-md-2"
+            >
+              <div class="form-group">
+                <label for="checkbox">AWS Approver Privilege </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isTsaApprover"
+                      [(ngModel)]="this.User.isTsaApprover"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="checkBoxChangeTsaUser($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div
+              *ngIf="!isConcessionaireUser || isAuthsigner"
+              class="col-md-3 pt-md-2"
+            >
+              <div class="form-group">
+                <label for="checkbox">AWS Scheduler Privilege </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isTsaScheduler"
+                      [(ngModel)]="this.User.isTsaScheduler"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="checkBoxChangeTsaUserForScheduler($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="isConcessionaireUser || isAuthsigner"
+              class="col-md-3 pt-md-2"
+            >
+              <div class="form-group">
+                <label for="checkbox">PI checkout Privilege </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">                  
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isPicheckout"
+                      [(ngModel)]="this.User.isPicheckout"                     
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="checkBoxChangePICheckout($event)"
+                      style="font-size: 20px"
+                    />
+
+                    &nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isConcessionaireUser || isAuthsigner" class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-3 pt-md-2">
+              <div class="form-group">
+                <label for="checkbox">PI audit Privilege </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">                   
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isAuditor"
+                      [(ngModel)]="this.User.isAuditor"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="checkBoxChangePIAudit($event)"
+                      style="font-size: 20px"
+                    />
+                    &nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3 pt-md-4">
+              <div class="form-group">
+                <label for="checkbox">Two Factor Authentication </label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isUserAuthenticated"
+                      [(ngModel)]="this.User.isUserAuthenticated"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="AuthenticationCheckBoxChange($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-2 px-md-1 pt-md-4"
+              *ngIf="this.User.isUserAuthenticated"
+            >
+              <div class="form-group">
+                <label for="checkbox"> Email Authentication </label>
+
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.userAuthenticationEmail"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="UserCheckBoxChangeEmail($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-2 px-md-1 pt-md-4"
+              *ngIf="this.User.isUserAuthenticated"
+            >
+              <div class="form-group">
+                <label for="checkbox"> SMS Authentication </label>
+
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.userAuthenticationSms"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="UserCheckBoxChangeSms($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-md-2 px-md-1 pt-md-4" *ngIf="this.User.isUserAuthenticated">
+              <div class="form-group">
+                <label for="checkbox">Both</label>
+            
+                <div class="form-check" style="margin-left: 10px;">
+                  <label class="form-check-label">
+                    <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.User.userAuthenticationBoth"
+                      [(ngModel)]="this.User.userAuthenticationBoth" [ngModelOptions]="{ standalone: true }"
+                      (click)="UserCheckBoxChange($event, 3)" style=" font-size: 20px; " />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div> -->
+          </div>
+
+          <!-- <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="checkbox">TSA</label>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" [checked]="this.User.isTSA"
+                      [(ngModel)]="this.User.isTSA" [ngModelOptions]="{ standalone: true }"
+                      (click)="tsaCheckBoxChange($event)" />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"> </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div style="text-align: center; padding-top: 10px">
+            <button
+              class="btn btn-fill btn-success"
+              type="submit"
+              [disabled]="!formData.form.valid"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn-fill btn-danger"
+              style="margin-left: 4px"
+              (click)="showlist()"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

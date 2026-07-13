@@ -1,0 +1,57 @@
+h3{
+    padding-left: 10px;
+  }
+  .logo-img {
+    width: 75px !important;
+    height:75px !important;
+    //background-color: #003594;
+  }
+  .logo-img img{
+    width: 75px !important;
+    height:70px !important;
+  }
+
+  
+.filedisplay div{
+  float:left;
+  overflow:auto;
+  margin:15px;
+  background-color: whitesmoke;
+  padding: 5px;
+  border: 1px silver solid;
+  border-radius: 5px;
+}
+.filedisplay span{
+  padding-left:5px;
+  padding-right:5px
+}
+
+b, strong {
+  font-weight: 500 !important;
+}
+
+// @media print {
+//     .content{      
+//       padding-left: 0px !important;
+//     }
+// }
+.filedisplay a img{
+  width: 40px;
+  height: 40px;
+}
+
+.imagescale{
+  height: 100px;
+  width: 100px;
+}
+
+.fontFormat{
+  text-align: justify;
+  //text-justify: inter-word;
+  font-size: 14; 
+  //color: #e9ecef;
+  color:white;
+  background-color: #003594;
+  padding: 4px 4px 4px 10px;
+  font-weight: 400;
+  }

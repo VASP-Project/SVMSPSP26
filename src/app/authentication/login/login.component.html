@@ -1,0 +1,141 @@
+<div class="row"
+    style="height: 750px;background-repeat: no-repeat;background-size:cover;width: 100%; margin-left: 0px;  background-image:url('assets/img/login40.jpg')">
+    <div class="col-11 col-sm-10 col-md-6 col-lg-5 col-xl-4 mx-auto mt-5">
+        <!-- <div class="alert alert-info">
+            Username: test<br />
+            Password: test
+        </div> -->
+        <div class="card"
+            style="background-color: #7B913B; text-align: center;border: aliceblue;border-style: solid;">
+            <h2 class="card-header" style="color: #484D56;font-weight: 600;">Airport SEMS Login</h2>
+            <div style="background-color:#fcfafa;">
+                <img src="assets/logos/Client2/PSP_full-color_h_cmyk.png" class="img-fluid" style="height:100px" />
+                <!-- <img src="assets/ICS_Software-logos/ICS Software-logos_white.png" style="height:100px"/> -->
+            </div>
+            <div class="card-body">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit(template)">
+                    <div class="form-group">
+                        <label for="username" style="color:#ffffff">Username</label>
+                        <input type="text" formControlName="username" class="form-control" id="username" name="username"
+                            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required />
+                        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                            <div *ngIf="f.username.errors.required">Username is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="!isForgotPassword">
+                        <label for="password" style="color:#ffffff">Password</label>
+                        <input type="password" formControlName="password" class="form-control" id="password"
+                            name="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                            <div *ngIf="f.password.errors.required">Password is required</div>
+                        </div>
+                    </div>
+
+                    <button [disabled]="loading" class="btn btn-primary mt-3" *ngIf="!isForgotPassword" id="btnLogin1"
+                        name="btnLogin1" style="background-color: #484D56 !important">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Login
+                    </button>
+
+                    <button [disabled]="loading" class="btn btn-primary mt-2" *ngIf="isForgotPassword" id="btnSubmit"
+                        name="btnSubmit" style="background-color: #484D56 !important">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Submit
+                    </button>
+
+                    <div class="form-group mt-2" *ngIf="!isForgotPassword" style="cursor: pointer">
+                        <a type="button" class="link"
+                            style="color: #484D56;font-size: 17px;background-color: aliceblue;padding: 3px;border-radius: 8px;"
+                            (click)="forgotPassword()">Forgot Password?</a>
+                    </div>
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                </form>
+                <button type="button" *ngIf="isForgotPassword" class="btn btn-primary mt-2" id="btnLogin" style="background-color: #484D56 !important"
+                    name="btnLogin" (click)="onSubbmitLogin()">Login</button>
+
+                <button type="button" class="btn btn-primary mt-2" id="btnLoginSSO" name="btnLoginSSO" style="background-color: #484D56 !important"
+                    *ngIf="getSsoValue === 'true'"  (click)="loginSSO()">SSO Login</button>
+
+                <button type="button" class="btn btn-primary mt-2" id="btnLoginSSO" name="btnLoginSSO" style="background-color: #484D56 !important"
+                   *ngIf="getSsoValue !== 'true'" (click)="loginWithMicrosoft()">SSO Login</button>
+
+                <!-- <button type="button" class="btn btn-primary mt-2" id="btnLoginOkta" name="btnLoginOkta"
+                    (click)="loginOkta()">Okta Login</button> -->
+
+            </div>
+            <ng-template #template let-modal>
+
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title" style="color: #484D56; font-weight: bold;">
+                        Verify Identity - Authentication Code </h4>
+                    <button type="button" class="close" aria-label="Cancel" (click)="close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form #formData="ngForm" (keyup.enter)="onAuthCodeSubmit()">
+                        <span> We are now sending <span *ngIf="this.emailid != ''"> an email</span>
+                            <span *ngIf="this.emailid != '' && this.phone != ''">,</span>
+                            <span *ngIf="this.phone != ''"> SMS </span>
+                            containing a confirmation code to your following
+                            <span *ngIf="this.emailid != ''"> email address</span><span
+                                *ngIf="this.phone == ''">.</span>
+                            <span *ngIf="this.emailid != '' && this.phone != ''">,</span>
+                            <span *ngIf="this.phone != ''"> mobile number.</span>
+                            <br><br>
+                            <span *ngIf="this.emailid != ''"><strong> Your email address: {{ email }} </strong>
+                                <br></span>
+                            <span *ngIf="this.phone != ''"><strong> Your mobile number: {{ phone }} </strong><br></span>
+                        </span>
+                        <br>
+                        <span>Enter the confirmation code below. After entering the confirmation code, you will be
+                            authorized to continue.</span> <br><br>
+                        <span>If you didn't receive the <span *ngIf="this.emailid != ''"> email </span>
+                            <span *ngIf="this.emailid != '' && this.phone != ''">OR</span>
+                            <span *ngIf="this.phone != ''"> SMS </span>
+                            within 5 minutes or had other problems wait for</span>&nbsp;
+                        <strong *ngIf="!showresend">{{ display }}</strong>&nbsp; <button *ngIf="showresend"
+                            type="button" class="btn btn-primary" (click)="resendcode()"
+                            style="margin-left: 5px;">Resend</button>
+                        <br>
+                        <br>
+
+                        <label><strong>Confirmation Code:</strong> </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" name="code" ngbAutoFocus [(ngModel)]="this.authenticationcode"
+                            placeholder="Confirmation Code" autocomplete="off">
+                        <br><br><br>
+                        <strong>Would You Like Us to Remember this Computer? </strong><br>
+
+                        <input id="yes" type="radio" value="yes" name="saveuser" checked="this.saveuseryes"
+                            (click)="saveuser(1)">&nbsp;
+                        <label class="custom-control-label" for="yes"> Yes. I plan to use this computer in the future to
+                            access my account.</label>
+                        <br>
+                        <input id="no" type="radio" value="no" name="saveuser" (click)="saveuser(0)">&nbsp;
+                        <label class="custom-control-label" for="no"> No. This is a public computer or one I do not plan
+                            on using often to access my account.</label>
+
+
+                        <div style="text-align: center; padding-top: 5px;">
+                            <button type="submit" class="btn btn-success" style="margin-right: 5px;"
+                                (click)="onAuthCodeSubmit()">Submit</button>
+
+                        </div>
+                    </form>
+                </div>
+
+            </ng-template>
+        </div>
+    </div>
+
+
+
+</div>
+<div style="text-align: center;">
+    <p>ICS Software @Copyright {{this.year}} </p>
+</div>
+
+<!-- <button type="button" style="display: none;" id="btnModal" class="btn btn-primary"
+    (click)="openModal(template)"></button> -->

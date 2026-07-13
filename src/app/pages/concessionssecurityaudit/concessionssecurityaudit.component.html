@@ -1,0 +1,481 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12">
+          <h3 class="card-title">Prohibited Item Audit</h3>
+          <div class="container-fluid mt-3">
+            <!-- Tabs -->
+            <!-- <ul *ngIf="isAuthsigner || isConcessionaireUser" class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Daily PI Logs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">PI Listing Activity</a>
+              </li>
+            </ul> -->
+            <!-- Filters -->
+            <div class="row" *ngIf="isStaffAdmin">
+              <div class="col-md-3 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;">
+                <div class="form-group">
+                  <strong> From Date </strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <input class="form-control" type="text" (click)="fromDate.toggle()" ngbDatepicker
+                      #fromDate="ngbDatepicker" [(ngModel)]="fromToDates.fromDate" name="fromDate"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class=" col-md-3 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;">
+                <div class=" form-group">
+                  <strong> To Date </strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <input class="form-control" type="text" (click)="toDate.toggle()" ngbDatepicker
+                      #toDate="ngbDatepicker" [(ngModel)]="fromToDates.toDate" name="this.toDate"
+                      placeholder="mm/dd/yyyy" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 pr-md-1 mt-3">
+                <div class="form-group">
+                  <span class="btn btn-primary" (click)="basicSearchAudit()">
+                    <i class="bi bi-search"></i>&nbsp;Search
+                  </span>
+                </div>
+              </div>
+
+
+
+              <div class="col-md-3  pr-md-1 pl-md-1 testareawidth" *ngIf="isStaffAdmin">
+                <div class="form-group">
+                  <strong>Company:</strong>
+                  <div class="input-group" style="padding-right: 5px;">
+                    <select class="form-select" style="width: 200px" [(ngModel)]="onselectedCompany"
+                      name="companySelect" (ngModelChange)="onCompanySelected()">
+                      <option [ngValue]="null">All Companies</option>
+                      <option *ngFor="let company of allCompanyList" [ngValue]="company">
+                        {{ company.companyName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+
+
+                <!-- <button class="btn btn-primary" (click)="onCompanyGo()">Go</button> -->
+              </div>
+            </div>
+            <!-- <div class="row mt-3 align-items-end"> -->
+            <!-- <div class="col-md-3">
+                <label>From Date</label>
+                <input type="date" class="form-control" [(ngModel)]="fromDate" />
+              </div>
+              <div class="col-md-3">
+                <label>To Date</label>
+                <input type="date" class="form-control" [(ngModel)]="toDate" />
+              </div>
+              <div class="col-md-3 d-flex ">
+                <button class="btn btn-primary" (click)="search()">
+                  Search
+                </button>
+                <button class="btn btn-primary ms-1">Advanced Search</button>
+              </div> -->
+
+            <!-- <div class="col-md-3 text-right">
+                <select class="form-control d-inline-block w-auto" [(ngModel)]="selectedLogType">
+                  <option disabled selected>Start Log</option>
+                  <option>PI Check Out Log</option>
+                  <option>Daily Audit Log</option>
+                </select>
+                <button class="btn btn-primary ml-2">Go</button>
+              </div> -->
+            <!-- </div> -->
+
+            <!-- Export Buttons -->
+            <!-- <div class="mt-3">
+              <button class="btn btn-secondary btn-sm ms-1">Copy</button>
+              <button class="btn btn-secondary btn-sm ms-1">Excel</button>
+              <button class="btn btn-secondary btn-sm ms-1">CSV</button>
+              <button class="btn btn-secondary btn-sm ms-1">Print</button>
+            </div> -->
+
+            <!-- Data Table -->
+            <div *ngIf="!isMobileView" class="table-responsive mt-3" style="overflow-x: auto; width: 100%">
+              <table id="dt1" class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead style="background-color: #484D56; color: white">
+                  <tr>
+                    <th>Audit Id</th>
+                    <th>Company Name</th>
+                    <th>Terminal / Location(s)</th>
+                    <th *ngIf="isAuthsigner">Daily Audit Count</th>
+                    <th *ngIf="!isAuthsigner">Audit No</th>
+                    <th>Submitted Date</th>
+                    <th *ngIf="isStaffAdmin">Submitted By</th>
+                    <!-- <th>Closed Audit</th> -->
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let log of prohibitedList">
+                    <td>{{ log.dailyAuditId }}</td>
+                    <td>{{ log.companyName }}</td>
+                    <td>{{ log.location }}</td>
+                    <ng-container *ngIf="
+                        isAuthsigner || isConcessionaireUser;
+                        else showAuditNo
+                      ">
+                      <td>
+                        {{ log.completedAuditCount }} /
+                        {{ log.dailyAuditCount }}
+                      </td>
+                    </ng-container>
+                    <ng-template #showAuditNo>
+                      <td>{{ log.auditNo }}</td>
+                    </ng-template>
+                    <!-- <td *ngIf="isAuthsigner || isConcessionaireUser">{{ log.completedAuditCount }} / {{ log.dailyAuditCount }}</td>
+                    <td *ngIf="!isAuthsigner">{{ log.auditNo }}</td> -->
+                    <td>
+                      {{ log.auditedDateTime | date : "MM/dd/yyyy HH:mm" }}
+                    </td>
+                    <td *ngIf="isStaffAdmin">
+                      {{ log.auditSubmittedBy }}
+                    </td>
+                    <!-- <td>
+                      <input *ngIf="
+                          isAuthsigner" class="form-check-input checkbox-size" type="checkbox" [(ngModel)]="log.isCompletedAudit"
+                        [ngModelOptions]="{ standalone: true }" (ngModelChange)="checkBoxChange($event,log.id)"
+                        style="font-size: 20px" />
+
+                      &nbsp;
+                      <span class="form-check-sign">
+                        <span class="check"> </span>
+                      </span>
+                    </td> -->
+                    <td>
+
+
+                      <button *ngIf="
+                          isAuthsigner
+                           &&
+                            (log.completedAuditCount != log.dailyAuditCount)
+                        " class="btn btn-success btn-sm" [disabled]="isAuditCompleted(log.audits)"
+                        (click)="openModalInspection(log, template2)">
+                        Conduct Audit
+                      </button>
+
+
+                      <div *ngIf="isStaffAdmin">
+
+
+                        <button *ngIf="isStaffAdmin" class="btn btn-primary btn-sm"
+                          [disabled]="isAuditCompleted(log.audits)" (click)="openModalInspection(log, template2)">
+                          <i class="bi bi-eye" title="View Details"></i>
+                        </button>
+                        &nbsp;
+                        <label style="
+                          cursor: pointer;
+                          color: blue;
+                          text-decoration: underline;
+                        " (click)="
+                          goToCitationPage(log.citationNo, log.dailyAuditId)
+                        ">
+                          {{ log.citationNo }}
+                        </label>
+
+                        <button *ngIf="log.citationNo == null" class="btn btn-warning btn-sm"
+                          [routerLink]="['/admin/nov/details']" [queryParams]="{
+                          isEdit: 1,
+                          isProhibitedAudit: true,
+                          companyId: log.companyId,
+                          auditId: log.dailyAuditId
+                        }" skipLocationChange>
+                          <i class="bi bi-pencil" title="Add NOV"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="isMobileView">
+              <div class="card-body">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  <label>Rows</label>
+                  <select [(ngModel)]="queryParam1.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+                <div class="list-group">
+                  <a *ngFor="
+                      let log of pagedProhibitedItemList;
+                      trackBy: identify
+                    " class="list-group-item list-group-item-action prohibited-card">
+                    <div class="row mb-2">
+                      <div class="col-12">
+                        <strong>Company Name:</strong> {{ log.companyName }}
+                      </div>
+                      <div class="col-12">
+                        <strong>Terminal / Location(s):</strong>
+                        {{ log.location }}
+                      </div>
+
+                      <div class="col-12" *ngIf="isAuthsigner || isConcessionaireUser">
+                        <strong>Daily Audit Count:</strong>
+                        {{ log.completedAuditCount }} /
+                        {{ log.dailyAuditCount }}
+                      </div>
+                      <div class="col-12" *ngIf="!isAuthsigner">
+                        <strong>Audit No:</strong> {{ log.auditNo }}
+                      </div>
+
+                      <div class="col-12">
+                        <strong>Submitted Date:</strong>
+                        {{ log.auditedDateTime | date : "MM/dd/yyyy HH:mm" }}
+                      </div>
+
+                      <div class="col-12" *ngIf="isStaffAdmin">
+                        <strong>Submitted By:</strong>
+                        {{ log.auditSubmittedBy }}
+                      </div>
+                      <div class="col-12 mt-2 d-flex flex-wrap gap-2">
+                        <!-- Conduct Audit Button -->
+                        <button *ngIf="
+                            isAuthsigner 
+                             &&
+                             ( log.completedAuditCount != log.dailyAuditCount)
+                          " class="btn btn-success btn-sm" [disabled]="isAuditCompleted(log.audits)"
+                          (click)="openModalInspection(log, template2)">
+                          Conduct Audit
+                        </button>
+
+                        <!-- Staff Admin View Button -->
+                        <div *ngIf="isStaffAdmin">
+                          <button *ngIf="isStaffAdmin" class="btn btn-primary btn-sm"
+                            [disabled]="isAuditCompleted(log.audits)" (click)="openModalInspection(log, template2)">
+                            <i class="bi bi-eye" title="View Details"></i>
+                          </button>&nbsp;
+
+                          <!-- Citation Number -->
+                          <span class="btn btn-link p-0" style="
+                            color: blue;
+                            text-decoration: underline;
+                            font-size: 14px;
+                          " (click)="
+                            goToCitationPage(log.citationNo, log.dailyAuditId)
+                          ">
+                            {{ log.citationNo }}
+                          </span>
+
+                          <!-- Add NOV Button -->
+                          <button *ngIf="log.citationNo == null " class="btn btn-warning btn-sm"
+                            [routerLink]="['/admin/nov/details']" [queryParams]="{
+                            isEdit: 1,
+                            isProhibitedAudit: true,
+                            companyId: log.companyId,
+                            auditId: log.dailyAuditId
+                          }">
+                            <i class="bi bi-pencil" title="Add NOV"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  <ngb-pagination [(page)]="pageHeaders1.pageNumber" [pageSize]="pageHeaders1.pageSize"
+                    [collectionSize]="pageHeaders1.totalItems" [maxSize]="1" (pageChange)="onPageChange($event)">
+                    <ng-template ngbPaginationPrevious>Prev</ng-template>
+                    <ng-template ngbPaginationNext>Next</ng-template>
+                  </ngb-pagination>
+                </div>
+                <div class="d-flex bd-highlight">
+                  <div class="p-2 flex-grow-1 bd-highlight">
+                    Showing total {{ pageHeaders1.totalItems }} entries
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #opdAlert let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Alert</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Close click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-danger fw-bold">You must immediately notify OPD.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" (click)="modal.close('Ok')">OK</button>
+      </div>
+    </ng-template>
+    <!-- Perform Audit Modal -->
+    <ng-template #template2 let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title card-title">
+          Perform Audit For Company : <br />{{ selectedCompany }} at {{ selectedcompanylocation }}
+        </h5>
+
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Close click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <br />
+      <div class="d-flex justify-content-between align-items-center p-2">
+        <h5 class="mb-0 font-weight-bold">
+          <b>Performing Audit {{ selectedAuditCount }}</b>
+        </h5>
+        <h5 class="mb-0 font-weight-bold">
+          <b>{{ submitteddate | date : "MM/dd/yyyy HH:mm" }}</b>
+        </h5>
+      </div>
+      <h3 style="text-align: center"></h3>
+      <div *ngIf="!isMobileView" class="modal-body table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+          <thead style="background-color: #484D56; color: white">
+            <tr>
+              <th>Photo</th>
+              <th>Item Id</th>
+              <th>Description</th>
+              <th>Check Out Location</th>
+              <th>Accountable</th>
+              <th>Unaccountable</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of prohibitedItemList">
+              <td style="width: 10%">
+                <img *ngIf="item.thumbnailUrl != null" [src]="item.thumbnailUrl" width="80" height="80"
+                  alt="Item Image" />
+              </td>
+              <td>{{ item.itemId }}</td>
+              <td>{{ item.shortDescription }}</td>
+              <td>{{ item.checkOutLocationName }}</td>
+              <td>
+                <ng-container *ngIf="isAuthsigner || isConcessionaireUser">
+                  <button class="btn btn-primary btn-sm" (click)="confirmAudit(item, 'true')">
+                    Accountable
+                  </button>
+                </ng-container>
+                <br />
+                <ng-container *ngIf="item.auditStatus === 'true'">
+                  <span class="badge" style="color: #06d79c; font-weight: bold">Accountable</span>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="isAuthsigner || isConcessionaireUser">
+                  <button class="btn btn-danger btn-sm" (click)="confirmAudit(item, 'false')">
+                    Unaccountable
+                  </button>
+                </ng-container>
+                <br />
+                <ng-container *ngIf="item.auditStatus === 'false'">
+                  <span class="badge" style="color: #ff0000; font-weight: bold">Unaccountable</span>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Mobile View Version -->
+      <div *ngIf="isMobileView" class="card-body">
+        <div class="list-group">
+          <a *ngFor="let item of prohibitedItemList; trackBy: identify"
+            class="list-group-item list-group-item-action prohibited-card">
+            <div class="row mb-2">
+              <div class="col-12 my-2" *ngIf="item.thumbnailUrl">
+                <img [src]="item.thumbnailUrl" (click)="openImageModal(item.originalImage)" alt="Item Image" style="
+                    max-width: 100px;
+                    height: auto;
+                    border-radius: 6px;
+                    cursor: pointer;
+                  " />
+              </div>
+
+              <div class="col-12">
+                <strong>Item ID:</strong> {{ item.itemId }}
+              </div>
+
+              <div class="col-12">
+                <strong>Description:</strong> {{ item.shortDescription }}
+              </div>
+
+              <div class="col-12">
+                <strong>Check Out Location:</strong>
+                {{ item.checkOutLocationName }}
+              </div>
+
+              <div class="col-12 mt-2">
+                <strong>Accountable:</strong><br />
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                  <button *ngIf="isAuthsigner || isConcessionaireUser" class="btn btn-primary btn-sm"
+                    (click)="confirmAudit(item, 'true')">
+                    Accountable
+                  </button>
+
+                  <span *ngIf="item.auditStatus === 'true'" class="badge" style="color: #06d79c; font-weight: bold">
+                    Accountable
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-12 mt-2">
+                <strong>Unaccountable:</strong><br />
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                  <button *ngIf="isAuthsigner || isConcessionaireUser" class="btn btn-danger btn-sm"
+                    (click)="confirmAudit(item, 'false')">
+                    Unaccountable
+                  </button>
+
+                  <span *ngIf="item.auditStatus === 'false'" class="badge" style="color: #ff0000; font-weight: bold">
+                    Unaccountable
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      
+      <div class="modal-footer d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center flex-grow-1">
+          <label for="comment" class="font-weight-bold mb-0 me-3">Comment</label>
+          <textarea id="comment"  [(ngModel)]="prohibitedItemModel.auditComment"
+                    name="comment" 
+                   
+                    class="form-control"
+                    rows="1"
+                    style="width: 80%; min-width: 180px;" [readonly]="isStaffAdmin"
+                    placeholder="Enter comment"></textarea>
+        </div>
+
+        <div class="d-flex align-items-center ms-3">
+          <button class="btn btn-primary me-2"
+                  (click)="submitAudit(modal)"                 
+                  [disabled]="isAllItemsConfirmed()"
+                  *ngIf="isAuthsigner || isConcessionaireUser">
+            Submit Audit
+          </button>
+
+          <button type="button"
+                  class="btn btn-fill btn-danger"
+                  (click)="modal.dismiss('Close click')">
+            Close
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

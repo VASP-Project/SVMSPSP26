@@ -1,0 +1,51 @@
+<div class=" content">
+  <div class=" row">
+      <div class=" col-md-12">
+          <div class="card" >
+              <!-- <br> -->
+              <div class="col-md-12">
+                  <h3 class="card-title">Inspection Types</h3>
+                  <button type="button" class="btn btn-primary" style="float: right; margin-right: 18px;" 
+                  [routerLink]="['/admin/inspectiontypeedit']"
+                      [queryParams]="{ isEdit: 0, isView: 0 }" skipLocationChange>
+                      Add Inspection Type
+                  </button>
+              </div>
+              <div class="card-body">                 
+                  <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                      [dtTrigger]="dtTrigger" id="dt1">
+                      <thead>
+                          <tr style="background-color: #484D56; color: white;">
+                              <th>Inspection Category</th>
+                              <th>Inspection Type</th>
+                              <th>Action</th>                              
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let inspectionType of inspectiontypes" (click)="viewInspectionType(inspectionType.id)"
+                              class="pointerCursor">
+                              <td>{{inspectionType.inspectionType}}</td>
+                              <td>{{inspectionType.displayName}}</td>
+                              <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                  <div>
+                                      <button class="btn btn-warning btn-sm" (click)="editInspectionType(inspectionType.id,inspectionType.inspectionType)"
+                                          >
+                                          <span><i class="bi bi-pencil"></i>
+                                          </span></button>
+                                      &nbsp;
+                                      <button type="button" class="btn btn-danger btn-sm"
+                                          (click)="deleteInspectionType(inspectionType.id)">
+                                          <span><i class="bi bi-trash"></i>
+                                          </span>
+                                      </button>
+                                  </div>
+                              </td>
+                          </tr>
+                      </tbody>
+
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

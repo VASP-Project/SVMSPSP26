@@ -1,0 +1,278 @@
+// @import "~ng-pick-datetime/assets/style/picker.min.css";
+.owl-dateTime-dialog { width: auto !important; }
+.is-added
+{
+  background-color: cadetblue;
+}
+.actionBtn {
+    font-size: 4em;
+    cursor: pointer;
+  }
+  
+  .snapshot {
+    text-align: center;
+    img {
+      max-width: 800px;
+      max-height: 800px;
+    }
+  }
+  
+  ul.links {
+    padding-bottom: 20px;
+  }
+  .column {
+    float: left;
+    width: 25%;
+    padding: 10px;
+  }
+  
+  /* Style the images inside the grid */
+  .column img {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+  
+  .column img:hover {
+    opacity: 1;
+  }
+
+  .collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+form label{
+  font-weight:bold;
+  color: #525f7f;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+}
+
+#upload_button {
+  display: inline-block;
+}
+
+#upload_button input[type=file] {
+  display:none;
+}
+
+.filedisplay div{
+  float:left;
+  overflow:auto;
+  margin:15px;
+  background-color: whitesmoke;
+  padding: 5px;
+  border: 1px silver solid;
+  border-radius: 5px;
+}
+.filedisplay span{
+  padding-left:5px;
+  padding-right:5px
+}
+
+.filedisplay a img{
+  width: 40px;
+  height: 40px;
+}
+
+
+.imagescale{
+  height: 100px;
+  width: 100px;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+input[type="number"] {
+   -moz-appearance: textfield;
+}
+
+.disabledRow{
+  background-color: lightcoral;
+}
+table { 
+  width: 100% !important; 
+  border-collapse: collapse !important; 
+}
+@media all and (max-width:768px) {
+  .eventTable tr {    display: table;  width:100%;    }               
+  .eventTable td {    display: table-row; }           
+}
+
+
+.containerd {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  margin-top: 50px !important;
+}
+
+::ng-deep.bs-datepicker {
+  height: 350px !important;
+}
+
+.custom-content {
+  position: absolute;
+  z-index: 1081;
+  top: 390px;
+  cursor: pointer;
+  align-self: center;
+}
+
+
+
+.custom-size .btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.mydatepicker{
+  padding: 0px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: translate(0px, -42px);
+}
+
+
+.input-group .form-control:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child){
+  border-radius: 0 !important;
+  // border-top-left-radius: 0 !important;
+  // border-bottom-left-radius: 0 !important;
+  // border-left: 0 none;
+}
+
+// .sort:hover {
+//   background-color:#f3f3f3;
+// }
+
+.sort.asc > i.tim-icons::after {
+  content: " icon-simple-add";
+}
+.sort.desc > i.tim-icons::after {
+  content: " icon-simple-add";
+}
+
+.displayselect{
+  display: block;
+}
+
+.link-text {
+  color: blue;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 18px;
+}
+
+.disabled-text {
+  color: gray;
+  cursor: default;
+  text-decoration: none;
+}
+
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120vh;
+
+  background-color: rgba(0,0,0,0.5);
+  z-index: 9999;
+
+  display: flex;              
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;          
+}
+
+
+/* Modal box */
+.modal-content {
+  background: white;
+  width: 950px;
+  max-width: 100%;
+
+  max-height: 90vh;           
+  overflow: auto;         
+margin-top: 20px;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Scroll only table section */
+.table-scroll-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 600px;          
+}
+
+
+/* Sticky header */
+.table-scroll-wrapper thead th {
+  position: sticky;
+  top: 0;
+  background-color: #484D56;
+  color: #fff;
+  z-index: 2;
+}
+
+
+/* Table header style */
+table th {
+  color: #fff !important;
+  font-weight: bold;
+  background-color: #484D56;
+  text-align: left;
+}
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-badge {
+  background-color: #484D56; /* deep blue */
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.close-btn {
+  background: transparent;
+  border: 1px solid #333;
+  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}

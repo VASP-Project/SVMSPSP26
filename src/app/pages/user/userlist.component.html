@@ -1,0 +1,83 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card" >
+        <!-- <br> -->
+        <div class="col-md-12">
+          <h3 class="card-title">Registered Users</h3>
+          <button class="btn btn-primary" style="float: right; margin-right: 18px;" (click)="addUser()">
+            Add User
+          </button>
+        </div>        
+
+        <div class="card-body">
+          <div>
+            <table
+              class="table table-bordered table-striped table-hover"
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              id="dt1"
+            >
+              <thead class="text-primary">
+                <tr style="background-color: #484D56;">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th class="text-center">Active Directory</th>
+                  <th class="text-center">Badge Audit</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of userList; trackBy: identify">
+                  <td>{{ item.firstName }} {{ item.lastName }}</td>
+                  <td>{{ item.company }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.role }}</td>
+                  <td class="text-center">
+                    {{ item.isADAuthenticated == true ? "Yes" : "No" }}
+                  </td>
+                  <td class="text-center">
+                    {{ item.isBadgeAudit == true ? "Yes" : "No" }}
+                  </td>
+                  <td class="actionColumn" style="width: 10%;">
+                    <button
+                      type="button"
+                      class="btn btn-warning btn-sm"
+                      title="Edit"
+                      (click)="editUser(item.id)" *ngIf="this.loggedInUserId != item.id"
+                    >
+                      <span><i class="bi bi-pencil"></i> </span>
+                    </button>
+                    &nbsp;&nbsp;
+                    <button
+                      *ngIf="item.isActive && this.loggedInUserId != item.id"
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      title="Delete"
+                      (click)="DeleteUser(item.id)"
+                    >
+                      <span><i class="bi bi-trash"></i> </span>
+                    </button>
+
+                    <button
+                      *ngIf="!item.isActive"
+                      type="button"
+                      class="btn btn-success btn-sm"
+                      title="Activate"
+                      (click)="ActivateUser(item.id)"
+                    >
+                      <span><i class="bi bi-check2"></i> </span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

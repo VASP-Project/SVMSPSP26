@@ -1,0 +1,2078 @@
+<!-- <link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css"> -->
+<div class="content" >
+  <div class="row" >
+    <div class="col-md-12" style="text-align: center;">
+      <h3 class="justify-content-center" style="color: darkblue;">{{citation.currentStatus}}</h3>
+    </div>
+  </div>
+  <!-- To do add nov component  --rushali --> 
+  <nav ngbNav #nav="ngbNav" class="nav-tabs" (navChange)="changeTab($event)">
+    <ng-container ngbNavItem domId="tab1">
+      <a ngbNavLink id="tab1">Notice Of Violation (NOV) Information</a>
+      <ng-template ngbNavContent>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card" >
+              <div class="card-body" *ngIf="!isViewCitation">
+                <form #formData="ngForm" (ngSubmit)="saveCitationByIssuer(formData)" (change)="setDirtyFlag()">
+                  
+                  <div class="row">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3" *ngIf="!isAuthsigner && this.citation.inspectionRecordNo > 0">
+                      <label>Source Inspection#: </label>
+                      <label style="cursor: pointer; color:blue; text-decoration: underline;"
+                      (click)="goToInspectionPage(this.citation.inspectionRecordNo)">
+                          &nbsp;{{this.citation.inspectionRecordNo}} </label>
+                    </div>
+                    <div class="col-md-3" *ngIf="!isAuthsigner && this.prohibitedauditId > 0 && this.isProhibitedAudit == 'true'">
+                      <label>Source PI Audit#: </label>
+                      <label style="cursor: pointer; color:blue; text-decoration: underline;"
+                      (click)="ProhibitedAuditpage(this.prohibitedauditId)">
+                          &nbsp;{{this.prohibitedauditId}} </label>
+                    </div>
+                    <div class="col-md-3" *ngIf="!isAuthsigner && this.citation.prohibitedAuditId > 0 && this.isProhibitedAudit != 'true' ">
+                      <label>Source PI Audit#: </label>
+                      <label style="cursor: pointer; color:blue; text-decoration: underline;"
+                      (click)="ProhibitedAuditpage(this.citation.prohibitedAuditId)">
+                          &nbsp;{{this.citation.prohibitedAuditId}} </label>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class=" col-md-9 pl-md-1">
+                      <h1><span class="badge bg-primary" style="font-size: 1rem;">Company/Badgeholder
+                          Information</span>
+                      </h1>
+                    </div>                    
+                    <div class=" col-md-3 pl-md-1">                      
+                      <div class="form-group form-inline">
+                        <!-- <strong> NOV # : {{(citation.novNo == "0" ? "" : citation.novNo)}}</strong> -->
+                        <strong> NOV # : </strong>
+                        <input type="number" class="form-control" placeholder="NOV #" [(ngModel)]="citation.novNo"
+                          name="novNo" (blur)="CheckNovExists()" [readonly]="readOnlyNov" />
+                        <!-- [readonly]="readOnlyNov" -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 pr-md-1">
+                      <div class="form-group">
+                        <label>Security Badge #</label>
+                        <input class="form-control" placeholder="Security Badge #" type="text" id="badgeNumber"
+                        [(ngModel)]="badgeholder.badgeNumber" name="badgeNumber" (blur)="GetBadgeholderInfoASCX()"/>
+                      </div>
+                    </div>
+                    <div class="col-md-3 pl-md-1">
+                      <div class="form-group">
+                        <label>Recent Citations</label>
+                        <div style="display: flex; align-items: center; flex-wrap: nowrap;">                          
+                          <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">                            
+                            <span *ngIf="dataLoaded"
+                              [class.link-text]="(couCount + novCount) > 0"
+                              [class.disabled-text]="(couCount + novCount) === 0"
+                              (click)="(couCount + novCount) > 0 && openPopup()"
+                              >
+                                COU: {{ couCount }} | NOV: {{ novCount }}
+                            </span>
+                          </div>
+
+                          <!-- <button class="btn btn-primary btn-sm"
+                                  style="margin-left: 8px; white-space: nowrap; width: auto; min-width: fit-content;"
+                                  routerLink="/admin/nov/details"
+                                  [queryParams]="{ isEdit: 0, badgeNo: badgeholder.badgeNumber }"
+                                  skipLocationChange
+                                  *ngIf="pastCou?.length >= maxValue"> Change to NOV
+                          </button> -->
+                          <div class="custom-modal" *ngIf="showPopup">
+                            <div class="modal-content" style="margin-bottom: 100px;">
+                              <div class="custom-header">
+                                <span class="header-badge">Citation Information</span>
+
+                                <button type="button" class="close-btn" (click)="closePopup()">
+                                  ×
+                                </button>
+                              </div>
+                              <div class="modal-content">
+                                <!-- <div *ngIf="windowRef.innerWidth >= 768"> -->
+                                  <div class="card-body">
+                                    <div class="table-responsive">
+                                      <table
+                                        class="table table-bordered table-sm"
+                                        id="dtPastCou"
+                                  datatable
+                                  [dtOptions]="dtOptionsPastCou"
+                                  [dtTrigger]="dtTriggerPastCou"
+                                      >
+                                        <thead class="text-primary">
+                                          <tr style="background-color: #484D56">
+                                            <th hidden>D</th>
+                                            <th>CIT #</th>
+                                            <th>CIT. Type</th>
+                                            <th>Category</th>
+                                            <th>Citation Reason</th>
+                                            <th>Citation Date</th>
+                                          </tr>
+                                        </thead>
+
+                                        <tbody>
+                                          <tr *ngFor="let item of pastCou">
+
+                                            <!-- hidden sortable date column -->
+                                            <td hidden>
+                                              {{
+                                                item.createdDate | dateTimeFormatFilter : "MM/DD/yyyy"
+                                              }}
+                                            </td>
+
+                                            <td>{{ item.novNo }}</td>
+                                            <td>{{ item.type }}</td>
+                                            <td>
+                                              {{ item.violationType }}
+                                            </td>
+
+                                            <td>
+                                              {{ item.citationReason }}
+                                            </td>
+
+                                            <!-- display date -->
+                                            <td>
+                                              {{
+                                                item.violationDate | dateTimeFormatFilter : "MM/DD/YYYY"
+                                              }}
+                                            </td>
+
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                <!-- </div> -->
+                              </div>                       
+                           </div>
+                         </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label>MVOP #</label>
+                        <input class="form-control" placeholder="MVOP #" type="text"  id="mvopPermitNo"
+                        [(ngModel)]="citation.mvopPermitNo" name="MVOPPermitNo" />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Company</label>
+                        
+                        <ng-select
+                          appendTo="body"
+                          id="companyId"
+                          #select
+                          [items]="allCompanyList"
+                          bindLabel="companyName"
+                          placeholder="Select Company"
+                          bindValue="id"
+                          [(ngModel)]="citation.companyId"
+                          appearance="outline"
+                          name="companyId"
+                          required
+                          [disabled]="isCompany"
+                          (change)="setDirtyFlag()"
+                        >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>Company Citation</label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Is Company Citation" type="checkbox"
+                              [(ngModel)]="citation.isCompanyCitation" name="isCompanyCitation" id="isCompanyCitation" />
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> First Name </label>
+                        <input class="form-control" placeholder="First Name" type="text" required id="firstName"
+                          [(ngModel)]="badgeholder.firstName" name="firstName" 
+                          [readonly]="readonlyBadge"/>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Last Name </label>
+                        <input class="form-control" placeholder="Last Name" type="text" required id="lastName"
+                          [(ngModel)]="badgeholder.lastName" name="lastName" [readonly]="readonlyBadge"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group" *ngIf="!citation.isCompanyCitation">
+                        <label> Violator Birth Date </label>
+                          <div class="input-group">
+                          <input
+                            class="form-control"
+                            type="text"
+                            (click)="dob.toggle()"
+                            ngbDatepicker
+                            #dob="ngbDatepicker"
+                            [(ngModel)]="badgeholder.dob"
+                            name="dob"
+                            placeholder="mm/dd/yyyy"
+                            required
+                            [disabled]="readonlyBadge"                            
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dob.toggle()" type="button"></button>
+                        </div>
+                      </div>
+                      <div class="form-group" *ngIf="citation.isCompanyCitation">
+                        <label> Violator Birth Date </label> 
+                          <div class="input-group">
+                          <input
+                            class="form-control"
+                            type="text"
+                            (click)="dob.toggle()"
+                            ngbDatepicker
+                            #dob="ngbDatepicker"
+                            [(ngModel)]="badgeholder.dob"
+                            name="dob"
+                            placeholder="mm/dd/yyyy"
+                            [readonly]="readonlyBadge"                            
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dob.toggle()" type="button"></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Email address </label>
+                        <input class="form-control" placeholder="Email" type="email" [(ngModel)]="badgeholder.recpt_email_address" 
+                        name="recpt_email_address" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,9})+$"
+                          autocomplete="new-email" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Mobile/Text Phone Number </label>
+                        <input class="form-control" placeholder="Phone" type="text" [(ngModel)]="citation.phone" 
+                        name="phone_number" (blur)="formatUserEmail();" (keyup)="formatUserPhoneNumber();"  maxlength="14"
+                          autocomplete="off"  />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> Address </label>
+                        <input class="form-control" placeholder="Address" type="text" id="address"
+                         [(ngModel)]="badgeholder.address" name="Address" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> City </label>
+                        <input class="form-control" placeholder="City" type="text" id="city"
+                        [(ngModel)]="badgeholder.city" name="City" />
+                      </div>
+                    </div>                    
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label> State </label>
+                        <ng-select
+                              appendTo="body"
+                              id="state"
+                              #select
+                              [items]="incidentStatList"
+                              bindLabel="state"
+                              placeholder="State"
+                              bindValue="state"
+                              [(ngModel)]="badgeholder.state"
+                              appearance="outline"
+                              name="State">
+                            </ng-select>
+
+                       
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Zip </label>
+                        <input class=" form-control" placeholder="Zip" type="text" id="zip"
+                        [(ngModel)]="badgeholder.zip" name="Zip" />
+                      </div>
+                    </div>                    
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>Driving License No.</label>
+                        <input class="form-control" placeholder="Driving License No." type="text" id="driversLicenseNo"
+                          [(ngModel)]="badgeholder.driversLicenseNo" name="DriversLicenseNo" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>License State</label>
+                        <input class=" form-control" placeholder="License State" type="text" id="licenseState"
+                          [(ngModel)]="badgeholder.licenseState" name="LicenseState" />
+                      </div>
+                    </div>
+                  </div> -->
+                  
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Company</label>
+                        
+                        <ng-select
+                          appendTo="body"
+                          id="companyId"
+                          #select
+                          [items]="allCompanyList"
+                          bindLabel="companyName"
+                          placeholder="Select Company"
+                          bindValue="id"
+                          [(ngModel)]="citation.companyId"
+                          appearance="outline"
+                          name="companyId"
+                          required
+                          [readonly]="readonlyBadge"
+                          (change)="setDirtyFlag()"
+                        >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>Company Citation</label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Is Company Citation" type="checkbox"
+                              [(ngModel)]="citation.isCompanyCitation" name="isCompanyCitation" id="isCompanyCitation" />
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> First Name </label>
+                        <input class="form-control" placeholder="First Name" type="text" required id="firstName"
+                          [(ngModel)]="badgeholder.firstName" name="firstName" 
+                          [readonly]="readonlyBadge"/>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Last Name </label>
+                        <input class="form-control" placeholder="Last Name" type="text" required id="lastName"
+                          [(ngModel)]="badgeholder.lastName" name="lastName" [readonly]="readonlyBadge"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group" *ngIf="!citation.isCompanyCitation">
+                        <label> Violator Birth Date </label>
+                          <div class="input-group">
+                          <input
+                            class="form-control"
+                            type="text"
+                            (click)="birthDate.toggle()"
+                            ngbDatepicker
+                            #birthDate="ngbDatepicker"
+                            [(ngModel)]="badgeholder.birthDate"
+                            name="birthDate"
+                            placeholder="mm/dd/yyyy"
+                            required
+                            [disabled]="readonlyBadge"                          
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="birthDate.toggle()" type="button"></button>
+                        </div>
+                      </div>
+                      <div class="form-group" *ngIf="citation.isCompanyCitation">
+                        <label> Violator Birth Date </label> 
+                          <div class="input-group">
+                          <input
+                            class="form-control"
+                            type="text"
+                            (click)="birthDate.toggle()"
+                            ngbDatepicker
+                            #birthDate="ngbDatepicker"
+                            [(ngModel)]="badgeholder.birthDate"
+                            name="birthDate"
+                            placeholder="mm/dd/yyyy"
+                            [disabled]="readonlyBadge"                          
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="birthDate.toggle()" type="button" ></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Email address </label>
+                        <input class="form-control" placeholder="Email" type="email" [(ngModel)]="badgeholder.emailAddress" 
+                        name="emailAddress" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,9})+$"
+                          autocomplete="new-email" [readonly]="readonlyBadge" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Mobile/Text Phone Number </label>
+                        <input class="form-control" placeholder="Phone" type="text" [(ngModel)]="citation.phone" 
+                        name="phone_number" (blur)="formatUserEmail();" (keyup)="formatUserPhoneNumber();"  maxlength="14"
+                          autocomplete="off" [readonly]="readonlyBadge" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> Address </label>
+                        <input class="form-control" placeholder="Address" type="text" id="streetAddress"
+                         [(ngModel)]="badgeholder.streetAddress" name="Address" [readonly]="readonlyBadge"/>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> City </label>
+                        <input class="form-control" placeholder="City" type="text" id="city"
+                        [(ngModel)]="badgeholder.city" name="City" [readonly]="readonlyBadge" />
+                      </div>
+                    </div>                    
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label> State </label>
+                        <ng-select
+                              appendTo="body"
+                              id="state"
+                              #select
+                              [items]="incidentStatList"
+                              bindLabel="state"
+                              placeholder="State"
+                              bindValue="state"
+                              [(ngModel)]="badgeholder.state"
+                              appearance="outline"
+                              name="State" 
+                              [disabled]="readonlyBadge">
+                            </ng-select>
+
+                       
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Zip </label>
+                        <input class=" form-control" placeholder="Zip" type="text" id="zip"
+                        [(ngModel)]="badgeholder.zip" name="Zip" />
+                      </div>
+                    </div>                    
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>Driving License No.</label>
+                        <input class="form-control" placeholder="Driving License No." type="text" id="driversLicenseNo"
+                          [(ngModel)]="badgeholder.driversLicenseNo" name="DriversLicenseNo" [readonly]="readonlyBadge" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>License State</label>
+                        <!-- <input class=" form-control" placeholder="License State" type="text" id="licenseState"
+                          [(ngModel)]="badgeholder.licenseState" name="LicenseState" /> -->
+                          <input class=" form-control" placeholder="License State" type="text" id="licenseState"
+                          [(ngModel)]="citation.licenseState" name="LicenseState" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Vehicle Make/Model</label>
+                        <input class=" form-control" placeholder="Vehicle Make/Model" type="text" id="vehicleMakeModel"
+                          [(ngModel)]="citation.vehicleMakeModel" name="VehicleMakeModel" />
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label>Vehicle Year</label>
+                        <input class="form-control" placeholder="Vehicle Year" OnlynumberDirective="true" id="vehicleYear"
+                          [(ngModel)]="citation.vehicleYear" name="VehicleYear" maxlength="4" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label>Vehicle License Plate</label>
+                        <input class="form-control" placeholder="Vehicle License No." type="text" id="vehicleLicenseNo"
+                          [(ngModel)]="citation.vehicleLicenseNo" name="VehicleLicenseNo" />
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Vehicle State</label>
+                        <ng-select
+                              appendTo="body"
+                              id="vehicleState"
+                              #select
+                              [items]="incidentStatList"
+                              bindLabel="state"
+                              placeholder="VehicleState"
+                              bindValue="state"
+                              [(ngModel)]="citation.vehicleState"
+                              appearance="outline"
+                              name="VehicleState">
+                            </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <h1 style="font-size: 1rem;"><span class="badge bg-primary" style="font-size: 1rem;"> Violation
+                        Information</span></h1>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Violation Type</label>
+                        <ng-select *ngIf="isCitationEdit != '1'"
+                          appendTo="body"
+                          id="violationTypeId"
+                          #select
+                          [items]="activeViolationTypes"
+                          bindLabel="violationType"
+                          placeholder="Select Violation Type"
+                          bindValue="id"
+                          [(ngModel)]="citation.violationTypeId"
+                          appearance="outline"
+                          name="violationTypeId"
+                          (change)="fillCitationReason(citation.violationTypeId); setDirtyFlag()"
+                          required
+                        >
+                        </ng-select>
+                        <ng-select
+                          *ngIf="isCitationEdit == '1'"
+                          appendTo="body"
+                          id="violationTypeId"
+                          #select
+                         
+                          bindLabel="violationType"
+                          bindValue="id"
+                          [(ngModel)]="citation.violationTypeId"
+                          appearance="outline"
+                          name="violationTypeId"
+                          
+                          (change)="fillCitationReason(citation.violationTypeId); setDirtyFlag()"
+                          
+                          required
+                        ><ng-option
+                        *ngFor="let item of allViolationTypes"
+                        [value]="item.id"
+                        [disabled]="item.isDisabled"
+                      >
+                        {{ item.violationType }}
+                      </ng-option>
+                        </ng-select>
+                       
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Citation Reason </label>                        
+                        <ng-select
+                        *ngIf="isCitationEdit != '1'"
+                        appendTo="body"
+                        id="citationResonId"
+                        #select
+                        [items]="activecitationReasonList"
+                        bindLabel="reason"
+                        placeholder="Select Citation Reason"
+                        bindValue="id"
+                        [(ngModel)]="citation.citationResonId"
+                        appearance="outline"
+                        name="citationResonId"
+                        (change)="setDirtyFlag()"
+                        required
+                      >
+                      </ng-select>  
+                      <ng-select
+                          *ngIf="isCitationEdit == '1'"
+                          appendTo="body"
+                          id="CitationResonId"
+                          #select
+                          
+                          bindLabel="reason"
+                          placeholder="Select Citation Reason"
+                          bindValue="id"
+                          [(ngModel)]="citation.citationResonId"
+                          appearance="outline"
+                          name="citationResonId"
+                          required
+                          (change)="setDirtyFlag()"
+                        ><ng-option
+                        *ngFor="let item of allCitationReasonsList"
+                        [value]="item.id"
+                        [disabled]="item.isDisabled"
+                      >
+                        {{ item.reason }}
+                      </ng-option>
+                        </ng-select>                      
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>Violation Date</label>                       
+                          <div class="input-group">
+                          <input
+                            class="form-control"
+                            type="text"
+                            (click)="violationDate.toggle()"
+                            ngbDatepicker
+                            #violationDate="ngbDatepicker"
+                            [(ngModel)]="citation.violationDate"
+                            name="violationDate"
+                            placeholder="mm/dd/yyyy"
+                            required                           
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="violationDate.toggle()" type="button"></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>Violation Time</label>                       
+                          <div class="input-group">
+                           
+                                    <input
+                                            type="time"
+                                            class="form-control"
+                                            id="violationTime"
+                                            [(ngModel)]="citation.violationTime"
+                                            name="violationTime"
+                                            #violationTime="ngModel" 
+                                             
+                                                    
+                                    />
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label>Incident Report #</label>
+                        <input class="form-control" placeholder="Incident Report #" type="text" id="opdPoliceReport"
+                          [(ngModel)]="citation.opdPoliceReport" name="OPDPoliceReport" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Witness Name</label>
+                        <input class=" form-control" placeholder="Witness Name" type="text" id="witnessName"
+                          [(ngModel)]="citation.witnessName" name="WitnessName" />
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label>Witness Badge #</label>
+                        <input class="form-control" placeholder="Witness Badge #" type="text" id="witnessBadgeNo"
+                          [(ngModel)]="citation.witnessBadgeNo" name="witnessBadgeNo" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pl-md-1" >
+                      <div class="form-group" id="filterAll">
+                        <label>Facility Door/gate# </label>
+                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                        <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [data]="allLocationList"
+                        [(ngModel)]="selectedNovDoorList" [settings]="doorDropdownSettings" id="selectedDoor"
+                        (onSelect)="onDoorSelect($event)"
+                        (onDeSelect)="onDoorDeselect($event)"
+                        (onSelectAll)="onSelectAllDoors($event)"
+                        (onDeSelectAll)="onDeSelectAllDoors($event)" 
+                        name="ddlDoor" #ddlDoor="ngModel" >                            
+                        </ng-multiselect-dropdown>                           
+                      </div>
+                    </div> 
+                  </div>
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Summary of Violation</label>
+                        <textarea class="form-control" placeholder="Enter Summary here..." id="summaryOfViolation"
+                          [(ngModel)]="citation.summaryOfViolation" name="SummaryOfViolation" rows="4"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1" *ngIf="!isAuthsigner">
+                      <div class="form-group">
+                        <label>NOV Notes</label>
+                        <textarea class="form-control" placeholder="Enter Notes here..." id="novNotes"
+                        [(ngModel)]="citation.novNotes" name="NOVNotes" rows="4"></textarea>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> Badge Confiscated </label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Badge Confiscated" type="checkbox"
+                              [(ngModel)]="citation.isBadgeConfiscated" name="IsBadgeConfiscated" id="isBadgeConfiscated"/>
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>CCTV available?</label>                        
+                        <ng-select appendTo="body" id="iscctvAvailable" #select [items]="findingOptions" bindLabel="label"
+                          placeholder="Select Option" bindValue="value" [(ngModel)]="citation.iscctvAvailable"
+                          appearance="outline" name="iscctvAvailable" (change)="showInfo(citation.iscctvAvailable); " required>
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row" *ngIf="this.user.rolename != 'AuthSigner'">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Attachments </span> 
+                    </h1>
+                  </div>
+                  <div class="col-lg-12" style="text-align:center">
+                    <div id="upload_button">
+                      <label>
+                        <input type="file" ngf-select ng-model="new_files" (change)="addFile(input.files)" multiple
+                          #input>
+                        <span class="btn btn-success" id="btnNOVUpload">
+                          <i class="bi bi-pin-angle"></i> Upload</span>
+                      </label>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btnCamera" (click)="toggleWebcam();"
+                    style="margin-left:2px;">Open Camera</button>
+                    <hr>
+
+                    <div class="snapshot row" *ngIf="this.webcamImageArr.length > 0">
+                      <div class="col-md-1" style="text-align: left">
+                        <label>Photos</label>
+                      </div>
+                      <div class="col-md-2" *ngFor="let image of this.webcamImageArr">
+                        <span style="color: red;font-size: 14px;font-weight: bolder;padding-right: 7px;"
+                          class="bi bi-x-lg btn-sm" title="Delete File"
+                          (click)="removeImage(image)"></span>
+                        <img [src]="image.imageAsDataUrl" height="100px" />
+                      </div>
+                    </div>
+                    <!-- <br/> -->
+                    <div *ngIf="this.showWebcam">
+                      <webcam [height]="300" [width]="300" [trigger]="triggerObservable"
+                        (imageCapture)="handleImage($event)" *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch"
+                        [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions" [imageQuality]="1"
+                        (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)"></webcam>
+                      <br />
+                      <div class="row" *ngIf="showWebcam">
+                        <div class="col-md-3 offset-md-3">
+                          <div class="actionBtn" (click)="triggerSnapshot();" title="Take Picture">📸</div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="actionBtn" (click)="showNextWebcam(true);" title="Switch Camera">🔁</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <!-- <h3>Attachments</h3> -->
+                    <div *ngIf="this.user.rolename != 'AuthSigner'">
+                      <!-- <br /> -->
+                      <span class="row">
+                        <div *ngFor="let file of citationAttachmentsissuersImg; index as i">
+                          <div class="filedisplay">
+                            <div
+                              *ngIf="file.filePath.split('.', 2)[1].toLowerCase() =='png' || file.filePath.toLowerCase().split('.', 2)[1] =='jpg' || file.filePath.toLowerCase().split('.', 2)[1] =='jpeg' || file.filePath.toLowerCase().split('.', 2)[1] =='gif'">
+                              <button title="Delete File" type="button" (click)="deleteFile(file)"
+                                class="btn btn-danger btn-sm bi bi-x-lg" style="float: right;">
+                              </button>&nbsp;
+                              <!-- <br /> -->
+                              <!-- <a href="{{
+                              'data:image/png;base64,' + this.file.thumbnailImage
+                          }}" data-lightbox="image"
+                              data-title="{{file.filePath}}">                                 -->
+                              <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)"
+                                src="{{
+                                          'data:image/png;base64,' + this.file.thumbnailImage
+                                      }}" />
+                              <!-- <img class="ui bordered small image" src="{{imgfileurl}}{{file.filePath}}" /> -->
+                              <!-- </a> -->
+                            </div>
+                            <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                          [src]="this.imgfileurl + file.filePath" /> -->
+                          </div>
+                        </div>
+                      </span>
+                      <!-- <br/> -->
+                      <span class="row">
+                        <div *ngFor="let file of citationAttachmentsissuersFile; index as i">
+                          <div class="filedisplay">
+                            <div
+                              *ngIf="file.filePath.split('.', 2)[1].toLowerCase() !='png' && file.filePath.toLowerCase().split('.', 2)[1] !='jpg' && file.filePath.toLowerCase().split('.', 2)[1] !='jpeg' && file.filePath.toLowerCase().split('.', 2)[1] !='gif'">
+                              <span
+                                *ngIf="file.filePath != null || file.filePath != undefined || file.filePath != ''">{{
+                                file.filePath }}
+                              </span>
+                              <span
+                                *ngIf="file.filePath == null || file.filePath == undefined || file.filePath == ''">{{
+                                file.filePath }}
+                              </span>
+                              <button type="button" (click)="deleteFile(file)" title="Delete File"
+                                class="btn btn-danger btn-sm bi bi-x-lg">
+                              </button>&nbsp;
+                              <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                                class="btn btn-info btn-sm bi bi-cloud-download">
+                              </button>&nbsp;
+                              <button
+                                *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                                type="button" title="View File" (click)="viewFile(file.id, file.filePath)"
+                                class="btn btn-primary btn-sm bi bi-card-image">
+                              </button>&nbsp;
+                            </div>
+                          </div>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div *ngFor="let file of this.files">
+                      <div class="filedisplay">
+                        <div>
+                          <span>{{ file.name }} </span>
+                          <span style="color: red;font-size: 14px;font-weight: bolder;"
+                            class="bi bi-x-lg btn-sm" title="Delete File" (click)="removeFile(file)">
+                          </span>&nbsp;
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+
+                  <h4 *ngIf="errors.length > 0">Messges:</h4>
+                  <ul *ngFor="let error of errors">
+                    <li>{{error | json}}</li>
+                  </ul>
+
+                  <!-- <div class="row" *ngIf="citation.capturedImage!=null">
+                  <div class="column">
+                    <img [src]="citation.capturedImage" />
+                  </div>
+                </div>
+                <br> -->
+
+                  <!-- Chronology of Events -->
+                  <ng-container *ngIf="this.user.rolename != 'AuthSigner'">
+                    <div class="row">
+                      <h1><span class="badge bg-primary" style="font-size: 1rem;">Chronology of Investigation</span>
+                      </h1>
+                    </div>
+                    <div class="row" style="text-align: center;">
+
+                    </div>
+                    <div class="row" style="text-align: center;">
+                      <div class="col-xs-12 col-md-3">
+                        <label>Event Type</label>
+                        <!-- <select id="eventTypeId" #Id="ngModel" class="form-control"
+                          [(ngModel)]="eventsModel.eventTypeId" name="eventTypeId">
+                          <option [ngValue]="0" selected disabled>Select Type</option>
+                          <option [ngValue]="k.id"  *ngFor="let k of eventTypeList">
+                            {{k.type}}
+                          </option>
+                        </select> -->
+
+                        <ng-select
+                        appendTo="body"
+                        id="eventTypeId"
+                        #select
+                        [items]="eventTypeList"
+                        bindLabel="type"
+                        placeholder="Select Type"
+                        bindValue="id"
+                        [(ngModel)]="eventsModel.eventTypeId"
+                        appearance="outline"
+                        name="eventTypeId"
+                        (change)="setDirtyFlag()"
+                      >
+                      </ng-select> 
+                      </div>
+                      <div class="col-xs-12 col-md-2">
+                        <label>Date of Event</label>              
+                        <div class="input-group">
+                        <input
+                            class="form-control"
+                            type="text"
+                            (click)="eventDate.toggle()"
+                            ngbDatepicker
+                            #eventDate="ngbDatepicker"
+                            [(ngModel)]="eventsModel.eventDate"
+                            name="eventDate"
+                            placeholder="mm/dd/yyyy"                              
+                          />
+                          <button class="btn btn-outline-secondary bi bi-calendar4" (click)="eventDate.toggle()" type="button"></button>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-md-2">
+                        <label>Time of Event</label>
+                        <input
+                                type="time"
+                                class="form-control"
+                                id="eventTime"
+                                [(ngModel)]="eventsModel.eventTime"
+                                name="eventTime"
+                                #eventTime="ngModel"
+                                        
+                              />
+                      </div>
+                      <div class="col-xs-12 col-md-4">
+                        <label>Details</label>
+                        <textarea class="form-control mt-1" type="text" [(ngModel)]="eventsModel.eventDetails"
+                          #eventDetails="ngModel" name="eventDetails" rows="3" id="eventDetails"></textarea>
+                      </div>
+                      <div class="col-xs-12 col-md-1" style="text-align: center;">
+                        <div class="form-group"><br>
+                          <button *ngIf="!eventsModel.inedit" class="btn btn-primary btn-sm" type="button"
+                            (click)="validateAndAddEventRecord(1)" id="btnAdd">
+                              <span><i class="bi bi-plus-lg "></i>
+                            </span></button>
+
+                          <button *ngIf="eventsModel.inedit" class="btn btn-success btn-sm" type="button"
+                            (click)="UpdateEventRecord(eventsModel,1)" id="btnUpdate">
+                            <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                            </span></button>
+                          <button *ngIf="eventsModel.inedit" class="btn btn-danger btn-sm" type="button"
+                            (click)="cancelEventUpdate(eventsModel)" id="btnCancel">
+                            <span><i class="bi bi-x-lg"></i>
+                            </span></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="(windowRef?.innerWidth >=768)">
+                      <table style="width: 100%;" id="eventTable"
+                        class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                        <thead>
+                          <tr style="background-color: #484D56;">
+                            <th><span (click)="sort('eventTypeName',$event)"
+                                class="sort">&nbsp;&nbsp;Event
+                                Type</span>
+                            </th>
+                            <th><span (click)="sort('eventDate',$event)" class="sort">
+                              &nbsp;&nbsp;Date of Event</span>
+                            </th>
+                            <th><span (click)="sort('eventDate',$event)" class="sort">
+                              &nbsp;&nbsp;Time of Event</span>
+                            </th>
+                            <th><span (click)="sort('userName',$event)" class="sort">
+                              &nbsp; &nbsp;SEMS User</span>
+                            </th>
+                            <th style="width: 30%;"><span (click)="sort('eventDetails',$event)"
+                                class="sort">&nbsp;&nbsp;Event Details</span></th>
+                            <th style="width: 10%;" *ngIf="this.user.rolename == 'StaffAdmin'">
+                              Action
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let event of this.citationEvents;let i = index">
+                            <td>
+                              <span>{{event.eventTypeName}}</span>                                                           
+                            </td>
+                            <td>                             
+                              <span>{{event.eventDate |date:"MM/dd/yyyy" }}</span>   
+                            </td>
+                            <td>
+                              <span>{{event.eventTime}}</span>                                                  
+                            </td>
+                            <td>
+                              <span>{{event.userName}}</span>                              
+                            </td>
+                            <td>
+                              <span>{{event.eventDetails}}</span>                              
+                            </td>
+                            <!-- show delete button only if user has permission and IR is not readonly -->
+                            <td *ngIf="this.user.rolename == 'StaffAdmin'">
+                              <button [hidden]="event.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                                (click)="onEditClick($event, i,event)">
+                                <span><i class="bi bi-pencil"></i>
+                                </span></button>                              
+                              <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteEvent(event)">
+                                <span><i class="bi bi-trash"></i>
+                                </span></button>
+                            </td>
+                          </tr>                         
+                        </tbody>
+                        <!-- show footer row to add ref submittal only if user has permission and IR is not readonly -->
+
+                      </table>
+                    </div>
+                    <div *ngIf="(windowRef?.innerWidth < 768)">
+                      <div class="card-body">                        
+                        <div class="list-group">
+                          <a *ngFor="let event of this.citationEvents 
+                            trackBy: identify; index as i; "
+                            skipLocationChange class="list-group-item list-group-item-action">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <span style="font-weight: bold;">Event Type:</span>
+                                {{event.eventTypeName}}
+                              </div>
+                              <div class="col-md-4">
+                                <span style="font-weight: bold;">Date of Event:</span>
+                                {{event.eventDate}}
+                              </div>
+                              <div class="col-md-4">
+                                <span style="font-weight: bold;">Time of Event:</span>
+                                  {{event.eventTime}}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <span style="font-weight: bold;">SEMS User:</span>
+                                {{event.userName}}
+                              </div>
+                              <div class="col-md-4">
+                                <span style="font-weight: bold;">Event Details:</span>
+                                {{event.eventDetails}}
+                              </div>
+                              <div class="col-md-4" *ngIf="this.user.rolename == 'StaffAdmin'">
+                                <span style="font-weight: bold;" *ngIf="this.user.rolename == 'StaffAdmin'">Action:</span>
+                                <button [hidden]="event.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                                  (click)="onEditClick($event, i,event)">
+                                  <span><i class="bi bi-pencil"></i>
+                                  </span></button>   
+                                
+                                <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteEvent(event)">
+                                  <span><i class="bi bi-trash"></i>
+                                  </span></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                              <div>
+                                
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+
+                  <div *ngIf="correctiveAction.tsa == 'Yes' && this.user.rolename == 'AuthSigner'">
+                    <div class="row col-md-12">
+                      <h1><span class="badge bg-primary" style="font-size: 1rem;">Chronology of Investigation</span>
+                      </h1>
+                    </div>
+                    <table style="width: 100%;" id="eventTable"
+                      class="table table-striped table-bordered row-border hover mt-2">
+                      <thead>
+                        <tr style="background-color: #484D56;">
+                          <th>Event Type</th>
+                          <th>DateTime</th>
+                          <th>User</th>
+                          <th style="width: 40%;">Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="text-center" *ngIf="this.citationEvents.length === 0">
+                          <td colspan="6">No saved Citation events</td>
+                        </tr>
+                        <tr *ngFor="let event of this.citationEvents;trackBy: trackByEventIndex;let i = index">
+                          <td>
+                            <span [innerHTML]="getEventName(event.eventTypeId)"></span>
+                          </td>
+                          <td>{{event.eventDate | date:'M/dd/yyyy HH:mm'}}
+                          </td>
+                          <td>
+                            <span>{{event.userName}}</span>
+                          </td>
+                          <td>
+                            <span>{{event.eventDetails}}</span>
+                          </td>
+
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- for signature -->
+                  <hr>
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Recipient Signature</span>
+                    </h1>
+                  </div>
+                  <!-- <h2>Signature</h2> -->
+                  <!-- <div class="col-md-5 sign-pad" style="border: 1px solid gray;">
+                    <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+                      (onEndEvent)="drawComplete()" ></signature-pad>
+                  </div> -->
+                  
+                  <div class="signature-container" #signatureDiv 
+                  style="border: 1px solid gray; width: 320px; padding: 10px;">
+                    <!-- <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+                      (onEndEvent)="drawComplete()" ></signature-pad> -->
+
+                      <signature-pad [options]="signaturePadOptions" (onEndEvent)="drawComplete()" (onBeginEvent)="drawStart()"
+                  ></signature-pad>
+                  </div>
+                  
+
+                  
+                  
+                  <button id="clear" class="btn btn-fill btn-warning" (click)="drawClear()" type="button">Clear</button>
+                  <hr>
+
+
+                  <div class="row">
+                    <div class="col-md-6" *ngIf="!isAuthsigner">
+                      <label>Issued By : {{this.citation.issuedBy}}</label>
+                      <br>
+                      <label>Mgmt Comment(s) for Issuer:
+                        <br>
+                         <Span
+                          [innerHTML]="correctiveAction.staffAdminCommentIssuer"></Span></label>
+  
+                    </div>
+                    <!-- <div class="col-md-6" *ngIf="!isAuthsigner && this.citation.inspectionRecordNo > 0">
+                      <label class="pull-right">Source Inspection#:  {{this.citation.inspectionRecordNo}} </label>
+                    </div> -->
+                  </div>
+                  
+                  
+
+                  <div class="card-footer" style="text-align: center;">
+                    <button class=" btn btn-fill btn-success" type="submit" id="btnNOVSave"
+                      [disabled]="!formData.form.valid">Save</button>
+
+                    <button class=" btn btn-fill btn-danger" type="button" id="btnNOVClose" style="margin-left:2px;"
+                    (click)="close();GetCitationDetails();">Close</button>
+                  </div>
+                </form>
+
+              </div>
+
+              <!-- to display form in view format -->
+              <div *ngIf="isViewCitation">
+                <app-novview></app-novview>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container ngbNavItem domId="tab2">
+      <a ngbNavLink *ngIf="this.user.rolename != 'Issuer' && citation.currentStatus!='Draft'" id="tab2">Corrective Actions</a>
+      <ng-template ngbNavContent>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body" *ngIf="!isViewCorrectiveActions">
+                <form #formData="ngForm" (ngSubmit)="saveCitationByStaffAdmin(formData)" (change)="setDirtyFlag()">
+                  <div class="row">
+
+                    <div class=" col-md-9"></div>
+                    <div class=" col-md-3 pl-md-1">
+                      <div class=" form-group">
+                        <strong> NOV # : {{citation.novNo}}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Corrective Actions</span>
+                    </h1>
+                  </div>
+                  <div class="row">
+                    <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Badge Suspended Date</label>
+                        <!-- <input type="text" class="form-control" id="badgeSuspendedDate"
+                          [(ngModel)]="correctiveAction.badgeSuspendedDate" name="badgeSuspendedDate" #name="ngModel"
+                          placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                          <div class="input-group">
+                          <input
+                          class="form-control"
+                          type="text"
+                          (click)="badgeSuspendedDate.toggle()"
+                          ngbDatepicker
+                          #badgeSuspendedDate="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.badgeSuspendedDate"
+                          name="badgeSuspendedDate"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeSuspendedDate.toggle()" type="button"></button>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label> Corrective Action Completion Deadline </label>
+                        <!-- <input type="text" class="form-control" id="remedialTrainingAssignedDate"
+                          [(ngModel)]="correctiveAction.remedialTrainingAssignedDate"
+                          name="remedialTrainingAssignedDate" #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                          [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                          <div class="input-group">
+                          <input
+                          class="form-control"
+                          type="text"
+                          (click)="remedialTrainingAssignedDate.toggle()"
+                          ngbDatepicker
+                          #remedialTrainingAssignedDate="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.remedialTrainingAssignedDate"
+                          name="remedialTrainingAssignedDate"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="remedialTrainingAssignedDate.toggle()" type="button"></button>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-md-1">
+                      <div class="form-group">
+                        <label> Corrective Action Completion Date </label>
+
+                        <!-- <input type="text" class="form-control" id="remedialTrainingCompletionDate"
+                          [(ngModel)]="correctiveAction.remedialTrainingCompletionDate"
+                          name="remedialTrainingCompletionDate" #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                          [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                          <div class="input-group">
+                          <input
+                          class="form-control"
+                          type="text"
+                          (click)="remedialTrainingCompletionDate.toggle()"
+                          ngbDatepicker
+                          #remedialTrainingCompletionDate="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.remedialTrainingCompletionDate"
+                          name="remedialTrainingCompletionDate"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="remedialTrainingCompletionDate.toggle()" type="button"></button>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="row" *ngFor="let dynamic of remedialTrainings; let i = index;">
+                        <input type="hidden" id="id" [(ngModel)]="dynamic.id" name="id" #id="ngModel">
+                        <input type="hidden" id="correctiveActionId" [(ngModel)]="correctiveAction.correctiveActionId"
+                          name="correctiveActionId" #correctiveActionId="ngModel">
+                        <div class="col-md-11">
+                          <div class="form-group">
+                            <label> Type of Corrective Action- {{i+1}} </label>
+
+                            <!-- <input [(ngModel)]="dynamic.typeofRemedialTraining" class="form-control"
+                              id="typeofRemedialTraining{{i}}" type="text" name="typeofRemedialTraining{{i}}"
+                              #typeofRemedialTraining{{i}}="ngModel" /> -->
+
+                            <!-- <select id="typeofRemedialTraining{{i}}" #typeofRemedialTraining{{i}}="ngModel"
+                              class="form-control" [(ngModel)]="dynamic.typeofRemedialTraining"
+                              name="typeofRemedialTraining{{i}}">
+                              <option disabled selected value="0">Select Corrective Action</option>
+                              <option [disabled]="!k.isActive" [ngClass]="{'disabledRow': k.isActive===false}"
+                                [value]="k.id" *ngFor="let k of remedialTraining">
+                                {{k.remedialTrainingType}}
+                              </option>
+                            </select> -->
+
+                            <ng-select
+                              appendTo="body"
+                              id="typeofRemedialTraining{{i}}"
+                              #select
+                              [items]="remedialTraining"
+                              bindLabel="remedialTrainingType"
+                              placeholder="Select Corrective Action"
+                              bindValue="id"
+                              [(ngModel)]="dynamic.typeofRemedialTraining"
+                              appearance="outline"
+                              name="typeofRemedialTraining{{i}}"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+
+
+                          </div>
+                        </div>
+                        <div class="" (click)="addRow(i)" *ngIf="i == remedialTrainings.length -1">
+                          <div class="form-group"><br>
+                            <button class="btn btn-warning btn-sm" type="button">
+                              <span><i class="bi bi-plus-lg"></i>
+                              </span></button>
+                          </div>
+                        </div>
+                        <div class="" (click)="deleteRow(i, dynamic.id)"
+                          *ngIf="i >= 0 && i != remedialTrainings.length -1">
+                          <div class=" form-group"><br>
+                            <button class="btn btn-danger btn-sm" type="button">
+                              <span>
+                                <i class="bi bi-trash"></i>
+                              </span></button>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label> Other Corrective Action </label>
+                        <textarea [(ngModel)]="correctiveAction.otherTraining" class="form-control" id="otherTraining"
+                          placeholder="Enter Other Corrective Action here" name="otherTraining"
+                          #otherTraining="ngModel"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!-- <div class=" col-md-6 pr-md-1">
+                      <div class=" form-group">
+                        <label>Select Corrective Action</label>
+                        <select id="remedialTrainingId" #remedialTrainingId="ngModel" class="form-control" [(ngModel)]="correctiveAction.remedialTrainingId"
+                          name="remedialTrainingId" required>
+                          <option disabled selected value="0">Select Corrective Action</option>
+                          <option [value]="k.id" *ngFor="let k of remedialTraining">
+                            {{k.remedialTrainingType}}
+                          </option>
+                        </select>
+                      </div>
+                    </div> -->
+
+                  </div>
+
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Violation Final Disposition</span>
+                    </h1>
+                  </div>
+                  <div class="row">
+
+                    <!-- <div class="col-md-3 pr-md-1">
+                      <div class="form-group">
+                        <label>Badge Reactivated Date</label>
+                        <input type="text" class="form-control" id="badgeReactivatedDate"
+                          [(ngModel)]="correctiveAction.badgeReactivatedDate" name="badgeReactivatedDate"
+                          #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                          [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" />
+                      </div>
+                    </div> -->
+                    <div class=" col-md-2 pr-md-1">
+                      <div class=" form-group">
+                        <label>Badge Revoked Date</label>
+                        <!-- <input type="text" class="form-control" id="badgeDeactivatedDate"
+                          [(ngModel)]="correctiveAction.badgeDeactivatedDate" name="badgeDeactivatedDate"
+                          #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                          [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                          <div class="input-group">
+                          <input
+                          class="form-control"
+                          type="text"
+                          (click)="badgeDeactivatedDate.toggle()"
+                          ngbDatepicker
+                          #badgeDeactivatedDate="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.badgeDeactivatedDate"
+                          name="badgeDeactivatedDate"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeDeactivatedDate.toggle()" type="button"></button>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="col-md-2 pr-md-1">
+                      <div class="form-group">
+                        <label> Badge Revoked </label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Badge Revoked" type="checkbox"
+                              [(ngModel)]="correctiveAction.badgeRevoked" name="badgeRevoked" />
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-1 pr-md-1">
+                      <div class="form-group">
+                        <label> Admin Fine </label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Admin Fine" type="checkbox" (change)="showpopup();"
+                              [(ngModel)]="correctiveAction.adminFine" name="adminFine" /> 
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class=" col-md-2 pr-md-1" *ngIf="showpaymentoption">
+                      <div class=" form-group">
+                        <label>Fine Amount </label>
+                        <input class=" form-control" placeholder="Fine Amount" type="text" id="fineAmount"
+                          [(ngModel)]="correctiveAction.fineAmount" name="fineAmount" currencyMask  />                        
+                      </div>
+                    </div>
+                    <div class=" col-md-4 pl-md-1" *ngIf="showpaymentoption">
+                      <div class=" form-group">
+                        <label>Payment Method(Authorized signer must select one)</label>
+                        <ng-select
+                              appendTo="body"
+                              id="paymentMethod"
+                              #select
+                              [items]="paymentMethod"
+                              bindLabel="paymentType"
+                              placeholder="Select Payment Method"
+                              bindValue="id"
+                              [(ngModel)]="correctiveAction.
+                              paymentMethod"
+                              appearance="outline"
+                              name="paymentMethod"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-1 pr-md-1" *ngIf="showpaymentoption">
+                      <div class="form-group">
+                        <label> Fine Paid</label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Fine Paid" type="checkbox"
+                              [(ngModel)]="correctiveAction.finePaid" name="finePaid" />
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row" *ngIf="showpaymentoption">
+                    <div class="form-group">
+                      <label>{{this.fineMsg}}</label>
+                    </div>
+                  </div> -->
+                  <div class="row" style="padding-top: 6px;">
+                    <div class=" col-md-5 pr-md-1" *ngIf="isStaffAdmin">
+                      <div class=" form-group">
+                        <label>Additional Notes</label>
+                        <textarea class="form-control" placeholder="Enter Text here..."
+                          [(ngModel)]="correctiveAction.additionalNotes" name="AdditionalNotes"></textarea>
+                      </div>
+                    </div>
+                    <div class=" col-md-2 pr-md-1" ></div>
+                    <div class=" col-md-5 pr-md-1" *ngIf="showpaymentoption">
+                      <div class="form-group">
+                        <label>{{this.fineMsg}}</label>
+                      </div>
+                    </div> 
+                    
+                    
+                  </div>
+                 
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Federal Agency Referral</span>
+                    </h1>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>FAA</label>
+                        <!-- <input class="form-control" placeholder="FAA" type="text" [(ngModel)]="correctiveAction.faa"
+                        name="FAA" /> -->
+
+                        <!-- <select class="form-control" id="faa" #FAA="ngModel" class="form-control"
+                          [(ngModel)]="correctiveAction.faa" name="faa">
+                          <option value="" disabled>Select FAA</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select> -->
+
+                        <ng-select
+                              appendTo="body"
+                              id="faa"
+                              #select
+                              [items]="FAA"
+                              bindLabel="label"
+                              placeholder="Select FAA"
+                              bindValue="value"
+                              [(ngModel)]="correctiveAction.faa"
+                              appearance="outline"
+                              name="faa"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>TSA</label>
+                        <!-- <input class=" form-control" placeholder="TSA" type="text" [(ngModel)]="correctiveAction.tsa"
+                        name="TSA" /> -->
+                        <!-- <select class="form-control" id="tsa" #tsa="ngModel" class="form-control"
+                          [(ngModel)]="correctiveAction.tsa" name="tsa">
+                          <option value="" disabled>Select TSA</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select> -->
+
+                        <ng-select
+                              appendTo="body"
+                              id="tsa"
+                              #select
+                              [items]="TSA"
+                              bindLabel="label"
+                              placeholder="Select TSA"
+                              bindValue="value"
+                              [(ngModel)]="correctiveAction.tsa"
+                              appearance="outline"
+                              name="tsa"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">TSA Voluntary Disclosure
+                        Program</span>
+                    </h1>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                      <div class="form-group">
+                        <label>Eligible</label>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" placeholder="Eligible" type="checkbox"
+                              [(ngModel)]="correctiveAction.eligible" name="Eligible" />
+                            <span class="form-check-sign">
+                              <span class="check"> </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class=" col-md-6 pl-md-1">
+                      <div class=" form-group">
+                        <label>Date of Disclosure</label>
+                        <!-- <input type="text" class="form-control" id="dateOfDisclosure"
+                          [(ngModel)]="correctiveAction.dateOfDisclosure" name="dateOfDisclosure" #name="ngModel"
+                          placeholder="mm/dd/yyyy" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                          <div class="input-group">
+                          <input
+                          class="form-control"
+                          type="text"
+                          (click)="dateOfDisclosure.toggle()"
+                          ngbDatepicker
+                          #dateOfDisclosure="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.dateOfDisclosure"
+                          name="dateOfDisclosure"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dateOfDisclosure.toggle()" type="button"></button>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <h1><span class="badge bg-primary" style="font-size: 1rem;">Attachments  </span> 
+                    </h1>
+                  </div>
+                  <div>
+                    <!-- <h3>Attachments</h3> -->
+                    <div *ngIf="this.user.rolename != 'AuthSigner'">
+                      <!-- <br /> -->
+                      <span class="row">
+                        <div *ngFor="let file of citationAttachmentsStaffadminImg">
+                          <div class="filedisplay">
+                            <div
+                              *ngIf="file.filePath.toLowerCase().split('.', 2)[1] =='png' || file.filePath.toLowerCase().split('.', 2)[1] =='jpg' || file.filePath.toLowerCase().split('.', 2)[1] =='jpeg' || file.filePath.toLowerCase().split('.', 2)[1] =='gif'">
+                              <button type="button" (click)="deleteFile(file)" title="Delete File"
+                                class="btn btn-danger btn-sm bi bi-x-lg" style="float: right;">
+                              </button>&nbsp;
+                              <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)"
+                                src="{{
+                                'data:image/png;base64,' + this.file.thumbnailImage
+                            }}" />
+                              <!-- <br /> -->
+                              <!-- <a href="{{imgfileurl}}{{file.filePath}}" data-lightbox="image"
+                                data-title="{{file.filePath}}">
+                                <img class="ui bordered small image" src="{{imgfileurl}}{{file.filePath}}" />
+                              </a> -->
+                            </div>
+                            <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                          [src]="this.imgfileurl + file.filePath" /> -->
+                          </div>
+                        </div>
+                      </span>
+                      <!-- <br/> -->
+                      <span class="row">
+                        <div *ngFor="let file of citationAttachmentsStaffadminFile">
+                          <div class="filedisplay">
+                            <div
+                              *ngIf="file.filePath.toLowerCase().split('.', 2)[1] !='png' && file.filePath.toLowerCase().split('.', 2)[1] !='jpg' && file.filePath.toLowerCase().split('.', 2)[1] !='jpeg' && file.filePath.toLowerCase().split('.', 2)[1] !='gif'">
+                              <span
+                                *ngIf="file.filePath != null || file.filePath != undefined || file.filePath != ''">{{
+                                file.filePath }}
+                              </span>
+                              <span
+                                *ngIf="file.filePath == null || file.filePath == undefined || file.filePath == ''">{{
+                                file.filePath }}
+                              </span>
+                              <button type="button" (click)="deleteFile(file)" title="Delete File"
+                                class="btn btn-danger btn-sm bi bi-x-lg">
+                              </button>&nbsp;
+                              <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                                class="btn btn-primary btn-sm bi bi-cloud-download">
+                              </button>&nbsp;
+                              <button
+                                *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                                type="button" title="View File" (click)="viewFile(file.id, file.filePath)"
+                                class="btn btn-primary btn-sm bi bi-card-image">
+                              </button>&nbsp;
+                            </div>
+                            <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                          [src]="this.imgfileurl + file.filePath" /> -->
+                          </div>
+                        </div>
+                      </span>
+                    </div>
+
+                  </div>
+                  <!-- *ngIf="isSaveTab2" -->
+                  <div class="col-lg-12" style="text-align:center">
+                    <div id="upload_button">
+                      <label>
+                        <input type="file" ngf-select ng-model="new_files" (change)="addFile(input.files)" multiple
+                          #input>
+                        <span class="btn btn-success">
+                          <i class="bi bi-pin-angle"></i> Upload</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div *ngFor="let file of this.files">
+                      <div class="filedisplay">
+                        <div>
+                          <span>{{ file.name }} </span>
+                          <span style="color: red;font-size: 14px;font-weight: bolder;" title="Delete File"
+                            class="bi bi-x-lg btn-sm" (click)="removeFile(file)">
+                          </span>&nbsp;
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" col-md-11 pl-md-1">
+                      <div class=" form-group">
+                        <div class=" form-group">
+                          <label>Mgmt comment(s) for Authorized Signer :</label>&nbsp;
+                          <br>
+                          <label [innerHTML]="correctiveAction.staffAdminComment"></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+         
+                  <div *ngIf="(citation.currentCitationStatusId == 3 || citation.currentCitationStatusId == 8) && isStaffAdmin">
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                          <label>Notify Authorized Signer</label>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" placeholder="notifyAuth" type="checkbox"
+                                [(ngModel)]="correctiveAction.notifyAuth" name="notifyAuth"
+                                (change)="showCommentBoc($event)" />
+                              <span class="form-check-sign">
+                                <span class="check"> </span>
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6 pr-md-1" *ngIf="this.correctiveAction.notifyAuth">
+                        <div class="form-group">
+                          <label>Comment(s) for Authorized Signer</label>
+                          <textarea cols="4" class="form-control" id="strCommentAuth" required
+                            [(ngModel)]="strCommentAuth" name="strCommentAuth" #name="ngModel"
+                            placeholder="Comment"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class=" card-footer" style="text-align: center;">
+                    <button class=" btn btn-fill btn-success"  type="submit">Save</button>
+                    <button class=" btn btn-fill btn-danger" style="margin-left:2px;" type="button" (click)="GetCitationDetails()">Close</button>
+                  </div>
+                  <div *ngIf="isPendingForCompletion">
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                          <label>Case Status</label>
+                          <!-- <select class="form-control" id="status" #status="ngModel" class="form-control"
+                            [(ngModel)]="citation.status" name="status">
+                            <option value="0" disabled>Select Case Status</option>
+                            <option value="Close">Closed</option>
+                            <option value="ReturnedToAS">Return to AS</option>
+                          </select> -->
+
+                          <ng-select
+                              appendTo="body"
+                              id="status"
+                              #select
+                              [items]="caseStatusValue"
+                              bindLabel="label"
+                              placeholder="Select Case Status"
+                              bindValue="value"
+                              [(ngModel)]="citation.status"
+                              appearance="outline"
+                              name="status"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+                        </div>
+                      </div>
+                      <div class="col-md-6 pr-md-1"
+                        *ngIf="citation.status =='Close' || citation.status =='ReturnedToAS' ">
+                        <div class="form-group">
+                          <label>Comment</label>
+                          <textarea cols="4" class="form-control" id="staffAdminComment" required
+                            [(ngModel)]="staffAdminComment" name="staffAdminComment" #name="ngModel"
+                            placeholder="Comment"></textarea>
+                          <br>
+                          <span [innerHTML]="correctiveAction.staffAdminComment"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="citation.currentCitationStatusId == 2 && isStaffAdmin">
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                          <label>Case Status</label>
+                          <!-- <select class="form-control" id="status" #status="ngModel" class="form-control"
+                            [(ngModel)]="citation.status" name="status">
+                            <option value="0" disabled>Select Case Status</option>
+                            <option value="ReturnedToIssuer">Return to Issuer</option>
+                            <option value="Assigned">Assigned</option>
+                          </select> -->
+
+                          <ng-select
+                              appendTo="body"
+                              id="status"
+                              #select
+                              [items]="caseStatusValue1"
+                              bindLabel="label"
+                              placeholder="Select Case Status"
+                              bindValue="value"
+                              [(ngModel)]="citation.status"
+                              appearance="outline"
+                              name="status"
+                              (change)="setDirtyFlag()"
+                            >
+                            </ng-select>
+                        </div>
+                      </div>
+                      <div class="col-md-6 pr-md-1" *ngIf="citation.status =='ReturnedToIssuer'">
+                        <div class="form-group">
+                          <label>Comment</label>
+                          <textarea cols="4" class="form-control" id="staffAdminCommentIssuer" required
+                            [(ngModel)]="staffAdminCommentIssuer" name="staffAdminCommentIssuer" #name="ngModel"
+                            placeholder="Comment"></textarea>
+                          <br>
+                          <span [innerHTML]="correctiveAction.staffAdminCommentIssuer"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div *ngIf="isViewCorrectiveActions">
+                <app-novview></app-novview>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container ngbNavItem domId="tab3">
+      <a ngbNavLink *ngIf="(isStaffAdmin || isAuthsigner) && isViewAuthorizedSigner" id="tab3">Authorized Signer</a>
+      <ng-template ngbNavContent>
+        <div class="card">
+          <div class="card-body">
+            <form #formData="ngForm" (ngSubmit)="saveByAuthSigner(formData)" (change)="setDirtyFlag()">
+              <div class="row">
+
+                <div class=" col-md-9"></div>
+                <div class=" col-md-3 pl-md-1">
+                  <div class=" form-group">
+                    <strong> NOV # : {{citation.novNo}}</strong>
+                  </div>
+                </div>
+              </div>
+              <!-- <p>Corrective Action</p> -->
+              <div class="row">
+                <div class="col-md-12 pr-md-1">
+                  <h4 style="font-size: 18px;text-align:center;font-weight: 600;">Advisement for Authorized Signers</h4>
+                  <div style="font-size: 18px;color: black;font-weight: 600;">
+                    <p>Completion of NOV: Upload all demonstration of corrective actions to include any additional
+                      records, comments, photos, signed Notification of Finding, employee Statements and others.</p>
+                  </div>
+
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Corrective Actions Completed</label>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input [disabled]="isStaffAdmin" class="form-check-input"
+                          placeholder="Corrective Actions Completed" type="checkbox"
+                          [(ngModel)]="correctiveAction.isCorrectiveActionCompleted"
+                          name="IsCorrectiveActionCompleted" />
+                        <span class="form-check-sign">
+                          <span class="check"> </span>
+                        </span>
+                      </label>
+                    </div>
+
+                  </div>
+                </div>
+                <div class=" col-md-6 pl-md-1">
+                  <div class=" form-group">
+                    <label>Corrective Action Completed Date</label>
+                    <!-- <input [disabled]="isStaffAdmin" required type="text" class="form-control"
+                      id="correctiveActionCompletedDate" [(ngModel)]="correctiveAction.correctiveActionCompletedDate"
+                      name="correctiveActionCompletedDate" #name="ngModel" placeholder="mm/dd/yyyy" bsDatepicker
+                      [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" /> -->
+
+                      <div class="input-group">
+                      <input
+                      [disabled]="isStaffAdmin"
+                          class="form-control"
+                          type="text"
+                          (click)="correctiveActionCompletedDate.toggle()"
+                          ngbDatepicker
+                          #correctiveActionCompletedDate="ngbDatepicker"
+                          [(ngModel)]="correctiveAction.correctiveActionCompletedDate"
+                          name="correctiveActionCompletedDate"
+                          placeholder="mm/dd/yyyy"                                                     
+                        />
+                        <button class="btn btn-outline-secondary bi bi-calendar4" (click)="correctiveActionCompletedDate.toggle()" type="button"></button>
+                      </div>
+                  </div>
+                </div>
+
+              </div>
+ 
+              <div class="row">
+                <h1><span class="badge bg-primary" style="font-size: 1rem;">Attachments by Authorized Signer</span> <!--changed label from attachments to Attachments by Authorized Signer on 10th oct 2024 -->
+                </h1>
+              </div>
+              <div>
+                <!-- <h3>Attachments</h3> -->
+                <div>
+                  <!-- <br /> -->
+                  <span class="row">
+                    <div *ngFor="let file of citationAttachmentsAuthsignerImg">
+                      <div class="filedisplay">
+                        <div
+                          *ngIf="file.filePath.toLowerCase().split('.', 2)[1] =='png' || file.filePath.toLowerCase().split('.', 2)[1] =='jpg' || file.filePath.toLowerCase().split('.', 2)[1] =='jpeg' || file.filePath.toLowerCase().split('.', 2)[1] =='gif'">
+                          <button [disabled]="isStaffAdmin" type="button" (click)="deleteFile(file)" title="Delete File"
+                            class="btn btn-danger btn-sm bi bi-x-lg" style="float: right;">
+                          </button>&nbsp;
+                          <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)"
+                            src="{{
+                            'data:image/png;base64,' + this.file.thumbnailImage
+                        }}" />
+                          <!-- <br /> -->
+                          <!-- <a href="{{imgfileurl}}{{file.filePath}}" data-lightbox="image"
+                            data-title="{{file.filePath}}">
+                            <img class="ui bordered small image" src="{{imgfileurl}}{{file.filePath}}" />
+                          </a> -->
+                        </div>
+                        <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                      [src]="this.imgfileurl + file.filePath" /> -->
+                      </div>
+                    </div>
+                  </span>
+                  <!-- <br /> -->
+                  <span class="row">
+                    <div *ngFor="let file of citationAttachmentsAuthsignerFile">
+                      <div class="filedisplay">
+                        <div
+                          *ngIf="file.filePath.toLowerCase().split('.', 2)[1] !='png' && file.filePath.toLowerCase().split('.', 2)[1] !='jpg' && file.filePath.toLowerCase().split('.', 2)[1] !='jpeg' && file.filePath.toLowerCase().split('.', 2)[1] !='gif'">
+                          <span *ngIf="file.filePath != null || file.filePath != undefined || file.filePath != ''">{{
+                            file.filePath }}
+                          </span>
+                          <span *ngIf="file.filePath == null || file.filePath == undefined || file.filePath == ''">{{
+                            file.filePath }}
+                          </span>
+                          <button [disabled]="isStaffAdmin" type="button" title="Delete File" (click)="deleteFile(file)"
+                            title="Delete File" class="btn btn-danger btn-sm bi bi-x-lg">
+                          </button>&nbsp;
+                          <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                            class="btn btn-primary btn-sm bi bi-card-image">
+                          </button>&nbsp;
+                          <button
+                            *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                            type="button" title="View File" (click)="viewFile(file.id, file.filePath)"
+                            class="btn btn-primary btn-sm bi bi-card-image">
+                          </button>&nbsp;
+                        </div>
+                        <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                      [src]="this.imgfileurl + file.filePath" /> -->
+                      </div>
+                    </div>
+                  </span>
+                </div>
+
+              </div>
+              <div class="col-lg-12" style="text-align:center"
+                *ngIf="(citation.currentCitationStatusId == 3 || citation.currentCitationStatusId == 8) && isAuthsigner">
+                <div id="upload_button">
+                  <label>
+                    <input type="file" ngf-select ng-model="new_files" (change)="addFileAuthSigner(input.files)"
+                      multiple #input>
+                    <span class="btn btn-success">
+                      <i class="bi bi-pin-angle"></i> Upload</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div *ngFor="let file of this.filesauthsigner">
+                  <div class="filedisplay">
+                    <div>
+                      <span>{{ file.name }} </span>
+                      <span style="color: red;font-size: 14px;font-weight: bolder;" title="Delete File"
+                        class="bi bi-x-lg btn-sm" (click)="removeFileAuthSigner(file)">
+                      </span>&nbsp;
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <button class=" btn btn-fill btn-primary" type="submit" style="width: inherit"
+              *ngIf="isSubmitShow">Save</button> -->
+            </form>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </nav>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  <!-- <hr> -->
+
+  <button type="button" class="btn btn-primary" 
+  style="display: none;" id="btnModal" (click)="openModal(template)">Create template modal</button>
+
+  <div class="row">
+    <div class=" col-md-4"></div>
+    <div class=" col-md-4" style="text-align: center;">
+      <!-- <button class=" btn btn-fill btn-primary" type="button" style="width: inherit" (click)="SubmitByUser()"
+        *ngIf="isSubmitShow && citation.companyId!=undefined">Submit</button> -->
+      <button class=" btn btn-fill btn-primary" type="button" style="width: inherit" (click)="SubmitByUser()"
+        *ngIf="isSubmitShow" id="btnNOVSubmit">Submit</button>
+    </div>
+    <div class=" col-md-5"></div>
+  </div>
+</div>
+
+
+ 
+<ng-template #template let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Do you want to return to Inspection ?</h4>
+    <!-- <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()"> -->
+      <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modal.close('Save click')">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button type="button" class="btn btn-primary" style="float: right;" (click)="modal.close('Save click'); goToNOV()">No</button>
+    <button type="button" class="btn btn-primary" style="float: right; margin-left:2px;" (click)="modal.close('Save click'); goToInspection()">Yes</button>    
+  </div>
+</ng-template>
+
+<ng-template #templateclose >
+  <div class="modal-header ">
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closemodal()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <h5 >{{this.fineMsg}}</h5>
+    </div>
+    <button style="float: right;margin-left: 2px;" (click)="showpayment(); closemodal(); " class="btn btn-primary"
+      type="button">
+      <span aria-hidden="true">Ok</span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #prohibitedtemplate >
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Do you want to return to Prohibited Audit ?</h4>
+    <!-- <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()"> -->
+      <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="closemodal();">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button type="button" class="btn btn-primary" style="float: right;" (click)="closemodal(); goToNOV()">No</button>
+    <button type="button" class="btn btn-primary" style="float: right; margin-left:2px;" (click)="closemodal(); ProhibitedAuditpage(this.citation.prohibitedAuditId)">Yes</button>    
+  </div>
+</ng-template>

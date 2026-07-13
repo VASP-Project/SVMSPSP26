@@ -1,0 +1,74 @@
+<form #formData="ngForm" (ngSubmit)="onSave(formData)">
+  <input type="hidden" name="id" [(ngModel)]="formDataModel.id" />
+
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="form-group">
+        <label>Quantity per Item</label>
+        <input
+          type="number"
+          class="form-control"
+          name="quantityPerItem"
+          [(ngModel)]="formDataModel.itemQuantity"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-5">
+      <div class="form-group">
+        <label>Quantity per Company</label>
+        <input
+          type="number"
+          class="form-control"
+          name="quantityPerCompany"
+          [(ngModel)]="formDataModel.itemForCompany"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="form-group">
+        <label>No of Audits per Day per Company</label>
+        <input
+          type="number"
+          class="form-control"
+          name="noOfAuditsPerDay"
+          [(ngModel)]="formDataModel.auditCount"
+          required
+        />
+      </div>
+    </div>
+
+      <div class="col-sm-12 col-md-5">
+      <div class="form-group">
+        <label>Email Address</label>        
+        <input
+                  class="form-control"
+                  placeholder="email"
+                  type="email"
+                  [(ngModel)]="formDataModel.emailId"
+                  name="email"
+                  required
+                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,9})+$"
+                  
+                  autocomplete="new-email"
+                />
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <div class="form-group" style="margin-top: 25px;">
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="!formData.form.valid"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

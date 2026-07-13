@@ -1,0 +1,220 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card" >
+        <!-- <br> -->
+       
+          <div class="col-md-12">
+            <h3 class="card-title">Security Clearance Status Report</h3>
+          </div>
+
+       
+     
+         <div class="col-md-12">
+             <!-- <p class="fontSetting"><b>CLEARANCE DATE:</b> The applicant must complete the badging process within 30 days of receiving a clearance date. Failure to complete the badging process within 30 days, to include security training & issuance, will require the applicant to be fingerprinted again before a badge can be issued. Should the 30-days period expire, an additional charge may be applicable for processing as additional security check.</p>  -->
+                <label class="fontSetting">{{ this.clearanceDateText }}</label>
+            </div> 
+            <div class="row"  *ngIf="displayTable" >
+              <div class="col-md-12 text-right" style="padding-right: 30px;">
+                <div class="form-group" *ngIf="headerArray.length > 0" style="float: right;">
+                  <br />
+                  <button
+                    class="btn btn-primary"                    
+                    (click)="ExportTableDataToPDF()"
+                  >
+                    PDF
+                  </button>
+                  <button
+                    class="btn btn-primary" style="margin-left: 5px"
+                    (click)="ExportTableDataToExcel()"
+                  >
+                    Excel
+                  </button>
+                  
+                  <button *ngIf="isStaffAdmin  || isSuperAdmin"
+                    class="btn btn-primary"
+                    style="margin-left: 5px"
+                    (click)="SaveClearanceDate()"
+                  >
+                  Approve Selected
+                  </button>
+                  <button *ngIf="isStaffAdmin || isSuperAdmin"
+                  class="btn btn-danger"
+                  style="margin-left: 5px"
+                  (click)="SaveDeny()"
+                  >
+                  Deny Selected
+                  </button>
+                </div>
+              </div>
+            </div>
+      
+        <div class="col-md-12 card-body" >
+          <div class="table-responsive">
+            <table
+              id="dt1"
+              class="table table-striped"
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+            >
+              <thead>
+                <tr    *ngIf="!displayTable"><td colspan="7"></td></tr>
+                <tr style="background-color: #484D56; color: white" *ngIf="displayTable">
+                  <th style="text-align: center;" *ngIf="isStaffAdmin || isSuperAdmin">
+                   
+                    <input id="checkBox" type="checkbox" name="websitecheck" 
+                      (click)="checkuncheckall()"> select All</th>
+                  
+                  <th *ngIf="isAuthsigner || isIssuer"></th>
+
+                  <ng-container
+                    *ngFor="let header of headerArray[0]; first as isFirst"
+                  >
+                    <th *ngIf="!isFirst">{{ header }}</th>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngIf="!displayTable">
+                  <td colspan="6">No data available in table</td>
+                </tr>
+                <tr *ngFor="let pba of dataPendingBadge" class="pointerCursor">
+                  <td style="text-align: center" *ngIf="isStaffAdmin || isSuperAdmin">
+                    <ng-container *ngIf="(pba[6] == '' || pba[6] == null) && (pba[8] == '' || pba[8] == null)">
+                      <input style="margin-top:-0.3rem" *ngIf="hideButtons(pba)"
+                        class="form-check-input"
+                        type="checkbox"  name="websitecheck"  [checked]="isChecked" 
+                        (click)="CheckBoxChange($event, pba)"
+                      />
+                    </ng-container>
+                  </td>
+                  <td *ngIf="isAuthsigner || isIssuer"></td>
+                  <ng-container
+                    *ngFor="
+                      let data of pba;
+                      last as isLast;
+                      first as isFirst;
+                      let i = index
+                    "
+                  >
+                    <td *ngIf="!isLast && !isFirst && i != 6">{{ data }}</td>
+                    <td *ngIf="i == 6">
+                      <ng-container *ngIf="pba[6] !== '' && pba[6] !== null">
+                         <!-- <table>
+                          <tr>
+                            <td> {{ data }}</td>
+                            <td>
+                              <button *ngIf="isStaffAdmin || isSuperAdmin"
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          (click)="CompleteProcess(pba)"
+                        >
+                          Close
+                        </button>      
+                            </td>
+                          </tr>
+                        </table>  -->
+                         {{ data }} 
+                         <!-- <button *ngIf="isStaffAdmin || isSuperAdmin"
+                          type="button"
+                          class="btn btn-success btn-sm"
+                          (click)="CompleteProcess(pba)"
+                        >
+                          Close
+                        </button>       -->
+                      </ng-container>
+                      <span *ngIf="showIndicate(pba)" title="{{this.infoMessage}}">
+                        <!-- <i class="fa fa-info-circle red-color"></i></span> -->
+                        <i class="bi bi-info-circle-fill red-color"></i></span>
+                      <ng-container
+                        *ngIf="
+                          (pba[6] == '' || pba[6] == null) &&
+                          (pba[7] == '' || pba[8] == null) && (pba[5] != '' && pba[5] != null) 
+                          
+                        "
+                      >
+                        <button *ngIf="(isStaffAdmin || isSuperAdmin) && hideNotifyButtons(pba)"
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          (click)="saveSingleClearanceDate(pba)"
+                          
+                        >
+                        Approve
+                        </button>  
+                        
+                        <!-- <span *ngIf="!hideButtons(pba)" title="Company doesn't exist.">
+                          <i class="fa fa-info-circle"></i></span> -->
+
+                      </ng-container>
+
+                      <ng-container
+                        *ngIf="
+                          (pba[6] != '' || pba[6] != null) && 
+                          (pba[7] != '' || pba[7] != null) && (pba[5] != '' && pba[5] != null) 
+                          
+                        "
+                      >
+                        <button *ngIf="(isSuperAdmin) && hideButtonApprove(pba)"
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          (click)="unsaveSingleClearanceDate(pba)"
+                          
+                        >
+                        Unapprove
+                        </button>  
+                        
+                        <!-- <span *ngIf="!hideButtons(pba)" title="Company doesn't exist.">
+                          <i class="fa fa-info-circle"></i></span> -->
+
+                      </ng-container>
+
+                    </td>
+
+                    <td *ngIf="isLast" style="text-align: center">
+                      <ng-container *ngIf="data != ''">
+                        {{ data }}
+                      </ng-container>
+
+                      <ng-container
+                        *ngIf="
+                          (data == '' || data == null) &&
+                          (pba[6] == '' || pba[6] == null)
+                        "
+                      >
+                        <button *ngIf="(isStaffAdmin || isSuperAdmin) && hideButtons(pba)"
+                          type="button"
+                          class="btn btn-danger btn-sm"
+                          (click)="saveDenyDate(pba)"
+                        >
+                          Deny
+                        </button>
+                      </ng-container>
+
+                      <ng-container
+                        *ngIf="
+                         
+                          (pba[6] == '' || pba[6] == null) && (pba[8] != '' || pba[8] != null)
+                        "
+                      >
+                        <button *ngIf="(isSuperAdmin) && hideDenyButtons(pba)"
+                          type="button"
+                          class="btn btn-danger btn-sm"
+                          (click)="saveUndenyDate(pba)"
+                        >
+                          Undeny
+                        </button>
+                      </ng-container>
+                    </td>
+                    
+                  </ng-container>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

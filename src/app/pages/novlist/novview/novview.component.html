@@ -1,0 +1,1049 @@
+<!-- <div [ngclass]="{'content' : isdivClass}"> -->
+<div [className]="isdivClass ? 'content' : ''">
+  <div class="row" >
+    <div class="col-md-12" style="text-align: center;">
+    <h3 class="justify-content-center" style="color: #484D56;">{{citation.currentStatus}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 pr-md-1">
+      <!-- <div class="logo-img" *ngIf="citation.companyLogo != null">
+        <img [src]="citation.companyLogo" class="rounded" />
+      </div> -->
+      <div class="logo-img">
+        <img src="assets/logos/Client2/PrintImg.png" class="" />
+        <!-- <img src="assets/ICS_Software-logos/ICS Software-logos_black.png" class="rounded" /> -->
+      </div>
+    </div>
+    <div class=" col-md-6" style="text-align: center">
+      <h3>Notice Of Violation (NOV) Information</h3>
+    </div>
+    <div class="col-md-3 pl-md-1">
+      <div class="form-group pull-right">
+        <strong style="font-size: 20px;color: #484D56;"> NOV # : {{ citation.novNo }}</strong>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(isIssuer || isStaffAdmin || isAuthsigner) && divTab1">
+    <!-- <h3>Notice Of Violation (NOV) Information</h3> -->
+
+    <div class="row" style="padding-top: 35px;">
+      <div class="col-md-12">
+        <div class="card" style="margin-bottom: 0px !important;">
+          <div class="card-body">
+            <!-- <div class="row">
+
+                            <div class="col-md-5 pr-md-1">
+                                <div style="border-bottom: 1px solid black">
+                                    <label> {{citation.caseStatus}}</label>
+                                </div>
+                                <div>
+                                    <strong> Case Status </strong>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5 pr-md-1">
+                            </div>
+                        </div> -->
+            <h1>
+              <span class="badge bg-primary" style="font-size: 1rem;">Company/Badgeholder Information</span>
+            </h1>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.violatorFirstName }} &nbsp;
+                    {{ citation.violatorLastName }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Name </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.violatorBirthDate | date: "MM/dd/yyyy" }}</label>
+                </div>
+                <div>
+                  <strong> DOB </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.phone }}</label>
+                </div>
+                <div>
+                  <strong> Mobile/Text Phone Number </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.email }}</label>
+                </div>
+                <div>
+                  <strong> Email Address </strong>
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.address }}</label>
+                </div>
+                <div>
+                  <strong> Address </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.city }}, {{ citation.state }},
+                    {{ citation.zip }}</label>
+                </div>
+                <div>
+                  <strong> City, State, Zip </strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+  <div class="col-md-3 pr-md-1">
+    <div style="border-bottom: 1px solid black">
+      <label> {{ citation.driversLicenseNo }}</label>
+    </div>
+    <div>
+      <strong> Drivers License No. </strong>
+    </div>
+  </div>
+
+  <div class="col-md-2 pr-md-1">
+    <div style="border-bottom: 1px solid black">
+      <label> {{ citation.licenseState }}</label>
+    </div>
+    <div>
+      <strong> State </strong>
+    </div>
+  </div>
+
+  <div class="col-md-1"></div>
+
+  <!-- Security Badge -->
+  <div class="col-md-3 pr-md-1">
+    <div style="border-bottom: 1px solid black">
+      <label> {{ citation.securityBadgeNo }}</label>
+    </div>
+    <div>
+      <strong> Security Badge No. </strong>
+    </div>
+  </div>
+
+  <!-- ✅ COU/NOV IN SAME ROW -->
+  <div class="col-md-3 pr-md-1 d-flex align-items-end">
+    <div>
+      <div>
+        <span
+          [class.link-text]="(couCount || 0) + (novCount || 0) > 0"
+          [class.disabled-text]="(couCount || 0) + (novCount || 0) === 0"
+          (click)="(couCount || 0) + (novCount || 0) > 0 && openPopup()"
+        >
+          COU: {{ couCount || 0 }} | NOV: {{ novCount || 0 }}
+        </span>
+      </div>
+      <div>
+        <strong> Recent Citations </strong>
+      </div>
+    </div>
+  </div>
+</div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.companyName }}</label>
+                </div>
+                <div>
+                  <strong> Company </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.mvopPermitNo }}</label>
+                </div>
+                <div>
+                  <strong> MVOP Permit No. </strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.vehicleLicenseNo }}</label>
+                </div>
+                <div>
+                  <strong> Vehicle License No. </strong>
+                </div>
+              </div>
+              <div class="col-md-2 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.vehicleState }}</label>
+                </div>
+                <div>
+                  <strong> State </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.vehicleYear }} /
+                    {{ citation.vehicleMakeModel }}</label>
+                </div>
+                <div>
+                  <strong> Year/Model </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.witnessName }}</label>
+                </div>
+                <div>
+                  <strong> Witness Name </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.witnessBadgeNo }}</label>
+                </div>
+                <div>
+                  <strong> Witness Badge # </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pl-md-1">
+                      <div class="form-group">
+                        
+                        <div style="display: flex; align-items: center; flex-wrap: nowrap;">                          
+                         
+
+                         
+                          <div class="custom-modal" *ngIf="showPopup">
+                            <div class="modal-content" style="margin-bottom: 100px;">
+                              <div class="custom-header">
+                                <span class="header-badge">Citation Information</span>
+
+                                <button type="button" class="close-btn" (click)="closePopup()">
+                                  ×
+                                </button>
+                              </div>
+                              <div class="modal-content">
+                                <!-- <div *ngIf="windowRef.innerWidth >= 768"> -->
+                                  <div class="card-body">
+                                    <div class="table-responsive">
+                                      <table
+                                        class="table table-bordered table-sm"
+                                        id="dtPastCou"
+                                  datatable
+                                  [dtOptions]="dtOptionsPastCou"
+                                  [dtTrigger]="dtTriggerPastCou"
+                                      >
+                                        <thead class="text-primary">
+                                          <tr style="background-color: #484D56; color: white;">
+                                            <th hidden>D</th>
+                                            <th>CIT #</th>
+                                            <th>CIT. Type</th>
+                                            <th>Category</th>
+                                            <th>Citation Reason</th>
+                                            <th>Citation Date</th>
+                                          </tr>
+                                        </thead>
+
+                                        <tbody>
+                                          <tr *ngFor="let item of pastCou">
+
+                                            <!-- hidden sortable date column -->
+                                            <td hidden>
+                                              {{
+                                                item.createdDate | dateTimeFormatFilter : "MM/DD/yyyy"
+                                              }}
+                                            </td>
+
+                                            <td>{{ item.novNo }}</td>
+                                            <td>{{ item.type }}</td>
+                                            <td>
+                                              {{ item.violationType }}
+                                            </td>
+
+                                            <td>
+                                              {{ item.citationReason }}
+                                            </td>
+
+                                            <!-- display date -->
+                                            <td>
+                                              {{
+                                                item.violationDate | dateTimeFormatFilter : "MM/DD/YYYY"
+                                              }}
+                                            </td>
+
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                <!-- </div> -->
+                              </div>                       
+                           </div>
+                         </div>
+                        </div>
+                      </div>
+                      <div >
+                       <strong> Recent Citations </strong>
+                      </div>
+                    </div>
+            </div>
+            <br />
+            <hr />
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">
+                  Violation Information</span>
+              </h1>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.violationDate | date: "MM/dd/yyyy" }}</label>
+                </div>
+                <div>
+                  <strong> Violation Date </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ citation.violationTime | date: 'hh:mm a' }}</label>
+                </div>
+                <div>
+                  <strong> Violation TIme </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.violationType }}</label>
+                </div>
+                <div>
+                  <strong> Violation Type </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.citationReason }}</label>
+                </div>
+                <div>
+                  <strong> Citation Reason </strong>
+                </div>
+              </div>
+              
+              
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.opdPoliceReport }}</label>
+                </div>
+                <div>
+                  <strong>Incident Report # </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11 pr-md-1">
+                <label style="border-bottom: 1px solid black">
+                  {{ citation.summaryOfViolation }}</label>
+              </div>
+              <div class="col-md-11 pr-md-1">
+                <strong> Summary Of Violation: </strong>
+              </div>
+            </div>
+            <br />
+            <div class="row" *ngIf="!isAuthsigner">
+              <div class="col-md-11 pr-md-1">
+                <label style="border-bottom: 1px solid black">
+                  {{ citation.novNotes }}</label>
+              </div>
+              <div class="col-md-11 pr-md-1">
+                <strong> NOV Notes: </strong>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.isBadgeConfiscated == true ? "Yes" : "No" }}</label>
+                </div>
+                <div>
+                  <strong> Badge Confiscated: </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.iscctvAvailable == 'True' ? "Yes" : "No" }}</label>
+                </div>
+                <div>
+                  <strong> CCTV Available? </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.inspectionRecordNo }}</label>
+                </div>
+                <div>
+                  <strong> Source Inspection#: </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ citation.issuedBy }}</label>
+                </div>
+                <div>
+                  <strong> Issued By: </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1" *ngIf="!isAuthsigner">
+                <div style="border-bottom: 1px solid black">
+                  <label [innerHTML]="correctiveAction.staffAdminCommentIssuer"></label>
+                </div>
+                <div>
+                  <strong> Mgmt Comment(s) for Issuer: </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black; width: 50%;">
+                  <img [src]="citation.offenderSignature" />
+                </div>
+                <div>
+                  <strong> Recipient Signature </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <hr />
+            <!-- <div class="row col-md-12" *ngIf="this.user.rolename != 'AuthSigner'">  remove condition as per mail on 7th oct 2024 -->
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">Attachments </span>
+              </h1>
+            <!-- </div> -->
+            <!-- <div *ngIf="this.user.rolename != 'AuthSigner'">   remove condition as per mail on 7th oct 2024  -->
+              <span class="row">
+                <div *ngFor="
+                    let file of citationAttachmentsissuersImg;
+                    let i = index
+                  ">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'PNG' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] ==
+                          'jpeg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                      ">
+                      <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" src="{{
+                      'data:image/png;base64,' + this.file.thumbnailImage
+                  }}" />
+                      <!-- <a
+                        href="{{ imgfileurl }}{{ file.filePath }}"
+                        data-lightbox="image"
+                        data-title="{{ file.filePath }}"
+                      >
+                        <img
+                          class="ui bordered small image"
+                          src="{{ imgfileurl }}{{ file.filePath }}"
+                        />
+                      </a> -->
+                      <!-- (click)="downloadFile(file.filePath) -->
+                      <!-- <button type="button" (click)="showUndoBtn(file.id, file.filePath)"
+                                            class="btn btn-primary tim-icons icon-image-02">
+                                        </button>&nbsp; -->
+                    </div>
+                    <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                                        [src]="this.imgfileurl + file.filePath" /> -->
+                  </div>
+                </div>
+              </span>
+              <!-- <br /> -->
+              <span class="row">
+                <div *ngFor="
+                    let file of citationAttachmentsissuersFile;
+                    let i = index
+                  ">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'png' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'jpg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] !=
+                          'jpeg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'gif'
+                      ">
+                      <span *ngIf="
+                          file.filePath != null ||
+                          file.filePath != undefined ||
+                          file.filePath != ''
+                        ">{{ file.filePath }}
+                      </span>
+                      <span *ngIf="
+                          file.filePath == null ||
+                          file.filePath == undefined ||
+                          file.filePath == ''
+                        ">{{ file.filePath }}
+                      </span>
+                      <!-- (click)="downloadFile(file.filePath) -->
+                      <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                        class="btn btn-primary bi bi-cloud-download btn-sm"></button>&nbsp;
+                      <button
+                        *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                        type="button" (click)="viewFile(file.id, file.filePath)" title="View File"
+                        class="btn btn-primary bi bi-card-image btn-sm">
+                      </button>&nbsp;
+                    </div>
+                    <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                                        [src]="this.imgfileurl + file.filePath" /> -->
+                  </div>
+                </div>
+              </span>
+            <!-- </div> -->
+
+
+            <div *ngIf="!isAuthsigner">
+              <div class="row col-md-12">
+                <h1><span class="badge bg-primary" style="font-size: 1rem;">Chronology of Investigation</span>
+                </h1>
+              </div>
+              <table style="width: 100%;" id="eventTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                <thead>
+                  <tr style="background-color: #484D56; color: white;">
+                    <th class="sort">Event Type</th>
+                    <th class="sort dt-date">Date /Time of Event</th>
+                    <th class="sort">SEMS User</th>
+                    <th style="width: 40%;" class="sort">Event Details</th>                   
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let event of this.citationEvents;let i = index">
+                    <td>
+                      <span [innerHTML]="getEventName(event.eventTypeId)"></span>
+                    </td>
+                    <td>{{event.eventDate | date:'MM/dd/yyyy HH:mm:ss'}}
+                    </td>
+                    <td>
+                      {{event.userName}}
+                    </td>
+                    <td>
+                      {{event.eventDetails}}
+                    </td>
+                  </tr>                 
+                </tbody>
+                <!-- show footer row to add ref submittal only if user has permission and IR is not readonly -->
+              </table>             
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="(isStaffAdmin || isAuthsigner || showTsa) && isViewCorrectiveActions && divTab2">
+    <div class="row">
+      <!-- <div class="col-md-3 pr-md-1"></div> -->
+      <div class=" col-md-6">
+        <h1>
+          <span style="color: #ffffff;font-size: 1.5rem;background: #484D56;padding: 6px;">Corrective Actions</span>
+        </h1>
+      </div>
+      <div class=" col-md-3 pl-md-1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.badgeSuspendedDate | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Badge Suspended Date </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.remedialTrainingAssignedDate
+                    | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Corrective Action Completion Deadline </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.remedialTrainingCompletionDate
+                    | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Corrective Action Completion Date </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <div *ngFor="
+                  let k of correctiveAction.correctiveActionsTrainings;
+                  let i = index
+                ">
+                    <label style="border-bottom: 1px solid black">
+                      {{ i + 1 }}) {{ k.typeofRemedialTrainingName }}
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <strong> Corrective Actions </strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.otherTraining
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Other Corrective Action </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <hr />
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">Violation Final Disposition</span>
+              </h1>
+            </div>
+            <div class="row">
+
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.badgeDeactivatedDate | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Badge Revoked Date</strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.badgeRevoked == true ? "Yes" : "No"
+                    }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Badge Revoked </strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+
+              <!-- <div class="col-md-5 pr-md-1" *ngIf="isStaffAdmin || showTsa"> show to authsigner as per email on 7th oct 2024  -->
+              
+              
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.adminFine === true ?'Yes':'No'
+                    }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Admin Fine </strong>
+                </div>
+              </div>
+              <div class="col-md-1" ></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                      correctiveAction.fineAmount 
+                    }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Fine Amount </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">              
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                      correctiveAction.paymentType
+                    }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Payment Method </strong>
+                </div>
+              </div>
+              <div class="col-md-1" ></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                      correctiveAction.finePaid === true ?'Yes':'No'
+                    }}
+                  </label>
+                </div>
+                <div>
+                  <strong> Fine Paid </strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1" >
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{ correctiveAction.additionalNotes }}</label>
+                </div>
+                <div>
+                  <strong>Additional Notes </strong>
+                </div>
+              </div>
+           </div>
+            <hr />
+            <!-- <div class="row col-md-12" *ngIf="this.user.rolename != 'AuthSigner'"> -->
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">Attachments</span>
+              </h1>
+            <!-- </div> -->
+            <!-- <div *ngIf="this.user.rolename != 'AuthSigner'"> -->
+              <br />
+              <span class="row">
+                <div *ngFor="
+                    let file of citationAttachmentsStaffadminImg;
+                    let i = index
+                  ">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] ==
+                          'jpeg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                      ">
+                     
+                      <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" src="{{
+                        'data:image/png;base64,' + this.file.thumbnailImage
+                    }}" />
+                    </div>
+                    <br />
+                    
+                  </div>
+                </div>
+              </span>
+              <br />
+              <span class="row">
+                <div *ngFor="
+                    let file of citationAttachmentsStaffadminFile;
+                    let i = index
+                  ">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'png' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'jpg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] !=
+                          'jpeg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'gif'
+                      ">
+                      <span *ngIf="
+                          file.filePath != null ||
+                          file.filePath != undefined ||
+                          file.filePath != ''
+                        ">{{ file.filePath }}
+                      </span>
+                      <span *ngIf="
+                          file.filePath == null ||
+                          file.filePath == undefined ||
+                          file.filePath == ''
+                        ">{{ file.filePath }}
+                      </span>
+                     
+                      <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                        class="btn btn-primary bi bi-cloud-download btn-sm"></button>&nbsp;
+                      <button
+                        *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                        type="button" (click)="viewFile(file.id, file.filePath)" title="View File"
+                        class="btn btn-primary bi bi-card-image btn-sm">
+                      </button>&nbsp;
+                    </div>
+                    <br />
+                    
+                  </div>
+                </div>
+              </span>
+            <!-- </div> -->
+            <hr />
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">
+                  Federal Agency Referral</span>
+              </h1>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ correctiveAction.faa }}</label>
+                </div>
+                <div>
+                  <strong>FAA</strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label> {{ correctiveAction.tsa }}</label>
+                </div>
+                <div>
+                  <strong> TSA</strong>
+                </div>
+              </div>
+            </div>
+            <br />
+            <hr />
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">
+                  TSA Voluntary Disclosure</span>
+              </h1>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.eligible == true ? "Yes" : "No"
+                    }}</label>
+                </div>
+                <div>
+                  <strong>Eligible</strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.dateOfDisclosure | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Date of Disclosure</strong>
+                </div>
+              </div>
+      
+            </div>
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- <div class="col-md-3 pr-md-1"></div> -->
+      <div class=" col-md-6">
+        <h1>
+          <span style="color: #ffffff;font-size: 1.5rem;background: #484D56;padding: 6px;">Authorized
+            Signer</span>
+        </h1>
+      </div>
+      <div class=" col-md-3 pl-md-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row col-md-12">
+              <h1>
+                <span class="badge bg-primary" style="font-size: 1rem;">Attachments by Authorized Signer</span>
+              </h1>
+            </div>
+            <div>
+              <br />
+              <span class="row">
+                <div *ngFor="let file of citationAttachmentsAuthsignerImg">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] ==
+                          'jpeg' ||
+                        file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                      ">                     
+                      <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" src="{{
+                        'data:image/png;base64,' + this.file.thumbnailImage
+                    }}" />
+                    </div>
+                    
+                  </div>
+                </div>
+              </span>
+              <br />
+              <span class="row">
+                <div *ngFor="let file of citationAttachmentsAuthsignerFile">
+                  <div class="filedisplay">
+                    <div *ngIf="
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'png' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'jpg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] !=
+                          'jpeg' &&
+                        file.filePath.toLowerCase().split('.', 2)[1] != 'gif'
+                      ">
+                      <span *ngIf="
+                          file.filePath != null ||
+                          file.filePath != undefined ||
+                          file.filePath != ''
+                        ">{{ file.filePath }}
+                      </span>
+                      <span *ngIf="
+                          file.filePath == null ||
+                          file.filePath == undefined ||
+                          file.filePath == ''
+                        ">{{ file.filePath }}
+                      </span>
+                      <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                        class="btn btn-primary bi bi-cloud-download btn-sm"></button>&nbsp;
+                      <button type="button"
+                        *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                        (click)="viewFile(file.id, file.filePath)" title="View File"
+                        class="btn btn-primary bi bi-card-image btn-sm">
+                      </button>&nbsp;
+                    </div>
+                    <br />
+                    
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.isCorrectiveActionCompleted == true
+                    ? "Completed"
+                    : "Not Completed"
+                    }}</label>
+                </div>
+                <div>
+                  <strong>Corrective Action Status</strong>
+                </div>
+              </div>
+              <div class="col-md-1"></div>
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label>
+                    {{
+                    correctiveAction.correctiveActionCompletedDate
+                    | date: "MM/dd/yyyy"
+                    }}</label>
+                </div>
+                <div>
+                  <strong> Corrective Action Completion Date</strong>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-5 pr-md-1">
+                <div style="border-bottom: 1px solid black">
+                  <label [innerHTML]="correctiveAction.staffAdminComment"></label>
+                </div>
+                <div>
+                  <strong> Mgmt comment(s) for Authorized Signer: </strong>
+                </div>
+              </div>
+            </div>
+            <hr />
+            
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="card-footer noprint" style="text-align: center;">
+    <button type="button" onClick="window.print();" *ngIf="isdivClass" class="btn btn-fill btn-primary">
+      Print
+    </button>
+    <button class=" btn btn-fill btn-danger" style="margin-left:2px;" type="button" (click)="GetCitationDetails()">
+      Close
+    </button>
+  </div>
+</div>

@@ -1,0 +1,256 @@
+.filedisplay div{
+    float:left;
+    overflow:auto;
+    margin:15px;
+    background-color: whitesmoke;
+    padding: 5px;
+    border: 1px silver solid;
+    border-radius: 5px;
+  }
+  .filedisplay span{
+    padding-left:5px;
+    padding-right:5px
+  }
+  
+  .filedisplay a img{
+    width: 40px;
+    height: 40px;
+  }
+  
+  
+  .imagescale{
+    height: 100px;
+    width: 100px;
+  }
+
+  b, strong {
+    font-weight: 500 !important;
+  }
+
+  h3{
+    padding-left: 10px;
+  }
+  .logo-img {
+    width: 75px !important;
+    height:75px !important;
+    //background-color: #003594;
+  }
+  .logo-img img{
+    width: 75px !important;
+    height:70px !important;
+  }
+
+  .input-group .form-control:not(:first-child):not(:last-child), .input-group-btn:not(:first-child):not(:last-child){
+    border-radius: 0 !important;
+    // border-top-left-radius: 0 !important;
+    // border-bottom-left-radius: 0 !important;
+    // border-left: 0 none;
+  }
+
+  .custom-size .btn-sm {
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    border-radius: 3px;
+  }
+
+  .custom-content {
+    position: absolute;
+    z-index: 1081;
+    top: 390px;
+    cursor: pointer;
+    align-self: center;
+  }
+
+  .containerd {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    margin-top: 50px !important;
+  }
+  
+  ::ng-deep.bs-datepicker {
+    height: 350px !important;
+  }
+
+  .owl-dateTime-dialog { width: auto !important; }
+.is-added
+{
+  background-color: cadetblue;
+}
+.actionBtn {
+    font-size: 4em;
+    cursor: pointer;
+  }
+
+  .snapshot {
+    text-align: center;
+    img {
+      max-width: 800px;
+      max-height: 800px;
+    }
+  }
+  
+  ul.links {
+    padding-bottom: 20px;
+  }
+  .column {
+    float: left;
+    width: 25%;
+    padding: 10px;
+  }
+  
+  /* Style the images inside the grid */
+  .column img {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+  
+  .column img:hover {
+    opacity: 1;
+  }
+
+  .collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+form label{
+  font-weight:bold;
+  color: #525f7f;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+}
+
+#upload_button {
+  display: inline-block;
+}
+
+#upload_button input[type=file] {
+  display:none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+input[type="number"] {
+   -moz-appearance: textfield;
+}
+
+.disabledRow{
+  background-color: lightcoral;
+}
+table { 
+  width: 100% !important; 
+  border-collapse: collapse !important; 
+}
+@media all and (max-width:768px) {
+  .eventTable tr {    display: table;  width:100%;    }               
+  .eventTable td {    display: table-row; }           
+}
+
+
+
+/* Style the Image Used to Trigger the Modal */
+#myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    // margin-top: 200px; /* Location of the box */
+    margin: auto;
+    // left: 0;
+    // top: 10;
+    width: 60%; /* Full width */
+    height: 80%; /* Full height */
+    // overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    height: 100%;
+    // height: 500px;
+    // max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)}
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+

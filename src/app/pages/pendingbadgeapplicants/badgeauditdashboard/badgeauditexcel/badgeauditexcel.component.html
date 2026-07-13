@@ -1,0 +1,122 @@
+
+
+  <div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Badge Accountability Audit</h3>
+
+                   
+                    <button
+                    type="button"
+                    [routerLink]="['/admin/badgedashoard/']" 
+                    [queryParams]="{ auditId: this.auditId, isEdit: 0, isView:1 }" skipLocationChange
+                    class="btn btn-primary mt-2"
+                    style="float: right; margin-right: 18px"
+                  >
+                    Back
+                  </button>
+                  <!-- <button type="button"  (click)="toPdf()" class="btn btn-primary mt-2"
+                  style="float: right; margin-right: 18px" >PDF</button> -->
+
+                  <button  class="btn btn-primary mt-2" style="float: right; margin-right: 18px"
+                   printSectionId="print-section" ngxPrint [printStyle]="{button: { display: 'none' }}" 
+                  [useExistingCss]="true">Print</button> 
+                 
+
+                  <button type="button" (click)="fireEvent()" class="btn btn-primary mt-2"
+                  style="float: right; margin-right: 18px">Excel</button>
+                </div>
+
+                <div id="print-section">
+                    <div class="card-body">
+                        
+                        <div class="container table-responsive" >
+                            <table class="table table-sm table-bordered " id="dt1" #table #pdfTable >
+                                <thead>
+                                    <tr *ngFor="let item of auditCompanysList">
+                                        <td colspan="17" style="text-align: center; font-size: large;"><strong>Audit Details ({{item.companyName | uppercase }})</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><strong>Audit Name : </strong>{{ badgeauditinfo.auditName }}</td>
+                                        <td colspan="4"><strong>Audit Type : </strong>{{ badgeauditinfo.auditType }}</td>
+                                        <td colspan="4"><strong>Audit Start Date : </strong>{{ badgeauditinfo.auditFromDate | date: "MM/dd/yyyy" }}</td>
+                                        <td colspan="5"><strong>Audit End Date : </strong>{{ badgeauditinfo.auditToDate | date: "MM/dd/yyyy" }}</td>
+                                    </tr>
+                                    <tr *ngFor="let item of auditCompanysList">
+                                        <td colspan="4"><strong>Total Badges : </strong>{{ item.totalBadges }}</td>
+                                        <td colspan="4"><strong>Total Accountable : </strong>{{ item.totalAccountable }}</td>
+                                        <td colspan="4"><strong>Total Unaccountable : </strong>{{ item.totalUnAccountable }}</td>
+                                        <td colspan="5"><strong>Total % Unaccountable : </strong>{{ item.totalPercentageUnAccountable  }}%</td>
+                                    </tr>
+                                    <tr *ngFor="let item of auditCompanysList">
+                                        <td colspan="4"><strong>Submitted : </strong>{{ item.isSubmitted == true?'Submitted':'Not Submitted' }}</td>
+                                        <td colspan="4"><strong>Submitted By : </strong>{{ item.submittedBy }}</td>
+                                        <td colspan="4"><strong>Submitted Date : </strong>{{ item.submittedDate | date: "MM/dd/yyyy"}}</td>
+                                    </tr>
+                                    <tr style ="background-color: #58B0BB">
+                                        <th><strong>First Name</strong></th>
+                                        <th><strong>Last Name</strong></th>
+                                        <th><strong>Badge Number</strong></th>
+                                        <th><strong>Status</strong></th>
+                                        <th><strong>Badge Color</strong></th>
+                                        <th><strong>Issuance Date</strong></th>
+                                        <th><strong>Expiration Date</strong></th>
+                                        <th><strong>Escort Icon</strong></th>
+                                        <th><strong>Access Level</strong></th>
+                                        <th><strong>Drivers Icon</strong></th>
+                                        <th><strong>Custom Seal</strong></th> 
+                                        <th><strong>Last Audit</strong></th>
+                                        <th ><strong>Accountability</strong></th>
+                                        <th><strong>Unacc Reason</strong></th>
+                                        <th><strong>Unacc Date</strong></th>
+                                        <th><strong>Comment</strong></th>
+                                        <th><strong>Badge Recov</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of auditEmployeeList" class="pointerCursor"
+                                        >
+                                        <td>{{ item.firstName }}</td>
+                                        <td>{{ item.lastName }}</td>
+                                        <td>{{ item.badgeNumber }}</td>
+                                        <td>{{ item.refreshStatus }}</td>
+                                        <td>{{ item.badgeColor }}</td>
+                                        <td>{{ item.issuanceDate | date: "MM/dd/yyyy" }}</td>
+                                        <td>{{ item.expirationDate | date: "MM/dd/yyyy" }}</td>
+                                        <td>{{ item.escortIcon }}</td>
+                                        <td>{{ item.accessLevel }}</td>           
+                                        <td>{{ item.driversIcon }}</td>
+                                        <td>{{ item.customSeal }}</td>          
+                                        <td>{{ item.lastAudit == '1900-01-01T00:00:00'?'':item.lastAudit | date: "MM/dd/yyyy" }}</td>
+                                        <td>
+                                        {{ item.empStatus == 0 && item.status != 'ACTIVE' && item.refreshStatus != 'ACTIVE'?'Unaccountable'
+                                            :item.empStatus == 0?'Pending'
+                                            :item.empStatus == 1?'Accountable'
+                                            :item.empStatus == 2?'Unaccountable'
+                                            :item.empStatus == 4?'Accountable'
+                                            :item.empStatus == 5?'Unaccountable'
+                                            :item.empStatus == 6?'Accountable'
+                                            :item.empStatus == 7?'Unaccountable'
+                                            :'Accountable' }} 
+                                        </td>
+                                        <td>{{ item.deactivatedReason }}</td>     
+                                        <td>{{ item.unaccountableDate | date: "MM/dd/yyyy"}}</td>     
+                                        <td style="word-break:break-all;">{{ item.comment }}</td>
+                                        <td>{{ item.badgeRecovered == true?"Yes":"No" }}</td> 
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                     
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

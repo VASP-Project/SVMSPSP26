@@ -1,0 +1,64 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Violation Types</h3>
+                    <button [routerLink]="['/admin/violationtypeedit']" 
+                    class="btn btn-primary" style="float: right; margin-right: 18px;"
+                            [queryParams]="{ isEdit: 0, isView: 0 }"> Add Violation Type</button>
+                </div>
+
+                <div>
+                    <div class="card-body">                 
+                        <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color: #484D56; color: white;">
+                                    <th>Violation Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let violationType of violationTypes" class="pointerCursor"
+                                    (click)="viewViolationType(violationType.id)">
+                                    <td>{{violationType.violationType}}</td>
+                                    <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                        <div>
+                                            <button title="Edit" [routerLink]="['/admin/violationtypeedit']" class="btn btn-warning btn-sm"
+                                                [queryParams]="{ violationtypeId: violationType.id, isEdit: 1, isView: 0 }">
+                                                <span><i class="bi bi-pencil"></i>
+                                                </span></button>
+                                            &nbsp;
+
+                                            <button title="Delete" type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteViolationTypes(violationType.id)">
+                                                <span><i class="bi bi-trash"></i>
+                                                </span>
+                                            </button>
+                                             &nbsp;
+                                        
+                                            <label title="Status" class="switch" (click)="$event.stopPropagation()">
+                                               <!-- <input 
+                                                type="checkbox"
+                                                [checked]="violationType.status"
+                                               (change)="onToggle(violationType, $event)"  /> -->
+                                                
+
+                                                <input name="active_{{violationType.id}}" type="checkbox" [(ngModel)]="violationType.status"  (click)="CheckBoxChange($event,violationType.id)"  />
+                                            <span class="slider"></span>
+                                            </label>
+
+                                            </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

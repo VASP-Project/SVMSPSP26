@@ -1,0 +1,1848 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12" style="text-align: center;">
+      <h3 class="justify-content-center" style="color: darkblue;">{{this.inspectioninfo.currentStatus}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3 class="card-title" style="padding-left: 10px;">Inspection Information</h3>
+        <div class="card-body">
+          <form #formData="ngForm" (ngSubmit)="saveInspectionRecord(formData)" (change)="setDirtyFlag()">
+
+            <div class="row">
+              <div class=" col-md-9 pr-md-1">
+                <!-- <h1 style="font-size: 1rem;"><span class="badge bg-primary" style="font-size: 1rem;"> Inspection
+                        Information</span></h1>  -->
+                <div class="d-inline">
+                  <strong> Inspection Type : </strong>
+                </div>
+                <div class="d-inline">
+                  <h5> {{ this.inspTypeName }}</h5>
+                </div>
+              </div>
+              <div class=" col-md-3 pl-md-1">
+                <div class=" form-group">
+                  <strong> Inspection No :</strong>
+                  <input type="number" class="form-control" placeholder="Inspection Record No" name="inspectionRecordNo"
+                    id="inspectionRecordNo" [(ngModel)]="inspectioninfo.inspectionRecordNo"
+                    (blur)="CheckInspectionExists()" [readonly]="readOnlyInspection" />
+                </div>
+              </div>
+            </div>
+
+
+            <ng-container *ngIf="isPerimeterInsp || isFacilityInsp || isDeliveryVehicleInsp">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Facility</label>
+                    <!-- <select class="form-control" id="inspectionFacilityId" #Id="ngModel" name="inspectionFacilityId" 
+                            [(ngModel)]="inspectioninfo.inspectionFacilityId" [disabled]="isFacility" required
+                            (change)="fillLocation(inspectioninfo.inspectionFacilityId)">
+                              <option disabled selected value="0">Select Option</option>
+                              <option [ngValue]="k.id" *ngFor="let k of allFacilityList">
+                                {{k.facilityName}}
+                              </option>
+                            </select>  -->
+
+                    <ng-select appendTo="body" id="inspectionFacilityId" #select [items]="allFacilityList"
+                      bindLabel="facilityName" placeholder="Select Facility" bindValue="id"
+                      [(ngModel)]="inspectioninfo.inspectionFacilityId" appearance="outline" name="inspectionFacilityId"
+                      [disabled]="isFacility" required
+                      (change)="fillLocation(inspectioninfo.inspectionFacilityId); setDirtyFlag()">
+                    </ng-select>
+                    <!-- <input class="form-control" placeholder="Inspection Facility" type="text" name="inspectionFacility" 
+                            id="inspectionFacility" [(ngModel)]="inspectioninfo.inspectionFacility" /> -->
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+
+                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                    <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'"
+                      [data]="allLocationList" [(ngModel)]="selectedDoorList" [settings]="doorDropdownSettings"
+                      id="selectedDoor" (onSelect)="onDoorSelect($event)" (onDeSelect)="onDoorDeselect($event)"
+                      (onSelectAll)="onSelectAllDoors($event)" (onDeSelectAll)="onDeSelectAllDoors($event)"
+                      name="ddlDoor" #ddlDoor="ngModel" required>
+
+                    </ng-multiselect-dropdown>
+
+
+                    <!-- <ng-multiselect-dropdown #multiSelect
+                            [placeholder]="'Select City'" 
+                            [data]="allLocationList"                              
+                            [settings]="doorDropdownSettings"
+                            [disabled]="false"
+                            [class.is-invalid]="f?.name?.errors?.required && f?.name?.touched"                                                       
+                            (onSelect)="onDoorSelect($event)" 
+                            (onDeSelect)="onDoorDeselect($event)"
+                            (onSelectAll)="onSelectAllDoors($event)"
+                            (onDeSelectAll)="onDeSelectAllDoors($event)">
+                          </ng-multiselect-dropdown> -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <!-- <input type="text" class="form-control" id="inspectionDate" name="inspectionDate" 
+                            [(ngModel)]="inspectioninfo.inspectionDate" required
+                            bsDatepicker  [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY dddd' }" > -->
+
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="inspectionDate.toggle()" ngbDatepicker
+                        #inspectionDate="ngbDatepicker" [(ngModel)]="inspectioninfo.inspectionDate"
+                        name="inspectionDate" placeholder="mm/dd/yyyy" required />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="inspectionDate.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Start Time (24 Hour)</label>
+                    <!-- <input type="text"class="form-control"  id="inspectionTime" name="inspectionTime" 
+                              [(ngModel)]="inspectioninfo.inspectionTime"
+                              [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1" >
+                                <owl-date-time  [pickerType]="'timer'" #dtPicker1 [hour12Timer]="true"></owl-date-time>  -->
+
+                    <!-- <ngb-timepicker [(ngModel)]="time" ></ngb-timepicker> -->
+
+                    <!-- <ngb-timepicker #tp name="inspectionTime" [ngModel]="inspectioninfo.inspectionTime" 
+                            (ngModelChange)="onTimeChange2($event)" [seconds]="seconds" [hourStep]="hourStep" 
+                            [spinners]="false" [minuteStep]="minuteStep" [secondStep]="secondStep">
+                            </ngb-timepicker>  -->
+                    <input type="time" class="form-control" id="inspectionTime"
+                      [(ngModel)]="inspectioninfo.inspectionTime" name="inspectionTime" #inspectionTime="ngModel"
+                      required />
+                  </div>
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Hours)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="hours" name="hours"
+                      [(ngModel)]="inspectioninfo.hours">
+                      <option disabled selected value=undefined>Select Hours</option>
+                      <option value="0">00</option>
+                      <option value="1">01</option>
+                      <option value="2">02</option>
+                      <option value="3">03</option>
+                      <option value="4">04</option>
+                      <option value="5">05</option>
+                    </select>
+                    <!-- <ng-select
+                              appendTo="body"
+                              id="hours"
+                              #select
+                              [items]="hoursNumber"
+                              bindLabel="label"
+                              placeholder="Hours"
+                              bindValue="value"
+                              [(ngModel)]="inspectioninfo.hours"
+                              appearance="outline"
+                              name="hours">
+                            </ng-select> -->
+                  </div>
+
+                  <!-- <div class="form-group">
+                            <label>Duration (Hours)</label>
+                            <input type="number"class="form-control"  id="hours" name="hours" 
+                            [(ngModel)]="inspectioninfo.hours" placeholder="Hours">                                                     
+                          </div> -->
+                </div>
+                <div class="col-md-2 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Minutes)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="minutes" name="minutes"
+                      [(ngModel)]="inspectioninfo.minutes">
+                      <option disabled selected value=undefined>Select Minutes</option>
+                      <option value="0">00</option>
+                      <option value="15">15</option>
+                      <option value="30">30</option>
+                      <option value="45">45</option>
+
+                    </select>
+                    <!-- <ng-select
+                              appendTo="body"
+                              id="minutes"
+                              #select
+                              [items]="minutesNumber"
+                              bindLabel="label"
+                              placeholder="Minutes"
+                              bindValue="value"
+                              [(ngModel)]="inspectioninfo.minutes"
+                              appearance="outline"
+                              name="minutes">
+                            </ng-select> -->
+                  </div>
+
+                  <!-- <div class="form-group">   
+                            <label>Duration (Minutes)</label>                                            
+                            <input type="number"class="form-control"  id="minutes" name="minutes" 
+                            [(ngModel)]="inspectioninfo.minutes" placeholder="Minutes" (blur)="checkMinutes()">                        
+                          </div> -->
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Finding/Vulnerability</label>
+                    <!-- <select class="form-control" id="inspectionFinding" name="inspectionFinding" 
+                            [(ngModel)]="inspectioninfo.inspectionFinding" (change)="showGate()">
+                              <option disabled selected>Select Option</option>
+                              <option value="1">Yes</option>
+                              <option value="0">No</option>
+                            </select> -->
+
+                    <ng-select appendTo="body" id="inspectionFinding" #select [items]="findingOptions" bindLabel="label"
+                      placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.inspectionFinding"
+                      appearance="outline" name="inspectionFinding" (change)="showGate(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <!-- <div class="col-md-6 pl-md-1">
+                          <div class="form-group">
+                            <label>Door / Gate Number</label>
+                            <select class="form-control" id="doorGateNumber" name="doorGateNumber"
+                            [(ngModel)]="inspectioninfo.doorGateNumber" [disabled]="isFinding">
+                              <option disabled selected value="0">Select Option</option>   
+                              <option [ngValue]="k.id" *ngFor="let k of selectedDoorGateNumber">
+                                {{k.location}}
+                              </option>                         
+                            </select>
+                          </div>                          
+                        </div> -->
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+                    <div [ngStyle]="{'cursor': isFinding ? 'no-drop' : 'default'}">
+                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                      <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="selectedDoorGateNumber"
+                        [disabled]="isFinding" [(ngModel)]="findingDoorList" style="cursor:n" id="findingDoor"
+                        [ngStyle]="{'pointer-events': isFinding ? 'none' : 'auto'}"
+                        [settings]="findingDoorDropdownSettings" (onSelect)="onFindingDoorSelect($event)"
+                        (onDeSelect)="onFindingDoorDeselect($event)" (onSelectAll)="onSelectAllFindingDoors($event)"
+                        (onDeSelectAll)="onDeSelectAllFindingDoors($event)" name="findingDoor" #findingDoor="ngModel">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>ETD Alarms</label>                    
+                    <ng-select appendTo="body" id="alarmsValue" #select [items]="edtAlarmList" bindLabel="alramsValue"
+                      placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtAlarm"
+                      appearance="outline" name="alarmsValue" (change)="showEdtResolution(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+
+                 <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label> ETD Resolution</label>  
+                    
+                      <ng-select appendTo="body" id="resolutionName" #select [items]=" edtResolutionList" bindLabel="resolutionName"
+                        placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtResolution" [disabled]="isEdtResolution"
+                        appearance="outline" name="resolutionName" (change)="setDirtyFlag()" >
+                      </ng-select>
+                                 
+                    
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Inspection Summary/Comments (ETD Alarms, Security Breaches, Inoperable Gates/Damage, Changes in Activity,
+                      Findings)</label>
+                    <textarea class="form-control" name="inspectionSummary" id="inspectionSummary"
+                      [(ngModel)]="inspectioninfo.inspectionSummary" rows="4"></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </ng-container>
+
+            <ng-container *ngIf="isPortalInsp">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Facility</label>
+                    <!-- <select class="form-control" id="inspectionFacilityId" #Id="ngModel" name="inspectionFacilityId" 
+                          [(ngModel)]="inspectioninfo.inspectionFacilityId" [disabled]="isFacility" required
+                          (change)="fillLocation(inspectioninfo.inspectionFacilityId)">
+                            <option disabled selected value="0">Select Option</option>
+                            <option [ngValue]="k.id" *ngFor="let k of allFacilityList">
+                              {{k.facilityName}}
+                            </option>
+                          </select>  -->
+
+                    <ng-select appendTo="body" id="inspectionFacilityId" #select [items]="allFacilityList"
+                      bindLabel="facilityName" placeholder="Select Facility" bindValue="id"
+                      [(ngModel)]="inspectioninfo.inspectionFacilityId" appearance="outline" name="inspectionFacilityId"
+                      [disabled]="isFacility" required
+                      (change)="fillLocation(inspectioninfo.inspectionFacilityId); setDirtyFlag()">
+                    </ng-select>
+
+                    <!-- <input class="form-control" placeholder="Inspection Facility" type="text" name="inspectionFacility" 
+                          id="inspectionFacility" [(ngModel)]="inspectioninfo.inspectionFacility" /> -->
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                    <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'"
+                      [data]="allLocationList" [(ngModel)]="selectedDoorList" [settings]="doorDropdownSettings"
+                      id="selectedDoor" (onSelect)="onDoorSelect($event)" (onDeSelect)="onDoorDeselect($event)"
+                      (onSelectAll)="onSelectAllDoors($event)" (onDeSelectAll)="onDeSelectAllDoors($event)"
+                      name="ddlDoor" #ddlDoor="ngModel" required>
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 pr-md-1">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <!-- <input type="text" class="form-control" id="inspectionDate" name="inspectionDate" 
+                          [(ngModel)]="inspectioninfo.inspectionDate" required
+                          bsDatepicker  [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY dddd' }" > -->
+
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="inspectionDate.toggle()" ngbDatepicker
+                        #inspectionDate="ngbDatepicker" [(ngModel)]="inspectioninfo.inspectionDate"
+                        name="inspectionDate" placeholder="mm/dd/yyyy" required />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="inspectionDate.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Start Time (24 Hour)</label>
+                    <!-- <input type="text"class="form-control"  id="inspectionTime" name="inspectionTime" 
+                            [(ngModel)]="inspectioninfo.inspectionTime"
+                            [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1" >
+                              <owl-date-time  [pickerType]="'timer'" #dtPicker1 [hour12Timer]="true"></owl-date-time>   -->
+
+                    <!-- <ngb-timepicker #tp name="inspectionTime" [ngModel]="inspectioninfo.inspectionTime" (ngModelChange)="onTimeChange2($event)"
+                              [seconds]="seconds" [hourStep]="hourStep" [spinners]="false" [minuteStep]="minuteStep"
+                              [secondStep]="secondStep">
+                            </ngb-timepicker>     -->
+
+                    <input type="time" class="form-control" id="inspectionTime"
+                      [(ngModel)]="inspectioninfo.inspectionTime" name="inspectionTime" #inspectionTime="ngModel"
+                      required />
+                  </div>
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Hours)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="hours" name="hours"
+                      [(ngModel)]="inspectioninfo.hours" required>
+                      <option disabled selected value=undefined>Select Hours</option>
+                      <option value="0">00</option>
+                      <option value="1">01</option>
+                      <option value="2">02</option>
+                      <option value="3">03</option>
+                      <option value="4">04</option>
+                      <option value="5">05</option>
+                    </select>
+
+
+                    <!-- <ng-select
+                                appendTo="body"
+                                id="hours"
+                                #select
+                                [items]="hoursNumber"
+                                bindLabel="label"
+                                placeholder="Hours"
+                                bindValue="value"
+                                [(ngModel)]="inspectioninfo.hours"
+                                appearance="outline"
+                                name="hours" >
+                              </ng-select> -->
+                  </div>
+
+                  <!-- <div class="form-group">
+                          <label>Duration (Hours)</label>
+                          <input type="number"class="form-control"  id="hours" name="hours" 
+                          [(ngModel)]="inspectioninfo.hours" placeholder="Hours">                                                     
+                        </div> -->
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Minutes)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="minutes" name="minutes"
+                      [(ngModel)]="inspectioninfo.minutes" required>
+                      <option disabled selected value=undefined>Select Minutes</option>
+                      <option value="0">00</option>
+                      <option value="15">15</option>
+                      <option value="30">30</option>
+                      <option value="45">45</option>
+
+                    </select>
+
+                    <!-- <ng-select
+                            appendTo="body"
+                            id="minutes"
+                            #select
+                            [items]="minutesNumber"
+                            bindLabel="label"
+                            placeholder="Minutes"
+                            bindValue="value"
+                            [(ngModel)]="inspectioninfo.minutes"
+                            appearance="outline"
+                            name="minutes"
+                            
+                            
+                          >
+                          </ng-select> -->
+                  </div>
+                  <!-- <div class="form-group">   
+                          <label>Duration (Minutes)</label>                                            
+                          <input type="number"class="form-control"  id="minutes" name="minutes" 
+                          [(ngModel)]="inspectioninfo.minutes" placeholder="Minutes" (blur)="checkMinutes()">                        
+                        </div> -->
+                </div>
+                <div class="col-md-2 pl-md-1">
+                  <div class="form-group">
+                    <label># of Persons Inspected</label>
+                    <input type="number" class="form-control" id="individualsInspected" name="individualsInspected"
+                      [(ngModel)]="inspectioninfo.individualsInspected" placeholder="Individuals Inspected" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Finding/Vulnerability</label>
+                    <!-- <select class="form-control" id="inspectionFinding" name="inspectionFinding" 
+                          [(ngModel)]="inspectioninfo.inspectionFinding" (change)="showGate()">
+                            <option disabled selected>Select Option</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                          </select> -->
+                    <ng-select appendTo="body" id="inspectionFinding" #select [items]="findingOptions" bindLabel="label"
+                      placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.inspectionFinding"
+                      appearance="outline" name="inspectionFinding" (change)="showGate(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <!-- <div class="col-md-6 pl-md-1">
+                        <div class="form-group">
+                          <label>Door / Gate Number</label>
+                          <select class="form-control" id="doorGateNumber" name="doorGateNumber"
+                          [(ngModel)]="inspectioninfo.doorGateNumber" [disabled]="isFinding">
+                            <option disabled selected value="0">Select Option</option>   
+                            <option [ngValue]="k.id" *ngFor="let k of selectedDoorGateNumber">
+                              {{k.location}}
+                            </option>                         
+                          </select>
+                        </div>                          
+                      </div> -->
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+                    <div [ngStyle]="{'cursor': isFinding ? 'no-drop' : 'default'}">
+                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                      <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="selectedDoorGateNumber"
+                        [disabled]="isFinding" [(ngModel)]="findingDoorList" style="cursor:n" id="findingDoor"
+                        [ngStyle]="{'pointer-events': isFinding ? 'none' : 'auto'}"
+                        [settings]="findingDoorDropdownSettings" (onSelect)="onFindingDoorSelect($event)"
+                        (onDeSelect)="onFindingDoorDeselect($event)" (onSelectAll)="onSelectAllFindingDoors($event)"
+                        (onDeSelectAll)="onDeSelectAllFindingDoors($event)" name="findingDoor" #findingDoor="ngModel">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>ETD Alarms</label>                    
+                    <ng-select appendTo="body" id="alarmsValue" #select [items]="edtAlarmList" bindLabel="alramsValue"
+                      placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtAlarm"
+                      appearance="outline" name="alarmsValue" (change)="showEdtResolution(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+
+                 <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label> ETD Resolution</label>  
+                    
+                      <ng-select appendTo="body" id="resolutionName" #select [items]=" edtResolutionList" bindLabel="resolutionName"
+                        placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtResolution" [disabled]="isEdtResolution"
+                        appearance="outline" name="resolutionName" (change)="setDirtyFlag()" >
+                      </ng-select>
+                                 
+                    
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Inspection Summary/Comments (ETD Alarms, Security Breaches, Inoperable Gates/Damage, Changes in Activity,
+                      Findings)</label>
+                    <textarea class="form-control" name="inspectionSummary" id="inspectionSummary"
+                      [(ngModel)]="inspectioninfo.inspectionSummary" rows="4"></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </ng-container>
+            <!-- AWS inspection -->
+            <ng-container *ngIf="isAWSInspection">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Facility</label>
+                    <ng-select appendTo="body" id="inspectionFacilityId" #select [items]="allFacilityList"
+                      bindLabel="facilityName" placeholder="Select Facility" bindValue="id"
+                      [(ngModel)]="inspectioninfo.inspectionFacilityId" appearance="outline" name="inspectionFacilityId"
+                      [disabled]="isFacility" required
+                      (change)="fillLocation(inspectioninfo.inspectionFacilityId); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                    <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'"
+                      [data]="allLocationList" [(ngModel)]="selectedDoorList" [settings]="doorDropdownSettings"
+                      id="selectedDoor" (onSelect)="onDoorSelect($event)" (onDeSelect)="onDoorDeselect($event)"
+                      (onSelectAll)="onSelectAllDoors($event)" (onDeSelectAll)="onDeSelectAllDoors($event)"
+                      name="ddlDoor" #ddlDoor="ngModel" required>
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3 pr-md-1">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="inspectionDate.toggle()" ngbDatepicker
+                        #inspectionDate="ngbDatepicker" [(ngModel)]="inspectioninfo.inspectionDate"
+                        name="inspectionDate" placeholder="mm/dd/yyyy" required />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="inspectionDate.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Start Time (24 Hour)</label>
+                    <input type="time" class="form-control" id="inspectionTime"
+                      [(ngModel)]="inspectioninfo.inspectionTime" name="inspectionTime" #inspectionTime="ngModel"
+                      required />
+                  </div>
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Hours)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="hours" name="hours"
+                      [(ngModel)]="inspectioninfo.hours" required>
+                      <option disabled selected value=undefined>Select Hours</option>
+                      <option value="0">00</option>
+                      <option value="1">01</option>
+                      <option value="2">02</option>
+                      <option value="3">03</option>
+                      <option value="4">04</option>
+                      <option value="5">05</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Duration (Minutes)</label>
+                    <select class="form-select form-select-md" style="color: black;" id="minutes" name="minutes"
+                      [(ngModel)]="inspectioninfo.minutes" required>
+                      <option disabled selected value=undefined>Select Minutes</option>
+                      <option value="0">00</option>
+                      <option value="15">15</option>
+                      <option value="30">30</option>
+                      <option value="45">45</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2 pl-md-1">
+                  <div class="form-group">
+                    <label># of Persons Inspected</label>
+                    <input type="number" class="form-control" id="individualsInspected" name="individualsInspected"
+                      [(ngModel)]="inspectioninfo.individualsInspected" placeholder="Individuals Inspected" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Finding/Vulnerability</label>
+                    <ng-select appendTo="body" id="inspectionFinding" #select [items]="findingOptions" bindLabel="label"
+                      placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.inspectionFinding"
+                      appearance="outline" name="inspectionFinding" (change)="showGate(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Door/Gate Number </label>
+                    <div [ngStyle]="{'cursor': isFinding ? 'no-drop' : 'default'}">
+                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                      <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="selectedDoorGateNumber"
+                        [disabled]="isFinding" [(ngModel)]="findingDoorList" style="cursor:n" id="findingDoor"
+                        [ngStyle]="{'pointer-events': isFinding ? 'none' : 'auto'}"
+                        [settings]="findingDoorDropdownSettings" (onSelect)="onFindingDoorSelect($event)"
+                        (onDeSelect)="onFindingDoorDeselect($event)" (onSelectAll)="onSelectAllFindingDoors($event)"
+                        (onDeSelectAll)="onDeSelectAllFindingDoors($event)" name="findingDoor" #findingDoor="ngModel">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 pr-md-1">
+                  <div class="form-group">
+                    <label>Airport Official 1</label>
+                    <input class="form-control" placeholder="Security Badge #" type="text" name="badge1"
+                      id="badge1" [(ngModel)]="inspectioninfo.badge1"
+                      (blur)="GetBadgeholderInfoAWSForBadgeASCX(inspectioninfo.badge1)"/>
+                      <input  style="margin-top: 5px;" class="form-control" placeholder="Name" type="text" name="name1"
+                      id="name1" [(ngModel)]="inspectioninfo.name1" [required]="this.isBadge1 ? true : false" [readonly]="readonlyBadge"
+                      />
+
+                  </div>
+                </div>
+                <div class="col-md-3 pr-md-1">
+                  <div class="form-group">
+                    <label>Airport Official 2</label>
+                    <input class="form-control" placeholder="Security Badge #" type="text" name="badge2"
+                      id="badge2" [(ngModel)]="inspectioninfo.badge2"
+                      (blur)="GetBadgeholderInfoAWSForBadgeASCX(inspectioninfo.badge2)" />
+                    <input  style="margin-top: 5px;" class="form-control" placeholder="Name" type="text" name="name2"
+                      id="name2" [(ngModel)]="inspectioninfo.name2" [required]="this.isBadge2 ? true : false" [readonly]="readonlyBadge"
+                      />
+                  </div>
+                </div>
+                <div class="col-md-3 pr-md-1">
+                  <div class="form-group">
+                    <label>Airport Official 3</label>
+                    <input class="form-control" placeholder="Security Badge #" type="text" name="badge3"
+                      id="badge3" [(ngModel)]="inspectioninfo.badge3"
+                      (blur)="GetBadgeholderInfoAWSForBadgeASCX(inspectioninfo.badge3)"  />
+                      <input  style="margin-top: 5px;" class="form-control" placeholder="Name" type="text" name="name3"
+                      id="name3" [(ngModel)]="inspectioninfo.name3"  [required]="this.isBadge3 ? true : false" [readonly]="readonlyBadge"
+                      />
+                  </div>
+                </div>
+                </div>
+                <div class="row">
+                <div *ngFor="let badge of BadgeholderList; let i = index" class="col-md-3 mt-2">
+                  <div class="badge-info">
+                    <span><strong>Badge #: </strong>{{badge.badgeNo}}</span><br>
+                    <span><strong>Name:</strong>{{badge.firstName}} {{badge.lastName}}</span>
+                  </div>
+                </div>
+              </div>              
+              
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group" style="margin-top: 10px;">
+                    <label># of unauthorized weapons, explosives, and incendiaries discovered</label>
+                    <input class="form-control"
+                      placeholder="# of unauthorized weapons, explosives, and incendiaries discovered" type="text"
+                      name="unAuthData" id="unAuthData" [(ngModel)]="inspectioninfo.unAuthData" (keydown)="onlyNumberKey($event)"/>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                  <div class="form-group">
+                    <label>Is this inspection the result of a scheduling deviation?</label>
+                    <ng-select appendTo="body" id="isDeviation" #select [items]="isDeviation" bindLabel="label"
+                      placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.isDeviation"
+                      appearance="outline" name="isDeviation" [required] (change)="isdeviation(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mt-2">
+                </div>
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group" *ngIf="isDev">
+                    <label>Describe the justification for any deviation from the airport-approved weekly
+                      plan, to include any door or time changes.</label>
+                    <input class="form-control" placeholder="Justification" type="text" name="justification"
+                      id="justification" [(ngModel)]="inspectioninfo.justification" />
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group">
+                  <label>IMPORTANT: All schedule deviations must be airport-approved. The re-scheduled screening
+                    activity must meet or exceed the operational screening hours of the originally scheduled screening
+                    activity. </label>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>ETD Alarms</label>                    
+                    <ng-select appendTo="body" id="alarmsValue" #select [items]="edtAlarmList" bindLabel="alramsValue"
+                      placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtAlarm"
+                      appearance="outline" name="alarmsValue" (change)="showEdtResolution(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+
+                 <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label> ETD Resolution</label>  
+                    
+                      <ng-select appendTo="body" id="resolutionName" #select [items]=" edtResolutionList" bindLabel="resolutionName"
+                        placeholder="Select Option" bindValue="id" [(ngModel)]="inspectioninfo.edtResolution" [disabled]="isEdtResolution"
+                        appearance="outline" name="resolutionName" (change)="setDirtyFlag()" >
+                      </ng-select>
+                                 
+                    
+                  </div>
+                </div>
+              </div>
+
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Inspection Summary/Comments (ETD Alarms, Security Breaches, Inoperable Gates/Damage, Changes in Activity,
+                      Findings)</label>
+                    <textarea class="form-control" name="inspectionSummary" id="inspectionSummary"
+                      [(ngModel)]="inspectioninfo.inspectionSummary" rows="4"></textarea>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="isVisitorInfoShow">
+              <div class="row">
+                <h1><span class="badge bg-primary" style="font-size: 1rem;">Visitor/Badgeholder
+                    Information</span>
+                </h1>
+              </div>
+
+              <div class="row">
+                <!-- <div class="col-md-4 pr-md-1">
+                  <div class="form-group">
+                    <label>Security Badge #</label>
+                    <input class="form-control" placeholder="Security Badge #" type="text" name="securityBadgeNo"
+                      id="securityBadgeNo" [(ngModel)]="badgeholderModel.securityBadgeNo"
+                      (blur)="GetBadgeholderInfo(1)" />
+                  </div>
+                </div>
+                <div class="col-md-4 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label>Tenant Company</label>                    
+                    <ng-select appendTo="body" id="companyId" #select [items]="allCompanyList" bindLabel="companyName"
+                      placeholder="Select Company" bindValue="id" [(ngModel)]="badgeholderModel.companyId"
+                      appearance="outline" name="companyId" required [disabled]="isCompany" (change)="setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3 pl-md-1 ">
+                  <div class="form-group">
+                    <label>Company Escorted</label>
+                    <input class="form-control" placeholder="Company Escorted" type="text" name="companyEscorted"
+                      id="companyEscorted" [(ngModel)]="badgeholderModel.companyEscorted" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 pr-md-1">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input class="form-control" placeholder="First Name" type="text" name="firstName" id="firstName"
+                      [(ngModel)]="badgeholderModel.firstName" required [readonly]="readonlyBadge" />
+                  </div>
+                </div>
+                <div class="col-md-4 pl-md-1 pr-md-1">
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input class="form-control" placeholder="Last Name" type="text" name="lastName" id="lastName"
+                      [(ngModel)]="badgeholderModel.lastName" required [readonly]="readonlyBadge" />
+                  </div>
+                </div>
+                <div class="col-md-3 pl-md-1">
+                  <div class="form-group">
+                    <label> Visitor/Badgeholder DOB</label>
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="badgeholderDOB.toggle()" ngbDatepicker
+                        #badgeholderDOB="ngbDatepicker" [(ngModel)]="badgeholderModel.badgeholderDOB"
+                        name="badgeholderDOB" placeholder="mm/dd/yyyy" required [disabled]="readonlyBadge" />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeholderDOB.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>Security Badge #</label>
+                  <input class="form-control" placeholder="Security Badge #" type="text" name="badgeNumber"
+                    id="badgeNumber" [(ngModel)]="badgeholderModel.badgeNumber"
+                    (blur)="GetBadgeholderInfoASCX(1)" />
+                </div>
+              </div>
+              <div class="col-md-4 pr-md-1 pl-md-1">
+                <div class="form-group">
+                  <label>Tenant Company</label>                    
+                  <ng-select appendTo="body" id="companyId" #select [items]="allCompanyList" bindLabel="companyName"
+                    placeholder="Select Company" bindValue="id" [(ngModel)]="badgeholderModel.companyId"
+                    appearance="outline" name="companyId" required [disabled]="isCompany" (change)="setDirtyFlag()">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="col-md-3 pl-md-1 ">
+                <div class="form-group">
+                  <label>Company Escorted</label>
+                  <input class="form-control" placeholder="Company Escorted" type="text" name="companyEscorted"
+                    id="companyEscorted" [(ngModel)]="badgeholderModel.companyEscorted" />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>First Name</label>
+                  <input class="form-control" placeholder="First Name" type="text" name="firstName" id="firstName"
+                    [(ngModel)]="badgeholderModel.firstName" required [readonly]="readonlyBadge" />
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1 pr-md-1">
+                <div class="form-group">
+                  <label>Last Name</label>
+                  <input class="form-control" placeholder="Last Name" type="text" name="lastName" id="lastName"
+                    [(ngModel)]="badgeholderModel.lastName" required [readonly]="readonlyBadge" />
+                </div>
+              </div>
+              <div class="col-md-3 pl-md-1">
+                <div class="form-group">
+                  <label> Visitor/Badgeholder DOB</label>
+                  <div class="input-group">
+                    <input class="form-control" type="text" (click)="badgeholderDOB.toggle()" ngbDatepicker
+                      #badgeholderDOB="ngbDatepicker" [(ngModel)]="badgeholderModel.badgeholderDOB"
+                      name="badgeholderDOB" placeholder="mm/dd/yyyy" required [disabled]="readonlyBadge" />
+                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeholderDOB.toggle()"
+                      type="button"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              <div class="row">
+                <div class="col-md-4 pr-md-1">
+                  <div class="form-group">
+                    <label>MVOP #</label>
+                    <input class="form-control" placeholder="MVOP" type="text" name="mvop" id="mvop"
+                      [(ngModel)]="badgeholderModel.mvop" />
+                  </div>
+                </div>
+                <div class="col-md-4 pr-md-1 pl-md-1">
+                  <div class="form-group">
+                    <label> Driver's License No </label>
+                    <input type="text" class="form-control" id="driverLicenseNo" name="driverLicenseNo"
+                      [(ngModel)]="badgeholderModel.driverLicenseNo" placeholder="Driver's License No"  [readonly]="readonlyBadge">
+                  </div>
+                </div>
+                <div class="col-md-3 pl-md-1">
+                  <div class="form-group">
+                    <label>License State</label>
+                    <input class="form-control" placeholder="License State" type="text" name="licenseState"
+                      id="licenseState" [(ngModel)]="badgeholderModel.licenseState" />
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-1" style="text-align: left;">
+                  <div class="form-group"><br>
+                    <button *ngIf="!badgeholderModel.inedit" class="btn btn-primary btn-sm" type="button"
+                      (click)="validateAndAddBadgeholderRecord(1)">
+                      <span><i class="bi bi-plus-lg"></i>
+                      </span></button>
+
+                    <button *ngIf="badgeholderModel.inedit" class="btn btn-success btn-sm" type="button"
+                      (click)="UpdateBadgeholderRecord(badgeholderModel,1)">
+                      <span><i class="bi bi-file-earmark-text"></i>
+                      </span></button>
+                    <button *ngIf="badgeholderModel.inedit" class="btn btn-danger btn-sm" type="button"
+                      (click)="cancelBadgeholderRecordUpdate(badgeholderModel)">
+                      <span><i class="bi bi-x-lg"></i>
+                      </span></button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="(windowRef?.innerWidth >= 768)">
+                <table style="width: 100%;" id="badgeholderTable"
+                  class="table table-striped table-bordered row-border hover mt-2 table-responsive" id="dt1">
+                  <thead>
+                    <tr style="background-color: #484D56;">
+                      <th style="width: 11%;"><span (click)="sort('securityBadgeNo',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Security Badge #</span></th>
+                      <th style="width: 11%;"><span (click)="sort('companyId',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Tenant Company</span></th>
+                      <!-- <th style="width: 11%;"><span (click)="sort('companyEscortedId',$event)" class="bi bi-arrow-down-up">&nbsp;&nbsp;Company Escorted</span></th> -->
+                      <th style="width: 11%;"><span (click)="sort('companyEscorted',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Company Escorted</span></th>
+                      <th style="width: 11%;"><span (click)="sort('firstName',$event)"
+                          class="bi bi-arrow-down-up">&nbsp; &nbsp;Name</span></th>
+                      <!-- <th style="width: 10%;"><span (click)="sort('lastName',$event)" class="bi bi-arrow-down-up">&nbsp; &nbsp;Last Name</span></th> -->
+                      <th style="width: 11%;"><span (click)="sort('badgeholderDOB',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;DOB</span></th>
+                      <th style="width: 11%;"><span (click)="sort('licenseState',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;MVOP</span></th>
+                      <th style="width: 11%;"><span (click)="sort('driverLicenseNo',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Driver's License No.</span></th>
+                      <th style="width: 11%;"><span (click)="sort('licenseState',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;License State</span></th>
+                      <th style="width: 10%;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let badgeholder of this.badgeholderInsp;let i = index">
+                      <td>
+                        <span>{{badgeholder.securityBadgeNo}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.securityBadgeNo}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                            [(ngModel)]="badgeholder.securityBadgeNo" id="securityBadgeNo" name="securityBadgeNo{{ i }}"
+                            #name="ngModel" />                             -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.cmpName}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.cmpName}}</span> -->
+                        <!-- <select id="companyId{{ i }}" #name="ngModel" class="form-control"
+                              [hidden]="!badgeholder.inedit" [(ngModel)]="badgeholder.companyId" name="companyId{{ i }}">
+                              <option [ngValue]="0" selected disabled>Select Company</option>
+                              <option [ngValue]="k.id" *ngFor="let k of allCompanyList">
+                                {{k.companyName}}
+                              </option>
+                            </select> -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.companyEscorted}}</span>
+                        <!-- <span>{{badgeholder.companyEscortedName}}</span> -->
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.companyEscortedName}}</span> -->
+                        <!-- <select id="companyEscortedId{{ i }}" #name="ngModel" class="form-control"
+                              [hidden]="!badgeholder.inedit" [(ngModel)]="badgeholder.companyEscortedId" name="companyEscortedId{{ i }}">
+                              <option [ngValue]="0" selected disabled>Select Company</option>
+                              <option [ngValue]="k.id" *ngFor="let k of allCompanyList">
+                                {{k.companyName}}
+                              </option>
+                            </select> -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.firstName}}&nbsp;{{badgeholder.lastName}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.firstName}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.firstName" id="firstName{{i}}" name="firstName{{i}}"
+                              #name{{i}}="ngModel" />                             -->
+                      </td>
+                      <!-- <td>
+                            <span>{{badgeholder.lastName}}</span>
+                            <span [hidden]="badgeholder.inedit">{{badgeholder.lastName}}</span>
+                            <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.lastName" id="lastName{{i}}" name="lastName{{i}}"
+                              #name{{i}}="ngModel" />                            
+                          </td> -->
+                      <td>
+                        <span>{{badgeholder.badgeholderDOB}}</span>
+                        <!-- <span>{{badgeholder.badgeholderDOB | date:'MM/dd/yyyy'}}</span> -->
+
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.badgeholderDOB | date:'MM/dd/yyyy'}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.badgeholderDOB" id="badgeholderDOB{{i}}" name="badgeholderDOB{{i}}"
+                              #badgeholderDOB{{i}}="ngModel" [owlDateTimeTrigger]="dtPicker2" [owlDateTime]="dtPicker2"
+                              formnovalidate [disabled]="!badgeholder.inedit" />
+                            <owl-date-time #dtPicker2 [pickerMode]="'dialog'" [pickerType]="'calendar'"></owl-date-time> -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.mvop}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.mvop}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.mvop" id="mvop{{i}}" name="mvop{{i}}"
+                              #mvop{{i}}="ngModel" />                             -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.driverLicenseNo}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.driverLicenseNo}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.driverLicenseNo" id="driverLicenseNo{{i}}" name="driverLicenseNo{{i}}"
+                              #driverLicenseNo{{i}}="ngModel" />                             -->
+                      </td>
+                      <td>
+                        <span>{{badgeholder.licenseState}}</span>
+                        <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.licenseState}}</span> -->
+                        <!-- <input type="text" [hidden]="!badgeholder.inedit" class="form-control"
+                              [(ngModel)]="badgeholder.licenseState" id="licenseState{{i}}" name="licenseState{{i}}"
+                              #licenseState{{i}}="ngModel" />                             -->
+                      </td>
+
+                      <td>
+                        <button [hidden]="badgeholder.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                          (click)="onBadgeholderEditClick($event, i,badgeholder)">
+                          <span><i class="bi bi-pencil"></i>
+                          </span></button>
+
+                        <!-- <button [hidden]="!badgeholder.inedit" type="button" class="btn btn-success mr-2"
+                              (click)="UpdateBadgeholder(badgeholder)" data-toggle="modal" data-target="#editModal"> <span><i
+                                  class="tim-icons icon-notes"></i>
+                              </span></button> -->
+                        <button [hidden]="badgeholder.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                          (click)="deleteBadgeholder(badgeholder)">
+                          <span><i class="bi bi-trash"></i>
+                          </span></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="(windowRef?.innerWidth < 768)">
+                <div class="card-body">
+                  <div class="list-group">
+                    <a *ngFor="let badgeholder of this.badgeholderInsp;
+                                      trackBy: identify; index as i; " skipLocationChange
+                      class="list-group-item list-group-item-action">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Security Badge #:</span>
+                          {{badgeholder.securityBadgeNo}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Tenant Company:</span>
+                          {{badgeholder.cmpName}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Company Escorted:</span>
+                          {{badgeholder.companyEscorted}}
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Name:</span>
+                          {{badgeholder.firstName}}&nbsp;{{badgeholder.lastName}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">DOB:</span>
+                          {{badgeholder.badgeholderDOB}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">MVOP:</span>
+                          {{badgeholder.mvop}}
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Driver's License No.:</span>
+                          {{badgeholder.driverLicenseNo}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">License State:</span>
+                          {{badgeholder.licenseState}}
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <span style="font-weight: bold;">Action:</span>
+                            <button [hidden]="badgeholder.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                              (click)="onBadgeholderEditClick($event, i,badgeholder)">
+                              <span><i class="bi bi-pencil"></i>
+                              </span></button>
+                            <button [hidden]="badgeholder.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                              (click)="deleteBadgeholder(badgeholder)">
+                              <span><i class="bi bi-trash"></i>
+                              </span></button>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <!-- <div class=" form-group">
+                            <label>Vehicle Inspection</label>
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input" placeholder="Is Vehicle Inspection" type="checkbox"
+                                  [(ngModel)]="inspectioninfo.isVehicleInspection" name="isVehicleInspection" />
+                                <span class="form-check-sign">
+                                  <span class="check"> </span>
+                                </span>
+                              </label>
+                            </div>
+                          </div> -->
+                  <div class=" form-group">
+                    <!-- <span>
+                              <span style="background-image: url('../../../../assets/img/right.png')"></span> 
+                              <label>Vehicle Inspection</label> 
+                            </span> -->
+
+                    <span class="btn btn-primary" (click)="showVehicleInspection()">
+                      <i class="bi bi-caret-down-fill" *ngIf="this.isVehicleInspection"></i>
+                      <i class="bi bi-caret-right-fill" *ngIf="!this.isVehicleInspection"></i>
+                      Vehicle Inspection
+                    </span>
+
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div *ngIf="this.isVehicleInspection">
+                <div class="row">
+                  <div class="col-md-2 pr-md-1">
+                    <div class="form-group">
+                      <label>Vehicle Year</label>
+                      <input class="form-control" placeholder="Vehicle Year" OnlynumberDirective="true" maxlength="4"
+                        (keypress)="onYearChange($event)" [(ngModel)]="vehicleModel.vehicleYear" name="VehicleYear"
+                        type="number" />
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1 pl-md-1">
+                    <div class="form-group">
+                      <label> Vehicle Make/Model</label>
+                      <input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required
+                        [(ngModel)]="vehicleModel.vehicleModel" placeholder="Vehicle Make/Model">
+                    </div>
+                  </div>
+                  <div class="col-md-3 pr-md-1 pl-md-1">
+                    <div class="form-group">
+                      <label> Vehicle State</label>
+                      <input type="text" class="form-control" id="vehicleState" name="vehicleState"
+                        [(ngModel)]="vehicleModel.vehicleState" placeholder="Vehicle State">
+                    </div>
+                  </div>
+                  <div class="col-md-3 pl-md-1">
+                    <div class="form-group">
+                      <label>Vehicle License No</label>
+                      <input class="form-control" placeholder="Vehicle License No" type="text" name="vehicleLicenseNo"
+                        id="vehicleLicenseNo" [(ngModel)]="vehicleModel.vehicleLicenseNo" />
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-md-1" style="text-align: center;">
+                    <div class="form-group"><br>
+                      <button *ngIf="!vehicleModel.inedit" class="btn btn-primary btn-sm" type="button"
+                        (click)="validateAndAddVehicleRecord(1)">
+                        <span><i class="bi bi-plus-lg"></i>
+                        </span></button>
+
+                      <button *ngIf="vehicleModel.inedit" class="btn btn-success btn-sm" type="button"
+                        (click)="UpdateVehicleRecord(vehicleModel,1)">
+                        <span><i class="bi bi-file-earmark-text"></i>
+                        </span></button>
+                      <button *ngIf="vehicleModel.inedit" class="btn btn-danger btn-sm" type="button"
+                        (click)="cancelVehicleUpdate(vehicleModel)">
+                        <span><i class="bi bi-x-lg"></i>
+                        </span></button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="row">
+                          <div class="col-md-5 pr-md-1">
+                            <div class="form-group">
+                              <label> Vehicle State</label>
+                              <input type="text" class="form-control" id="vehicleState" name="vehicleState" 
+                              [(ngModel)]="vehicleModel.vehicleState" placeholder="Vehicle State" >
+                            </div>
+                          </div>
+                          <div class="col-md-5 pl-md-1">
+                            <div class="form-group">
+                              <label>Vehicle License No</label>
+                              <input class="form-control" placeholder="Vehicle License No" type="text" name="vehicleLicenseNo" 
+                              id="vehicleLicenseNo" [(ngModel)]="vehicleModel.vehicleLicenseNo" />
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-2" style="text-align: center;">
+                            <div class="form-group"><br>
+                              <button *ngIf="!vehicleModel.inedit" class="btn btn-primary" type="button"
+                              (click)="validateAndAddVehicleRecord(1)">
+                                <span><i class="tim-icons icon-simple-add"></i>
+                                </span></button>
+        
+                              <button *ngIf="vehicleModel.inedit" class="btn btn-success" type="button"
+                                (click)="UpdateVehicleRecord(vehicleModel,1)">
+                                <span><i class="tim-icons icon-single-copy-04"></i>
+                                </span></button>
+                              <button *ngIf="vehicleModel.inedit" class="btn btn-danger" type="button"
+                                (click)="cancelVehicleUpdate(vehicleModel)">
+                                <span><i class="tim-icons icon-simple-remove"></i>
+                                </span></button>
+                            </div>
+                          </div>
+                        </div> -->
+                <div *ngIf="(windowRef?.innerWidth >= 768)">
+                  <table style="width: 100%;" id="vehicleTable"
+                    class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                    <thead>
+                      <tr style="background-color: #484D56;">
+                        <th style="width: 20%;"><span (click)="sort('vehicleYear',$event)"
+                            class="bi bi-arrow-down-up">&nbsp;&nbsp;Vehicle Year</span></th>
+                        <th style="width: 20%;"><span (click)="sort('vehicleModel',$event)"
+                            class="bi bi-arrow-down-up">&nbsp; &nbsp;Vehicle Make/Model</span></th>
+                        <th style="width: 20%;"><span (click)="sort('vehicleState',$event)"
+                            class="bi bi-arrow-down-up">&nbsp;&nbsp;Vehicle State</span></th>
+                        <th style="width: 20%;"><span (click)="sort('vehicleLicenseNo',$event)"
+                            class="bi bi-arrow-down-up">&nbsp;&nbsp;Vehicle License No</span></th>
+                        <th style="width: 20%;">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let vehicle of this.vehicleInsp;let i = index">
+                        <td>
+                          <span>{{vehicle.vehicleYear}}</span>
+                          <!-- <span [hidden]="vehicle.inedit">{{vehicle.vehicleYear}}</span> -->
+                          <!-- <input type="number" [hidden]="!vehicle.inedit" class="form-control"
+                                    [(ngModel)]="vehicle.vehicleYear" id="vehicleYear{{i}}" name="vehicleYear{{i}}"
+                                    #vehicleYear{{i}}="ngModel" />                             -->
+                        </td>
+                        <td>
+                          <span>{{vehicle.vehicleModel}}</span>
+                          <!-- <span [hidden]="vehicle.inedit">{{vehicle.vehicleModel}}</span> -->
+                          <!-- <input type="text" [hidden]="!vehicle.inedit" class="form-control"
+                                    [(ngModel)]="vehicle.vehicleModel" id="vehicleModel{{i}}" name="vehicleModel{{i}}"
+                                    #vehicleModel{{i}}="ngModel" />                             -->
+                        </td>
+                        <td>
+                          <span>{{vehicle.vehicleState}}</span>
+                          <!-- <span [hidden]="vehicle.inedit">{{vehicle.vehicleState}}</span> -->
+                          <!-- <input type="text" [hidden]="!vehicle.inedit" class="form-control"
+                                  [(ngModel)]="vehicle.vehicleState" id="vehicleState" name="vehicleState{{ i }}"
+                                  #name="ngModel"/>                             -->
+                        </td>
+                        <td>
+                          <span>{{vehicle.vehicleLicenseNo}}</span>
+                          <!-- <span [hidden]="vehicle.inedit">{{vehicle.vehicleLicenseNo}}</span> -->
+                          <!-- <input type="text" [hidden]="!vehicle.inedit" class="form-control"
+                                    [(ngModel)]="vehicle.vehicleLicenseNo" id="vehicleLicenseNo{{i}}" name="vehicleLicenseNo{{i}}"
+                                    #vehicleLicenseNo{{i}}="ngModel" />                             -->
+                        </td>
+
+                        <td>
+                          <button [hidden]="vehicle.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                            (click)="onVehicleEditClick($event, i,vehicle)">
+                            <span><i class="bi bi-pencil"></i>
+                            </span></button>
+
+                          <!-- <button [hidden]="!vehicle.inedit" type="button" class="btn btn-success mr-2"
+                                    (click)="UpdateVehicle(vehicle)" data-toggle="modal" data-target="#editModal"> <span><i
+                                        class="tim-icons icon-notes"></i>
+                                    </span></button> -->
+                          <button [hidden]="vehicle.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                            (click)="deleteVehicle(vehicle)">
+                            <span><i class="bi bi-trash"></i>
+                            </span></button>
+                        </td>
+                      </tr>
+                      <!-- <ng-container *ngTemplateOutlet="editableRefSubmittalRowsTemplate">
+                            </ng-container> -->
+                    </tbody>
+                    <!-- show footer row to add ref submittal only if user has permission and IR is not readonly -->
+
+                  </table>
+                </div>
+
+
+                <div *ngIf="(windowRef?.innerWidth < 768)">
+                  <div class="card-body">
+                    <div class="list-group">
+                      <a *ngFor="let vehicle of this.vehicleInsp;
+                                    trackBy: identify; index as i; " skipLocationChange
+                        class="list-group-item list-group-item-action">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;">Vehicle Year:</span>
+                            {{vehicle.vehicleYear}}
+                          </div>
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;">Vehicle Make/Model:</span>
+                            {{vehicle.vehicleModel}}
+                          </div>
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;">Vehicle State:</span>
+                            {{vehicle.vehicleState}}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;">Vehicle License No:</span>
+                            {{vehicle.vehicleLicenseNo}}
+                          </div>
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;">Action:</span>
+                            <button [hidden]="vehicle.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                              (click)="onVehicleEditClick($event, i,vehicle)">
+                              <span><i class="bi bi-pencil"></i>
+                              </span></button>
+                            <!-- <button [hidden]="!vehicle.inedit" type="button" class="btn btn-success mr-2"
+                                            (click)="UpdateVehicle(vehicle)" data-toggle="modal" data-target="#editModal"> <span><i
+                                                class="tim-icons icon-notes"></i>
+                                            </span></button> -->
+                            <button [hidden]="vehicle.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                              (click)="deleteVehicle(vehicle)">
+                              <span><i class="bi bi-trash"></i>
+                              </span></button>
+                          </div>
+                          <div class="col-md-4">
+                            <span style="font-weight: bold;"></span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+
+
+            <ng-container *ngIf="isSterileAreaPiInsp">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="fontFormat">Verify the Tenant is not displaying, offering for sale or use, or carrying in
+                    their inventory, any item on the PIL, except as authorized by current Security Directive(s) or ASP
+                    Section VI.H. </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group" id="filterAll">
+                    <label>Facility</label>
+                    <!-- <select class="form-control" id="inspectionFacilityId" #Id="ngModel" name="inspectionFacilityId" 
+                            [(ngModel)]="inspectioninfo.inspectionFacilityId" [disabled]="isFacility"
+                            (change)="fillLocation(inspectioninfo.inspectionFacilityId)">
+                              <option disabled selected value="0">Select Option</option>
+                              <option [ngValue]="k.id" *ngFor="let k of allFacilityList">
+                                {{k.facilityName}}
+                              </option>
+                            </select> -->
+
+                    <ng-select appendTo="body" id="inspectionFacilityId" #select [items]="allFacilityList"
+                      bindLabel="facilityName" placeholder="Select Facility" bindValue="id"
+                      [(ngModel)]="inspectioninfo.inspectionFacilityId" appearance="outline" name="inspectionFacilityId"
+                      [disabled]="isFacility"
+                      (change)="fillLocation(inspectioninfo.inspectionFacilityId); setDirtyFlag()">
+                    </ng-select>
+                    <!-- <input class="form-control" placeholder="Inspection Facility" type="text" name="inspectionFacility" 
+                          id="inspectionFacility" [(ngModel)]="inspectioninfo.inspectionFacility" /> -->
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label>Space Number</label>
+                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                    <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="allLocationList"
+                      [(ngModel)]="selectedDoorList" [settings]="doorDropdownSettings" (onSelect)="onDoorSelect($event)"
+                      (onDeSelect)="onDoorDeselect($event)" (onSelectAll)="onSelectAllDoors($event)"
+                      (onDeSelectAll)="onDeSelectAllDoors($event)" name="ddlDoor" #ddlDoor="ngModel">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <!-- <input type="text" class="form-control" id="inspectionDate" name="inspectionDate" 
+                          [(ngModel)]="inspectioninfo.inspectionDate" required
+                          bsDatepicker  [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY dddd' }" > -->
+
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="inspectionDate.toggle()" ngbDatepicker
+                        #inspectionDate="ngbDatepicker" [(ngModel)]="inspectioninfo.inspectionDate"
+                        name="inspectionDate" placeholder="mm/dd/yyyy" required />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="inspectionDate.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label>Time</label>
+                    <!-- <input type="text"class="form-control"  id="inspectionTime" name="inspectionTime" 
+                          [(ngModel)]="inspectioninfo.inspectionTime"
+                                  [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1">
+                                <owl-date-time  [pickerType]="'timer'" #dtPicker1></owl-date-time>        -->
+
+                    <input type="time" class="form-control" id="inspectionTime"
+                      [(ngModel)]="inspectioninfo.inspectionTime" name="inspectionTime" #inspectionTime="ngModel"
+                      required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label>Finding</label>
+                    <!-- <select class="form-control" id="inspectionFinding" name="inspectionFinding" 
+                            [(ngModel)]="inspectioninfo.inspectionFinding" (change)="showGate()">
+                              <option disabled selected>Select Option</option>
+                              <option value="1">Yes</option>
+                              <option value="0">No</option>
+                            </select> -->
+
+                    <ng-select appendTo="body" id="inspectionFinding" #select [items]="findingOptions" bindLabel="label"
+                      placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.inspectionFinding"
+                      appearance="outline" name="inspectionFinding" (change)="showGate(); setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label>Space Number</label>
+                    <div [ngStyle]="{'cursor': isFinding ? 'no-drop' : 'default'}">
+                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                      <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="selectedDoorGateNumber"
+                        [disabled]="isFinding" [(ngModel)]="findingDoorList" style="cursor:n" id="findingDoor"
+                        [ngStyle]="{'pointer-events': isFinding ? 'none' : 'auto'}"
+                        [settings]="findingDoorDropdownSettings" (onSelect)="onFindingDoorSelect($event)"
+                        (onDeSelect)="onFindingDoorDeselect($event)" (onSelectAll)="onSelectAllFindingDoors($event)"
+                        (onDeSelectAll)="onDeSelectAllFindingDoors($event)" name="findingDoor" #findingDoor="ngModel">
+                      </ng-multiselect-dropdown>
+                    </div>
+
+                    <!-- <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                          <ng-multiselect-dropdown [placeholder]="'Select Option'" [data]="selectedDoorGateNumber"
+                          [disabled]="isFinding" [(ngModel)]="findingDoorList" 
+                          [settings]="findingDoorDropdownSettings"
+                          (onSelect)="onFindingDoorSelect($event)"
+                          (onDeSelect)="onFindingDoorDeselect($event)"
+                          (onSelectAll)="onSelectAllFindingDoors($event)"
+                          (onDeSelectAll)="onDeSelectAllFindingDoors($event)"
+                          name="findingDoor" #findingDoor="ngModel">                            
+                          </ng-multiselect-dropdown>  -->
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Inspection Summary/Comments (if applicable)</label>
+                    <textarea class="form-control" name="inspectionSummary" id="inspectionSummary"
+                      [(ngModel)]="inspectioninfo.inspectionSummary" rows="4"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <h1><span class="badge bg-primary" style="font-size: 1rem;">Company Information</span>
+                </h1>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="fontFormat">Verify the Tenant is performing daily audits pursuant with ASP Section VI.G.
+                    Daily Prohibited Item Audits (Concessionaires, restaurants, passenger lounges, and vendors). </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 pr-md-1">
+                  <div class="form-group">
+                    <label>Company Name</label>
+                    <!-- <select class="form-control" name="companyId" id="companyId" 
+                          [(ngModel)]="companyModel.companyId" required>
+                            <option disabled selected value="0">Select Company</option>
+                                  <option [value]="k.id" *ngFor="let k of allCompanyList">
+                                    {{k.companyName}}
+                                  </option>   
+                            </select>    -->
+
+                    <ng-select appendTo="body" id="companyId" #select [items]="allCompanyList"
+                      bindLabel="companyName" placeholder="Select Company" bindValue="id"
+                      [(ngModel)]="companyModel.companyId" appearance="outline" name="companyId" required
+                      [disabled]="isCompany" (change)="setDirtyFlag()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-4 pl-md-1 pr-md-1">
+                  <div class="form-group">
+                    <label>Company Facilitator/Supervisor</label>
+                    <input type="text" class="form-control" name="companyFacilitator" id="companyFacilitator"
+                      [(ngModel)]="companyModel.companyFacilitator" required>
+                  </div>
+                </div>
+                <div class="col-md-3 pl-md-1">
+                  <div class="form-group">
+                    <label>Date of Knife Accountability Review</label>
+                    <!-- <input type="text" class="form-control" id="dateOfKnife" name="dateOfKnife" 
+                          [(ngModel)]="companyModel.dateOfKnife"
+                          bsDatepicker  [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" > -->
+
+                    <div class="input-group">
+                      <input class="form-control" type="text" (click)="dateOfKnife.toggle()" ngbDatepicker
+                        #dateOfKnife="ngbDatepicker" [(ngModel)]="companyModel.dateOfKnife" name="dateOfKnife"
+                        placeholder="mm/dd/yyyy" />
+                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dateOfKnife.toggle()"
+                        type="button"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                  <div class="form-group"><br>
+                    <button *ngIf="!companyModel.inedit" class="btn btn-primary btn-sm" type="button"
+                      (click)="validateAndAddCompanyRecord(1)">
+                      <span><i class="bi bi-plus-lg"></i>
+                      </span></button>
+
+                    <button *ngIf="companyModel.inedit" class="btn btn-success btn-sm" type="button"
+                      (click)="UpdateCompanyRecord(companyModel,1)">
+                      <span><i class="bi bi-file-earmark-text"></i>
+                      </span></button>
+                    <button *ngIf="companyModel.inedit" class="btn btn-danger btn-sm" type="button"
+                      (click)="cancelCompanyUpdate(companyModel)">
+                      <span><i class="bi bi-x-lg"></i>
+                      </span></button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="(windowRef?.innerWidth >= 768)">
+                <table style="width: 100%;" id="companyTable"
+                  class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                  <thead>
+                    <tr style="background-color: #484D56;">
+                      <th style="width: 25%;"><span (click)="sort('cmpName',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Company Name</span></th>
+                      <th style="width: 25%;"><span (click)="sort('companyFacilitator',$event)"
+                          class="bi bi-arrow-down-up">&nbsp;&nbsp;Company Facilitator</span></th>
+                      <th style="width: 25%;"><span (click)="sort('dateOfKnife',$event)"
+                          class="bi bi-arrow-down-up">&nbsp; &nbsp;Date of Review</span></th>
+                      <th style="width: 25%;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let cmp of this.companyInsp;let i = index">
+                      <td>
+                        <span>{{cmp.cmpName}}</span>
+                        <!-- <span [hidden]="cmp.inedit">{{cmp.cmpName}}</span> -->
+                        <!-- <select id="companyId_{{ i }}" #name="ngModel" class="form-control"
+                                [hidden]="!cmp.inedit" [(ngModel)]="cmp.companyId" name="companyId_{{ i }}">
+                                <option [ngValue]="0" selected disabled>Select Company</option>
+                                <option [ngValue]="k.id" *ngFor="let k of allCompanyList">
+                                  {{k.companyName}}
+                                </option>
+                              </select> -->
+                      </td>
+                      <td>
+                        <span>{{cmp.companyFacilitator}}</span>
+                        <!-- <span [hidden]="cmp.inedit">{{cmp.companyFacilitator}}</span> -->
+                        <!-- <input type="text" [hidden]="!cmp.inedit" class="form-control"
+                                [(ngModel)]="cmp.companyFacilitator" id="companyFacilitator{{i}}" name="companyFacilitator{{i}}"
+                                #companyFacilitator{{i}}="ngModel" />                             -->
+                      </td>
+                      <td>
+                        <span>{{cmp.dateOfKnife}}</span>
+                        <!-- <span [hidden]="cmp.inedit">{{cmp.dateOfKnife | date:'MM/dd/yyyy'}}</span> -->
+                        <!-- <input type="text" [hidden]="!cmp.inedit" class="form-control"
+                                [(ngModel)]="cmp.dateOfKnife" id="dateOfKnife{{i}}" name="dateOfKnife{{i}}"
+                                #dateOfKnife{{i}}="ngModel" [owlDateTimeTrigger]="dtPicker2" [owlDateTime]="dtPicker2"
+                                formnovalidate [disabled]="!cmp.inedit" />
+                              <owl-date-time #dtPicker2 [pickerMode]="'dialog'" [pickerType]="'calendar'"></owl-date-time> -->
+                      </td>
+
+                      <td>
+                        <button [hidden]="cmp.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                          (click)="onCompanyEditClick($event, i,cmp)">
+                          <span><i class="bi bi-pencil"></i>
+                          </span></button>
+
+                        <!-- <button [hidden]="!cmp.inedit" type="button" class="btn btn-success mr-2"
+                                (click)="UpdateCompany(cmp)" data-toggle="modal" data-target="#editModal"> <span><i
+                                    class="tim-icons icon-notes"></i>
+                                </span></button> -->
+                        <button [hidden]="cmp.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                          (click)="deleteCompany(cmp)">
+                          <span><i class="bi bi-trash"></i>
+                          </span></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+              <div *ngIf="(windowRef?.innerWidth < 768)">
+                <div class="card-body">
+                  <div class="list-group">
+                    <a *ngFor="let cmp of this.companyInsp;
+                                  trackBy: identify; index as i; " skipLocationChange
+                      class="list-group-item list-group-item-action">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Company Name:</span>
+                          {{cmp.cmpName}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Company Facilitator:</span>
+                          {{cmp.companyFacilitator}}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Date of Review:</span>
+                          {{cmp.dateOfKnife}}
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <span style="font-weight: bold;">Action:</span>
+                          <button [hidden]="cmp.inedit" type="button" class="btn btn-info mr-2 btn-sm"
+                            (click)="onCompanyEditClick($event, i,cmp)">
+                            <span><i class="bi bi-pencil"></i>
+                            </span></button>
+                          <button [hidden]="cmp.inedit" class="btn btn-danger mr-2 btn-sm" type="button"
+                            (click)="deleteCompany(cmp)">
+                            <span><i class="bi bi-trash"></i>
+                            </span></button>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+            </ng-container>
+
+
+            <hr />
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Upload Photos/Files</label>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span class="row">
+                <div *ngFor="let file of inspectionImageList; index as i">
+                  <div class="filedisplay">
+                    <div
+                      *ngIf="file.filePath.split('.', 2)[1].toLowerCase() =='png' || file.filePath.toLowerCase().split('.', 2)[1] =='jpg' || file.filePath.toLowerCase().split('.', 2)[1] =='jpeg' || file.filePath.toLowerCase().split('.', 2)[1] =='gif'">
+                      <button title="Delete File" type="button" (click)="deleteFile(file)"
+                        class="btn btn-danger bi bi-x-lg btn-sm" style="float: right;">
+                      </button>&nbsp;
+
+                      <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" src="{{
+                                          'data:image/png;base64,' + this.file.thumbnailImage
+                                      }}" />
+                    </div>
+                  </div>
+                </div>
+              </span>
+
+              <span class="row">
+                <div *ngFor="let file of inspectionFilesList; index as i">
+                  <div class="filedisplay">
+                    <div
+                      *ngIf="file.filePath.split('.', 2)[1].toLowerCase() !='png' && file.filePath.toLowerCase().split('.', 2)[1] !='jpg' && file.filePath.toLowerCase().split('.', 2)[1] !='jpeg' && file.filePath.toLowerCase().split('.', 2)[1] !='gif'">
+                      <span *ngIf="file.filePath != null || file.filePath != undefined || file.filePath != ''">{{
+                        file.filePath }}
+                      </span>
+                      <span *ngIf="file.filePath == null || file.filePath == undefined || file.filePath == ''">{{
+                        file.filePath }}
+                      </span>
+                      <button type="button" (click)="deleteFile(file)" title="Delete File"
+                        class="btn btn-danger bi bi-x-lg btn-sm">
+                      </button>&nbsp;
+                      <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                        class="btn btn-info bi bi-cloud-download btn-sm">
+                      </button>&nbsp;
+                      <button
+                        *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                        type="button" title="View File" (click)="viewFile(file.id, file.filePath)"
+                        class="btn btn-primary bi bi-card-image btn-sm">
+                      </button>&nbsp;
+                    </div>
+                  </div>
+                </div>
+              </span>
+            </div>
+
+            <div class="row">
+              <div *ngFor="let file of this.files">
+                <div class="filedisplay">
+                  <div>
+                    <span>{{ file.name }} </span>
+                    <span style="color: red;font-size: 14px;font-weight: bolder;" class="bi bi-x-lg" title="Delete File"
+                      (click)="removeFile(file)">
+                    </span>&nbsp;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="center">
+                  <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
+                    (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                      <button type="button" class="btn btn-success" (click)="openFileSelector()" id="btnInspUpload">
+                        <i class="bi bi-pin-angle"></i> Upload / Drag</button>
+                    </ng-template>
+                  </ngx-file-drop>
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div class="form-group">
+                  <label>NOV Required</label>
+                  <!-- <select class="form-control" id="inspectionNOV" name="inspectionNOV" 
+                        [(ngModel)]="inspectioninfo.inspectionNOV" (change)="isCreateNOV()" [disabled]="isCitationId">
+                          <option disabled selected>Select Option</option>
+                          <option value="1">Yes</option>
+                          <option value="0">No</option>
+                        </select> -->
+
+                  <ng-select appendTo="body" id="inspectionNOV" #select [items]="novRequiredOptions" bindLabel="label"
+                    placeholder="Select Option" bindValue="value" [(ngModel)]="inspectioninfo.inspectionNOV"
+                    appearance="outline" name="inspectionNOV" (change)="isCreateNOV(); setDirtyFlag()"
+                    [disabled]="isCitationId">
+                  </ng-select>
+                </div>
+              </div>
+              <!-- <div class="col-md-3 pl-md-1 pr-md-1">
+                      <div class="form-group" *ngIf="!isNovExists && !show">
+                        <label>NOV #</label>
+                        <input class="form-control" type="number" name="inspectionNOVNumber" 
+                        id="inspectionNOVNumber" [(ngModel)]="inspectioninfo.inspectionNOVNumber" 
+                        [readonly]="isNOV " (blur)="CheckNovExists(inspectioninfo.inspectionNOVNumber)"/>                                                                     
+                      </div>                      
+
+                      <div class="form-group" *ngIf="isNovExists">
+                        <label>NOV #</label>
+                        <label class="form-control" [ngClass]="{'hyperlink':isHyperlink}" (click)="goToCitationPage(inspectioninfo.inspectionNOVNumber)">
+                          {{this.inspectioninfo.inspectionNOVNumber}}&nbsp; 
+                        <span *ngIf="isGreaterThanZero"  style="color: red;font-size: 14px;font-weight: bolder;"
+                            class="bi bi-x-lg" title="Delete" 
+                            (click)="removeNovNo(this.inspectioninfo.inspectionNOVNumber)">
+                            </span></label>                            
+                      </div> -->
+
+              <!-- <div class="form-group" *ngIf="isCitationId && show">
+                        <label>NOV #</label>
+                        <label class="form-control" style="cursor: pointer;" (click)="goToCitationPage(this.citationNo)"> {{this.citationNo}} 
+                            </label>
+                      </div> -->
+              <!-- </div> -->
+              <div class="col-md-5 pr-md-1" [hidden]="!isCitationId">
+                <div class="form-group">
+                  <label>NOV #</label>
+                  <div class="form-control" style="border: none;">
+                    <label style="cursor: pointer; color:blue; text-decoration: underline;"
+                      (click)="goToCitationPage(citation.novNo)" *ngFor="let citation of this.mappingNOV; index as i;">
+                      <!-- {{this.inspectioninfo.inspectionNOVNumber}} -->
+                      <!-- {{this.eachMappingNovNo}} -->
+                      {{citation.novNo}}{{i === this.mappingNOV.length - 1 ? '' : ','}}&nbsp;
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2 pl-md-1 form-inline" style="padding-top: 20px;">
+                <button type="button" class="btn btn-primary" (click)="Unsave($event,1)"
+                  *ngIf="inspectioninfo.id > 0 && !isNOV && this.mappingNOV.length > 0">
+                  Add NOV
+                </button>
+              </div>
+            </div>
+
+            <br />
+            <div class="row">
+              <div class="col-md-12">
+                <label>Inspecting Airport Official: {{this.inspectioninfo.issuedBy}} </label>
+              </div>
+            </div>
+
+            <!-- <div class="row">
+                    <div class="col-md-12">
+                      <label *ngIf="isCitationId" style="cursor: pointer;" (click)="goToCitationPage(this.citationNo)">Nov #: {{this.citationNo}} 
+                         </label>                 
+                    </div>
+                  </div> -->
+
+            <!-- <div class="card-footer" style="text-align: center;" *ngIf="isPerimeterInsp || isPortalInsp || isFacilityInsp">
+                    <button class=" btn btn-fill btn-success" type="submit" [disabled]="!formData.form.valid" id="btnSave">Save</button>                        
+                    <button class=" btn btn-fill btn-danger" type="button" (click)="GetInspectionDetails()" id="btnClose">Close</button>                      
+                  </div> -->
+            <div class="card-footer" style="text-align: center;">
+              <button class=" btn btn-fill btn-success" type="submit" [disabled]="enableSave()"
+                id="btnSave">Save</button>
+              <button class=" btn btn-fill btn-danger" type="button" style="margin-left:2px;"
+                (click)="GetInspectionDetails()" id="btnClose">Close</button>
+              <button class=" btn btn-fill btn-primary" type="button" style="margin-left:2px;" (click)="SubmitByUser()"
+                [disabled]="enableSave()" id="btnInspSubmit">Submit</button>
+            </div>
+            <!-- <div class="card-footer" style="text-align: center;" *ngIf="isSterileAreaPiInsp">
+                    <button class=" btn btn-fill btn-success" type="submit" [disabled]="this.companyInsp.length==0">Save</button>     
+                    <button class=" btn btn-fill btn-danger" type="button" (click)="GetInspectionDetails()">Close</button>                      
+                  </div> -->
+
+            <!-- <div class="row">
+                    <div class="col-md-12">              
+                      <button type="button" class="btn btn-primary pull-right" (click)="Unsave($event,1)"
+                       *ngIf="inspectioninfo.id !== 0 && !isNOV">
+                      Add NOV
+                      </button>
+                    </div>
+                  </div> -->
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class=" col-md-4"></div>
+    <div class=" col-md-4" style="text-align: center;">      
+      <button class=" btn btn-fill btn-primary" type="button" style="width: inherit" (click)="SubmitByUser()"
+        *ngIf="isSubmitShow" id="btnInspSubmit">Submit</button>
+    </div>
+    <div class=" col-md-5"></div>
+  </div>   -->
+
+</div>

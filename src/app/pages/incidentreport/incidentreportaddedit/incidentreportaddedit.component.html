@@ -1,0 +1,2818 @@
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <h3 class="card-title" style="padding-left: 10px;">Incident Details</h3>        
+                <div class="card-body">
+                    <form #formData="ngForm" (ngSubmit)="saveIncidentRecord(formData)">
+                        <div class="row">
+                            <div class=" col-md-6 pr-md-1"> 
+                                  <strong> Incident Type : </strong>                                    
+                                  <ng-select
+                                    appendTo="body"
+                                    id="incidentType"
+                                    #select
+                                    [items]="allIncidentTypeDisplayNameList"
+                                    bindLabel="incidentType"
+                                    placeholder=" Incident"
+                                    bindValue="id"
+                                    [(ngModel)]="incidentinfo.incidentType"
+                                    appearance="outline"
+                                    name="incidentType"   
+                                    (change)="setPerimeterBreachRequiredEdit(incidentinfo.incidentType)"                     
+                                    >
+                                  </ng-select>                                      
+                                      
+                            </div>                             
+                        </div>
+                        <ng-container>
+                            <div class="row">
+                                <div class="col-md-3 pr-md-1">
+                                    <div class="form-group">
+                                      <label>Additional Type</label>
+                                      <input class="form-control" placeholder="Additional Type" type="text" name="additionalType" id="additionalType" 
+                                      [(ngModel)]="incidentinfo.additionalType" (change)="setDirtyFlag();" [readonly]="view"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1">
+                                  <div class="form-group">
+                                    <label>Facility</label>                                   
+                                    <ng-select appendTo="body" id="incidentFacilityId" #select [items]="allFacilityList"
+                                      bindLabel="facilityName" placeholder="Select Facility" bindValue="id"
+                                      [(ngModel)]="incidentinfo.incidentFacilityId" appearance="outline" name="incidentFacilityId"
+                                      [disabled]="isFacility" required
+                                      (change)="fillLocation(incidentinfo.incidentFacilityId); setDirtyFlag()">
+                                    </ng-select>             
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pl-md-1">
+                                  <div class="form-group" id="filterAll">
+                                    <label>Door/Gate Number </label>
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                                    <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'"
+                                      [data]="locationForIncident" [(ngModel)]="selectedDoorList" [settings]="doorDropdownSettings"
+                                      id="selectedDoor" (onSelect)="onDoorSelect($event)" (onDeSelect)="onDoorDeselect($event)"
+                                      (onSelectAll)="onSelectAllDoors($event)" (onDeSelectAll)="onDeSelectAllDoors($event)"
+                                      name="ddlDoor" #ddlDoor="ngModel">
+                                    </ng-multiselect-dropdown>
+                                  </div>
+                                </div>
+                                <!-- <div class="col-md-3 pl-md-1" >
+                                    <div class="form-group" id="filterAll">
+                                        <label>Location </label>                                                                  
+                                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                            <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="locationDropdownSettings"  [data]="allIncidentLocationList" 
+                                            [(ngModel)]="selectedLocationList" id="selectedLocation"
+                                            (onSelect)="onLocationSelect($event)"
+                                            (onDeSelect)="onLocationDeselect($event)"
+                                            (onSelectAll)="onSelectAllLocations($event)"
+                                            (onDeSelectAll)="onDeSelectAllLocations($event)" 
+                                            name="selectedLocation" #selectedLocation="ngModel" 
+                                            required [disabled]="view"
+                                            >                   
+                                        </ng-multiselect-dropdown> 
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 pr-md-1">
+                                  <div class="form-group">
+                                    <label>Date Occurred</label>                                     
+                                    <div class="input-group">
+                                    <input
+                                      class="form-control"
+                                      type="text"
+                                      (click)="dateOccurred.toggle()"
+                                      ngbDatepicker
+                                      #dateOccurred="ngbDatepicker"
+                                      [(ngModel)]="incidentinfo.dateOccurred"
+                                      name="dateOccurred"
+                                      placeholder="mm/dd/yyyy"
+                                      required  [disabled]="view"                                           
+                                    />
+                                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dateOccurred.toggle()" 
+                                    type="button" readonly="view" ></button>
+                                  </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1">                          
+                                  <div class="form-group">
+                                    <label>Time Occurred</label>
+                                      <input
+                                      type="time"
+                                      class="form-control"
+                                      id="timeOccurred"
+                                      [(ngModel)]="incidentinfo.timeOccurred"
+                                      name="timeOccurred"
+                                      #timeOccurred="ngModel" [readonly]="view" 
+                                      required                                
+                                    />
+                                  </div>
+                                </div>                                                                
+                              </div>
+                              <div class="row">
+                                <div *ngIf="showTextForLocation">
+                                  <div class="col-md-3 pr-md-1">
+                                    <div class="form-group">
+                                      <label>Other </label>
+                                      <input class="form-control" placeholder="Other" type="text" name="otherLocationTextvalue" id="otherLocationTextvalue" 
+                                      [(ngModel)]="incidentinfo.otherLocationTextvalue" (change)="setDirtyFlag();" [readonly]="view"/>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">                                
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>Media Attention ?</label>                                     
+                                      <ng-select
+                                          appendTo="body"
+                                          id="mediaAttention"
+                                          #select
+                                          [items]="boolndlOptions"
+                                          bindLabel="label"
+                                          placeholder="Select Option"
+                                          bindValue="value"
+                                          [(ngModel)]="incidentinfo.mediaAttention"
+                                          appearance="outline"
+                                          name="mediaAttention"      [readonly]="view" 
+                                          (change)=" setDirtyFlag()"  required                                        
+                                        >
+                                        </ng-select>
+                                    </div>                      
+                                </div>
+                                <div class="col-md-3 pt-md-1">
+                                  <div class="form-group">
+                                    <label>TSA Checkpoint Closure?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="tsacheckpointClosure"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentinfo.tsacheckpointClosure"
+                                        appearance="outline"
+                                        name="tsacheckpointClosure"  [readonly]="view"     
+                                        (change)=" setDirtyFlag()"   required                                       
+                                      >
+                                      </ng-select>
+                                  </div>                      
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>Evacuation ?</label>                                     
+                                      <ng-select
+                                          appendTo="body"
+                                          id="evacuation"
+                                          #select
+                                          [items]="boolndlOptions"
+                                          bindLabel="label"
+                                          placeholder="Select Option"
+                                          bindValue="value"
+                                          [(ngModel)]="incidentinfo.evacuation"
+                                          appearance="outline"
+                                          name="evacuation"      [readonly]="view" 
+                                          (change)="showEvacuatonDesc(); setDirtyFlag()"  required                                        
+                                        >
+                                        </ng-select>
+                                    </div>                      
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label> Description of Evacuation</label>
+                                        <textarea
+                                            class="form-control"
+                                            placeholder="Description of Evacuation"
+                                            id="evacuationDescription"
+                                            name="evacuationDescription"  [disabled]="showEvacuationDesctext"
+                                            [(ngModel)]="incidentinfo.evacuationDescription" [readonly]="view"     
+                                            [required]="isEvacuationRequired" (change)="setDirtyFlag();"
+                                        ></textarea>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"> 
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>Assoc. NOV/COU Report</label>&nbsp;<span *ngIf = "!view" class="btn btn-sm btn-primary"  (click)="openModal(template)" >
+                                        <i class="bi bi-search"></i>
+                                      </span>
+                                      <input class="form-control" placeholder="Assoc. NOV/COU Report" type="text" name="associatedNovreport" id="associatedNovreport" 
+                                      [(ngModel)]="incidentinfo.associatedNovreport" (change)="setDirtyFlag();"/>                                      
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                  <div class="form-group">
+                                    <label>Assoc. INSP Report</label>&nbsp;<span *ngIf = "!view" class="btn btn-sm btn-primary" (click)="openModalInsp(templateInsp)">
+                                      <i class="bi bi-search"></i>
+                                    </span>
+                                    <input class="form-control" placeholder="Assoc. INSP Report" type="text" name="associatedInspreport" id="associatedInspreport" 
+                                    [(ngModel)]="incidentinfo.associatedInspreport" (change)="setDirtyFlag();" />
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>Associated OPD Report</label>
+                                      <input class="form-control" placeholder="Associated OPD Report" type="text" name="associatedOpdreport" id="associatedOpdreport" 
+                                      [(ngModel)]="incidentinfo.associatedOpdreport" (change)="setDirtyFlag();" [readonly]="view" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 pt-md-1 pt-md-1" >
+                                    <div class="form-group" id="filterAll">
+                                        <label>Reporting Agency </label>                                                                  
+                                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                            <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="agencyDropdownSettings"  [data]="incidentAgencyList" 
+                                            [(ngModel)]="selectedRepoAgencyList" id="selectedAgency"
+                                            (onSelect)="onItemSelectRepoAgency($event)"
+                                            (onSelectAll)="onSelectAllRepoAgency($event)" 
+                                            (onDeSelect)="onItemDeSelectRepoAgency($event)"
+                                            (onDeSelectAll)="onDeSelectAllRepoAgency($event)"
+                                            name="selectedAgency" #selectedAgency="ngModel" required [disabled]="view" 
+                                            
+                                            >                   
+                                        </ng-multiselect-dropdown> 
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pt-md-1 pt-md-1" >
+                                    <div class="form-group" id="filterAll">
+                                        <label>Involved Agencies </label>                                                                  
+                                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                          <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="agencyDropdownSettings" [data]="incidentAgencyList" 
+                                            [(ngModel)]="selectedInAgencyList"  id="selectedInAgency"
+                                            (onSelect)="onItemSelectInvoAgency($event)" (onDeSelect)="onItemDeSelectInvoAgency($event)"
+                                            (onSelectAll)="onSelectAllInvoAgency($event)" (onDeSelectAll)="onDeSelectAllInvoAgency($event)"
+                                            name="selectedInAgency" #selectedInAgency="ngModel"  required    [disabled]="view"                                       
+                                            >                   
+                                          </ng-multiselect-dropdown> 
+                                    </div>
+                                </div> 
+                                <div class="col-md-3 pt-md-1 pt-md-1" >
+                                  <div class="form-group" >
+                                    <label for="checkbox">TSA Coordination Center Notified? </label>
+                                    <div class="form-check" style="margin-left: 10px;">
+                                      <label class="form-check-label" >
+                                        <input class="form-check-input checkbox-size" type="checkbox" [checked]="this.incidentinfo.tsaNotified"
+                                          [(ngModel)]="this.incidentinfo.tsaNotified" [ngModelOptions]="{ standalone: true }" [disabled]="view"
+                                          (click)="checkBoxChangeTsaNotified($event)" style="font-size: 20px;" />&nbsp;
+                                        <span class="form-check-sign">
+                                          <span class="check"> </span>
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>                               
+                            </div>
+                            <div class="row">
+                              <div class="col-md-3 pr-md-1" >
+                                <div *ngIf="showOtherRepo" >
+                                  <div class="form-group">
+                                    <label>Other Reporting Agency </label>
+                                    <input class="form-control" placeholder="Other" type="text" name="otherReportingvalue" id="otherReportingvalue" 
+                                    [(ngModel)]="incidentinfo.otherReportingvalue" [readonly]="view"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-3 pr-md-1">
+                                <div *ngIf ="showOtherInvol">
+                                  <div class="form-group">
+                                    <label>Other Involved Agencies</label>
+                                    <input class="form-control" placeholder="Other" type="text" name="otherInvolvedvalue" id="otherInvolvedvalue" 
+                                    [(ngModel)]="incidentinfo.otherInvolvedvalue" (change)="setDirtyFlag();" [readonly]="view"/>
+                                  </div>
+                                </div>                                
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>AOA Perimeter Breach Classification</label>&nbsp;<span *ngIf="!view" class="btn btn-sm btn-primary"  (change)="setDirtyFlag();"
+                                      (click)="openModalPeri(templatePerimeter)">
+                                        <i class="bi bi-search"></i>
+                                      </span>&nbsp;  
+                                      <span class="btn btn-danger mr-2 btn-sm" type="button" (click)="clearbreach()" >
+                                        <i class="bi bi-trash"></i>
+                                        </span>
+
+                                       <input class="form-control" placeholder="AOA Perimeter Breach Classification" type="text" name="perimeterBreach" id="perimeterBreach" 
+                                      [(ngModel)]="incidentinfo.perimeterBreachName" readonly [required]="this.perimeterBreachRequired ? 'true':'false'" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-1">
+                                    <div class="form-group">
+                                      <label>Additional Details</label>
+                                      <input class="form-control" placeholder="Additional Details" type="text" name="additionalDetails" id="additionalDetails" 
+                                      [(ngModel)]="incidentinfo.additionalDetails" (change)="setDirtyFlag();" [readonly]="view"/>
+                                    </div>
+                                </div>
+                                
+                            </div>                           
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold;">
+                                  <i class="bi bi-caret-down-fill" ></i> 
+                                  <!-- <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentSummary"></i> -->
+                                  INCIDENT SUMMARY
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                        
+                          <div >
+                            <div class="row">
+                              <div class="col-md-12 pr-md-1">
+                                <div class="form-group">
+                                  <label> (Who/What/Where/When/Why/How)</label>
+                                    <textarea
+                                        class="form-control"
+                                        placeholder=""
+                                        id="incidentSummary"
+                                        name="incidentSummary"
+                                        [(ngModel)]="incidentinfo.incidentSummary" rows="4"  (change)="setDirtyFlag();" required  [readonly]="view"                                  
+                                    ></textarea>                                  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style=" background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold;">
+                                  <i class="bi bi-caret-down-fill" *ngIf="!this.isIncidentNotification" ></i> 
+                                  <!-- <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentNotification"></i> -->
+                                  INCIDENT NOTIFICATIONS
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div *ngIf="!this.isIncidentNotification">
+                            <div *ngIf="!view">
+                              <div class="row" style="text-align: center;">
+                                <div class="col-xs-12 col-md-3">
+                                  <label>Official(s) Notified</label>                                           
+                                  <ng-select
+                                      appendTo="body"
+                                      id="notificationTypeId"
+                                      #select
+                                      [items]="notificationTypes"
+                                      bindLabel="notificationName"
+                                      placeholder="Select Type"
+                                      bindValue="id"
+                                      [(ngModel)]="notificationModel.notificationTypeId"
+                                      appearance="outline"
+                                      name="notificationTypeId" [required]="!notificationValue"
+                                      (change)="setDirtyFlag(); notificationTypeIdValue(notificationModel);" [readonly]="view"
+                                  >
+                                  </ng-select> 
+                                </div>
+                                <div class="col-xs-12 col-md-2">
+                                  <label> Date Notified</label>                 
+                                  <div class="input-group">
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="notifiedDate.toggle()"
+                                        ngbDatepicker
+                                        #notifiedDate="ngbDatepicker"
+                                        [(ngModel)]="notificationModel.notifiedDate"
+                                        name="notifiedDate"
+                                        placeholder="mm/dd/yyyy"  [disabled]="view"                       
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="notifiedDate.toggle()" type="button"></button>
+                                  </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2">
+                                  <label> Time Notified</label>
+                                    <input
+                                            type="time"
+                                            class="form-control"
+                                            id="notifiedTime"
+                                            [(ngModel)]="notificationModel.notifiedTime"
+                                            name="notifiedTime"
+                                            #notifiedTime="ngModel" 
+                                             
+                                                    
+                                    />
+                                </div>                                  
+                                <div class="col-xs-12 col-md-4">
+                                  <label>Notified by</label>
+                                  <input class="form-control" placeholder="Notified by" type="text" name="notifiedBy" id="notifiedBy" 
+                                        [(ngModel)]="notificationModel.notifiedBy" [readonly]="view"/>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1 " style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    
+                                    <button *ngIf="!notificationModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddNotificationRecord(notificationModel);" id="btnAdd">  Save                                    
+                                       
+                                    </button>&nbsp;
+                                    <button *ngIf="!notificationModel.inedit" class="btn btn-primary btn-sm" type="button" (click)="clearNotofication()">
+                                      <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="notificationModel.inedit" class="btn btn-success btn-sm" type="button"
+                                      (click)="UpdateEventRecord(notificationModel)" id="btnUpdate">
+                                      <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                      </span>
+                                    </button>                                    
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="eventTable"
+                                class="table table-responsive table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Official(s) Notified</span>
+                                    </th>
+                                    <th ><span class="sort">
+                                      &nbsp;&nbsp;Date Notified</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;Time Notified</span>
+                                    </th>                                   
+                                    <th style="width: 30%;"><span 
+                                        class="sort">&nbsp;Notified by</span></th>
+                                    
+                                    <th *ngIf="!view">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.notificationList;let i = index">
+                                    <td>
+                                      <span>{{event.officialNotified}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.newDate |date:"MM/dd/yyyy" }}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.newTime }}</span>                                                      
+                                    </td>
+                                  
+                                    <td>
+                                      <span>{{event.notifiedBy}}</span>                                  
+                                    </td>                               
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onEditClick(i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteEvent(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>
+                                    
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                           
+                           
+                            <div class="col-xs-12 col-md-4 pt-md-2 pb-mb-2">
+                              <label>Other Notifications:</label>
+                              <input class="form-control" placeholder="Other Notifications" type="text" name="otherNotification" id="otherNotification" 
+                                    [(ngModel)]="incidentinfo.otherNotification" [readonly]="view"/>
+                            </div>
+                          </div>
+                            
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style=" background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold;"  (click)="showIncidentEvents(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentEvent" ></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentEvent"></i>
+                                  CHRONOLOGY OF INVESTIGATION 
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div *ngIf="this.isIncidentEvent">
+                            <div *ngIf="!view">
+                              <div class="row" style="text-align: center;">
+                                <div class="col-xs-12 col-md-3">
+                                  <label>Event Type</label>                                           
+                                  <ng-select
+                                      appendTo="body"
+                                      id="eventTypeId"
+                                      #select
+                                      [items]="eventTypeList"
+                                      bindLabel="type"
+                                      placeholder="Select Type"
+                                      bindValue="id"
+                                      [(ngModel)]="eventModel.eventTypeId"
+                                      appearance="outline"
+                                      name="eventTypeId"
+                                      (change)="setDirtyFlag(); eventTypeIdValue(eventModel);" [readonly]="view" required
+                                  >
+                                  </ng-select> 
+                                </div>
+                                <div class="col-xs-12 col-md-2">
+                                  <label> Date of Event</label>                 
+                                  <div class="input-group">
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="eventDate.toggle()"
+                                        ngbDatepicker
+                                        #eventDate="ngbDatepicker"
+                                        [(ngModel)]="eventModel.eventDate"
+                                        name="eventDate"
+                                        placeholder="mm/dd/yyyy"  [disabled]="view"                       
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="eventDate.toggle()" type="button"></button>
+                                  </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2">
+                                  <label> Time of Event</label>
+                                    <input
+                                            type="time"
+                                            class="form-control"
+                                            id="eventTime"
+                                            [(ngModel)]="eventModel.eventTime"
+                                            name="eventTime"
+                                            #eventTime="ngModel" 
+                                    />
+                                </div>                                  
+                                <div class="col-xs-12 col-md-4">
+                                  <label>Details</label>
+                                  <textarea class="form-control mt-1" type="text" [(ngModel)]="eventModel.eventDetails"
+                                    #eventDetails="ngModel" name="eventDetails" rows="3" id="eventDetails" style="margin-top: 0px !important;"></textarea>
+                                  
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1 " style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    
+                                    <button *ngIf="!eventModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddEventRecord(eventModel);" id="btnAdd">  Save                                    
+                                       
+                                    </button>&nbsp;
+                                    <button *ngIf="!eventModel.inedit" class="btn btn-primary btn-sm" type="button" (click)="clearEvent()">
+                                      <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="eventModel.inedit" class="btn btn-success btn-sm" type="button"
+                                      (click)="UpdateIncidentEventRecord(eventModel)" id="btnUpdate">
+                                      <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                      </span>
+                                    </button>                                    
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                            
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="eventTable"
+                                class="table table-responsive table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Event Type</span>
+                                    </th>
+                                    <th ><span class="sort">
+                                      &nbsp;&nbsp;Date of Event</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;Time of Event</span>
+                                    </th>  
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;SEMS User </span>
+                                    </th>                                 
+                                    <th style="width: 30%;"><span 
+                                        class="sort">&nbsp;Event Details</span></th>
+                                    
+                                    <th *ngIf="!view">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.incidentEvents;let i = index">
+                                    <td>
+                                      <span>{{event.eventTypeName}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.newDate |date:"MM/dd/yyyy" }}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.newTime }}</span>                                                      
+                                    </td>
+                                    <td>
+                                      <span>{{event.userName}}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{event.eventDetails}}</span>                                  
+                                    </td>                               
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onEventEditClick(i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteIncidentEvent(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>
+                                    
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                          </div>
+                            
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; " (click)="showIncidentIndividual(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentIndividual"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentIndividual"></i>
+                                  INDIVIDUAL(S) INVOLVED
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div *ngIf="this.isIncidentIndividual">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-2 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Individual Type</label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="individualType"
+                                      #select
+                                      [items]="this.incidentIndividualTypeList"
+                                      bindLabel="individualTypeName"
+                                      placeholder="Individual Type"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentIndividual.individualType"
+                                      appearance="outline"
+                                      name="individualType" required
+                                      (change)="showTextTypeText();setDirtyFlag(); setIndividualChangeFlag();">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div *ngIf="showTextForIndividualType">
+                                  <div class="col-md-3 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Other Type</label>
+                                      <input class="form-control" placeholder="Other Type" type="text" name="otherIndividualTypevalue" id="otherIndividualTypevalue" 
+                                          [(ngModel)]="incidentIndividual.otherIndividualTypevalue"/>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input class="form-control" placeholder="Last Name" type="text" name="lastName" id="lastName" 
+                                        [(ngModel)]="incidentIndividual.lastName" [required]="showRequiredFiled" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div>                            
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>First Name</label>
+                                    <input class="form-control" placeholder="First Name" type="text" name="firstName" id="firstName" 
+                                        [(ngModel)]="incidentIndividual.firstName" [required]="showRequiredFiled" (change) ="setIndividualChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Middle Name</label>
+                                    <input class="form-control" placeholder="Middle Name" type="text" name="middleName" id="middleName" 
+                                        [(ngModel)]="incidentIndividual.middleName" (change) ="setIndividualChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Alias/Nickname </label>
+                                    <input class="form-control" placeholder="Alias/Nickname " type="text" name="nickName" id="nickName" 
+                                        [(ngModel)]="incidentIndividual.nickName" (change) ="setIndividualChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>DOB</label>                                     
+                                    <div class="input-group">
+                                    <input
+                                      class="form-control"
+                                      type="text"
+                                      (click)="birthDate.toggle()"
+                                      ngbDatepicker
+                                      #birthDate="ngbDatepicker"
+                                      [(ngModel)]="incidentIndividual.birthDate"
+                                      name="birthDate"
+                                      placeholder="mm/dd/yyyy"
+                                      [required]="showRequiredFiled"   (change) ="setIndividualChangeFlag()"                                                   
+                                    />
+                                    <button class="btn btn-outline-secondary bi bi-calendar4" (click)="birthDate.toggle()" type="button"></button>
+                                  </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Gender </label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="gender"
+                                        #select
+                                        [items]="genderValue"
+                                        bindLabel="label"
+                                        placeholder="Select Gender"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentIndividual.gender"
+                                        appearance="outline"
+                                        name="gender"   [required]="showRequiredFiled"   
+                                        (change)=" setDirtyFlag();setIndividualChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>                      
+                                </div>  
+                                <div class="row">
+                                  <div class="col-md-3 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Street Address </label>
+                                      <input class="form-control" placeholder="Street Address " type="text" name="streetAddress" id="streetAddress" 
+                                          [(ngModel)]="incidentIndividual.streetAddress" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Apartment/Unit #: </label>
+                                      <input class="form-control" placeholder="Apartment/Unit #: " type="text" name="apartment" id="apartment" 
+                                          [(ngModel)]="incidentIndividual.apartment" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>City</label>
+                                      <input class="form-control" placeholder="City " type="text" name="city" id="city" 
+                                          [(ngModel)]="incidentIndividual.city" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>State/Province</label>
+                                      <input class="form-control" placeholder="State/Province " type="text" name="state" id="state" 
+                                          [(ngModel)]="incidentIndividual.state" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Zip Code </label>
+                                      <input class="form-control" placeholder="Zip Code " type="text" name="zip" id="zip" 
+                                          [(ngModel)]="incidentIndividual.zip" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div> 
+                                </div> 
+                                <div class="row">
+                                  <div class="col-md-3 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Alternate Address </label>
+                                      <input class="form-control" placeholder="Alternate Address " type="text" name="alternateAddress" id="alternateAddress" 
+                                          [(ngModel)]="incidentIndividual.alternateAddress" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Apartment/Unit #: </label>
+                                      <input class="form-control" placeholder="Apartment/Unit #: " type="text" name="altApartment" id="altApartment" 
+                                          [(ngModel)]="incidentIndividual.altApartment" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>City</label>
+                                      <input class="form-control" placeholder="altCity " type="text" name="altCity" id="altCity" 
+                                          [(ngModel)]="incidentIndividual.altCity" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>State/Province</label>
+                                      <input class="form-control" placeholder="State/Province " type="text" name="altState" id="altState" 
+                                          [(ngModel)]="incidentIndividual.altState" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2 pr-md-1 pt-md-2">
+                                    <div class="form-group">
+                                      <label>Zip Code </label>
+                                      <input class="form-control" placeholder="Zip Code " type="text" name="altZip" id="altZip" 
+                                          [(ngModel)]="incidentIndividual.altZip" (change) ="setIndividualChangeFlag()" />
+                                    </div>
+                                  </div>
+                                </div>                                                                                                             
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Country</label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="country"
+                                      #select
+                                      [items]="this.incidentCountryList"
+                                      bindLabel="country"
+                                      placeholder="Country"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentIndividual.country"
+                                      appearance="outline"
+                                      name="country" (change) ="setIndividualChangeFlag()" >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Primary Phone (cell):</label>
+                                    <input class="form-control" placeholder="Primary Phone" type="text" name="primaryPhone" id="primaryPhone" 
+                                        [(ngModel)]="incidentIndividual.primaryPhone" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Alternate Phone or email:</label>
+                                    <input class="form-control" placeholder="Alternate Phone or email" type="text" name="altPhone" id="altPhone" 
+                                        [(ngModel)]="incidentIndividual.altPhone" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div>  
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>DL #:</label>
+                                    <input class="form-control" placeholder="DL #" type="text" name="dl" id="dl" 
+                                        [(ngModel)]="incidentIndividual.dl" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div> 
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>DL Issuing State:</label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="dlissuingState"
+                                      #select
+                                      [items]="this.incidentStatList"
+                                      bindLabel="state"
+                                      placeholder="DL Issuing State"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentIndividual.dlissuingState"
+                                      appearance="outline"
+                                      name="dlissuingState"(change) ="setIndividualChangeFlag()" >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>DL Expiration Date:</label>
+                                    <div class="input-group">
+                                      <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="dlexpiringDate.toggle()"
+                                        ngbDatepicker
+                                        #dlexpiringDate="ngbDatepicker"
+                                        [(ngModel)]="incidentIndividual.dlexpiringDate"
+                                        name="dlexpiringDate"
+                                        placeholder="mm/dd/yyyy" (change) ="setIndividualChangeFlag()" 
+                                                                                              
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dlexpiringDate.toggle()" type="button"></button>
+                                    </div>
+                                  </div>
+                                </div>  
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Other ID (Type):</label>
+                                    <input class="form-control" placeholder="Other ID (Type)" type="text" name="otherTypeId" id="otherTypeId" 
+                                        [(ngModel)]="incidentIndividual.otherTypeId" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Other ID #:</label>
+                                    <input class="form-control" placeholder="Other ID #" type="text" name="otherId" id="otherId" 
+                                        [(ngModel)]="incidentIndividual.otherId" (change) ="setIndividualChangeFlag()" />
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Expiration Date:</label>
+                                    <div class="input-group">
+                                      <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="expirationDate.toggle()"
+                                        ngbDatepicker
+                                        #expirationDate="ngbDatepicker"
+                                        [(ngModel)]="incidentIndividual.expirationDate"
+                                        name="expirationDate"
+                                        placeholder="mm/dd/yyyy" (change) ="setIndividualChangeFlag()" 
+                                                                                              
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="expirationDate.toggle()" type="button"></button>
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Detained by LEO?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="detainedbyLeo"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentIndividual.detainedbyLeo"
+                                        appearance="outline"
+                                        name="detainedbyLeo"      
+                                        (change)=" setDirtyFlag();setIndividualChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Arrested by LEO?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="arrestedbyLeo"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentIndividual.arrestedbyLeo"
+                                        appearance="outline"
+                                        name="arrestedbyLeo"      
+                                        (change)=" showDisposition();setDirtyFlag();setIndividualChangeFlag()" 
+                                                                                 
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-5 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>If arrested, Immediate Disposition?</label>                                  
+                                      <input class="form-control" placeholder="" type="text" name="arrestedDisposition" id="arrestedDisposition" 
+                                      [disabled]="isArrested" [ngStyle]="{'pointer-events': isArrested ? 'none' : 'auto'}"
+                                       [(ngModel)]="incidentIndividual.arrestedDisposition" (change) ="setIndividualChangeFlag()" />                                  
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Cleared to Fly?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="flyCleared"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentIndividual.flyCleared"
+                                        appearance="outline"
+                                        name="flyCleared"      
+                                        (change)=" setDirtyFlag(); setIndividualChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>ONT+ Do Not Issue Referral?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="referralIssue"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentIndividual.referralIssue"
+                                        appearance="outline"
+                                        name="referralIssue"      
+                                        (change)="setontvalue(); setIndividualChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div class="form-group">
+                                    <label>Additional Information:</label>
+                                    <input class="form-control" placeholder="" type="text" name="additionalInformation" id="additionalInformation" 
+                                        [(ngModel)]="incidentIndividual.additionalInformation"(change)= setIndividualChangeFlag()/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!incidentIndividual.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddIndividualRecord(1)" id="btnAdd">  Save                                     
+                                      
+                                    </button>&nbsp;
+                                    <button *ngIf="!incidentIndividual.inedit" class="btn btn-primary btn-sm" type="button" (click)="clearIndividuals()">
+                                      <i class="bi bi-arrow-clockwise"></i> </button>
+
+                                    <button *ngIf="incidentIndividual.inedit" class="btn btn-success btn-sm" type="button"
+                                      (click)="UpdateIndividualRecord(incidentIndividual,1)" id="btnUpdate">
+                                      <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                      </span>
+                                    </button>
+                                   
+                                  </div>
+                                </div>
+                              </div>
+                              
+                            </div>
+                           
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="individualTable"
+                                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Individual Type</span>
+                                    </th>
+                                    <th><span class="sort">
+                                      &nbsp;&nbsp;Last Name</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;First Name</span>
+                                    </th>
+                                    
+                                    <th style="width: 30%;"><span 
+                                        class="sort">&nbsp;&nbsp;Middle Name</span></th>
+                                    <th *ngIf="!view" style="width: 10%;">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.incidentIndividuals;let i = index">
+                                    <td>
+                                      <span>{{event.individualTypeName}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.lastName}}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.firstName}}</span>                                                      
+                                    </td>
+                                  
+                                    <td>
+                                      <span>{{event.middleName}}</span>                                  
+                                    </td>                               
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onIndividualEditClick( i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteIndividual(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>
+                                    
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                            
+
+                          </div>
+                          
+
+                        </ng-container>
+                        
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; "  (click)="showIncidentPassenger(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isIncidentPassenger"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isIncidentPassenger"></i>
+                                  AIRLINE / AIRCRAFT / SCHEDULED PASSENGER INFORMATION
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="this.isIncidentPassenger">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Airline: </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="airLine"
+                                      #select
+                                      [items]="this.incidentAirlineList"
+                                      bindLabel="airlineName"
+                                      placeholder="Airline"
+                                      bindValue="id"
+                                      [(ngModel)]="passengerModel.airline"
+                                      appearance="outline"
+                                      name="airLine" required (change)="setPassengerChangeFlag()">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>A/C Type:</label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="acType"
+                                      #select
+                                      [items]="this.incidentAcTypesList"
+                                      bindLabel="actypeName"
+                                      placeholder="A/C Type"
+                                      bindValue="id"
+                                      [(ngModel)]="passengerModel.acType"
+                                      appearance="outline"
+                                      name="acType" (change)="setPassengerChangeFlag()">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Flight #: </label>
+                                    <input class="form-control" placeholder="Flight" type="text" name="flight" id="flight" 
+                                        [(ngModel)]="passengerModel.flight" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Destination: </label>
+                                    <input class="form-control" placeholder="Destination" type="text" name="destination" id="destination" 
+                                        [(ngModel)]="passengerModel.destination" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Terminal:</label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="terminal"
+                                      #select
+                                      [items]="this.incidnetTerminalList"
+                                      bindLabel="terminalName"
+                                      placeholder="Terminal"
+                                      bindValue="id"
+                                      [(ngModel)]="passengerModel.terminal"
+                                      appearance="outline"
+                                      name="terminal" (change)="setPassengerChangeFlag()">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Gate: </label>
+                                    <input class="form-control" placeholder="Gate" type="text" name="gate" id="gate" 
+                                        [(ngModel)]="passengerModel.gate" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Flight(s) Delayed? </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="isFlightDelayed"
+                                      #select
+                                      [items]="boolndlOptions"
+                                      bindLabel="label"
+                                      placeholder="Flight(s) Delayed?"
+                                      bindValue="value"
+                                      [(ngModel)]="passengerModel.isFlightDelayed"
+                                      appearance="outline"
+                                      name="isFlightDelayed"
+                                      (change)="showDelayTime(); setDirtyFlag();setPassengerChangeFlag();">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>If Yes, How Long? </label>
+                                    <input class="form-control" placeholder="If Yes, How Long?" type="text" name="delayedTime" id="delayedTime" 
+                                    [disabled]="isFlightDelay" [ngStyle]="{'pointer-events': isFlightDelay ? 'none' : 'auto'}"  
+                                    [(ngModel)]="passengerModel.delayedTime" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Passenger Missed Flight? </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="isMissedFlight"
+                                      #select
+                                      [items]="boolndlOptions"
+                                      bindLabel="label"
+                                      placeholder="Passenger Missed Flight?"
+                                      bindValue="value"
+                                      [(ngModel)]="passengerModel.isMissedFlight"
+                                      appearance="outline"
+                                      name="isMissedFlight" (change)="setPassengerChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Scheduled Departure Time </label>
+                                    <input class="form-control" placeholder="Scheduled Departure Time" type="text" name="scheduledDepartureTime" id="scheduledDepartureTime" 
+                                     [(ngModel)]="passengerModel.scheduledDepartureTime" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Actual Departure Time </label>
+                                    <input class="form-control" placeholder="Actual Departure Time" type="text" name="actualDepartureTime" id="actualDepartureTime" 
+                                     [(ngModel)]="passengerModel.actualDepartureTime" (change)="setPassengerChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!passengerModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddPassengerRecord(1)" id="btnAdd">  Save                                   
+                                        
+                                    </button>&nbsp;
+                                    <button *ngIf="!passengerModel.inedit" class="btn btn-primary btn-sm" type="button" (click)="clearPassenger()">
+                                      <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="passengerModel.inedit" class="btn btn-success btn-sm" type="button"
+                                      (click)="UpdatePassengerRecord(passengerModel,1)" id="btnUpdate">
+                                      <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                      </span>
+                                    </button>
+                                   
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                           
+
+                              
+                              <div class="table-responsive">
+                                <table style="width: 100%;" id="passengerTable"
+                                  class="table table-striped table-bordered row-border hover mt-2" id="dt2">
+                                  <thead>
+                                    <tr style="background-color: #484D56; color: white;">
+                                      <th><span 
+                                          class="sort">&nbsp;&nbsp;AirLine</span>
+                                      </th>
+                                      <th><span 
+                                        class="sort">&nbsp;&nbsp;A/C Type</span>
+                                    </th>
+                                      <th><span class="sort">
+                                        &nbsp;&nbsp;Flight</span>
+                                      </th>
+                                      <th><span  class="sort">
+                                        &nbsp;&nbsp;Destination</span>
+                                      </th>
+                                      
+                                      <th style="width: 30%;"><span 
+                                          class="sort">&nbsp;&nbsp;Terminal</span>
+                                      </th>
+                                      <th *ngIf="!view" style="width: 10%;">
+                                        Action
+                                      </th>
+                                      
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let event of this.incidentinfo.incidentPassengerInformation;let i = index">
+                                      <td>
+                                        <span>{{event.airlineName}}</span>                                                             
+                                      </td>
+                                      <td>
+                                        <span>{{event.acTypeName}}</span>                                                             
+                                      </td>
+                                      <td>                                  
+                                        <span>{{event.flight}}</span>                                                                                              
+                                      </td>
+                                      <td>
+                                        <span>{{event.destination}}</span>                                                      
+                                      </td>
+                                    
+                                      <td>
+                                        <span>{{event.terminalName}}</span>                                  
+                                      </td> 
+                                      <td *ngIf="!view">
+                                        <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                        (click)="onPassengerEditClick( i,event)">
+                                          <span><i class="bi bi-pencil"></i>
+                                          </span></button>                                 
+                                        <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deletePassenger(i,event)" >
+                                          <span><i class="bi bi-trash"></i>
+                                          </span></button>
+                                      </td>                        
+                                    </tr>                             
+                                  </tbody>                           
+                                </table>
+                              </div>
+                          </div>
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; " (click)="showProhabitedItems(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isProhabteditemsshow"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isProhabteditemsshow"></i>
+                                  PROHIBITED ITEMS DISCOVERED
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="isProhabteditemsshow">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Explosives </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="explosives"
+                                      #select
+                                      [items]=" this.incidentExplosivesList"
+                                      bindLabel="explosiveTypeName"
+                                      placeholder="Explosives"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentProhibitedModel.explosives"
+                                      appearance="outline"
+                                      name="explosives" (change)="setProhibitedChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Guns </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="guns"
+                                      #select
+                                      [items]="this.incidentGunsList"
+                                      bindLabel="gunTypeName"
+                                      placeholder="Guns"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentProhibitedModel.guns"
+                                      appearance="outline"
+                                      name="guns" (change)="setProhibitedChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Sharp Objects </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="sharpObjects"
+                                      #select
+                                      [items]="this.incidentSharpObjectsList"
+                                      bindLabel="sharpObjectName"
+                                      placeholder="Sharp Objects"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentProhibitedModel.sharpObjects"
+                                      appearance="outline"
+                                      name=" sharpObjects" (change)="setProhibitedChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Incendiaries </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="incendiaries"
+                                      #select
+                                      [items]="this.incidentIncendiariesList"
+                                      bindLabel="incendiarieName"
+                                      placeholder="Incendiaries"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentProhibitedModel.incendiaries"
+                                      appearance="outline"
+                                      name=" incendiaries" (change)="setProhibitedChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Disabling </label>
+                                    <ng-select
+                                      appendTo="body"
+                                      id="disabling"
+                                      #select
+                                      [items]="this.incidentDisablingList"
+                                      bindLabel="disablingName"
+                                      placeholder="Disabling"
+                                      bindValue="id"
+                                      [(ngModel)]="incidentProhibitedModel.disabling"
+                                      appearance="outline"
+                                      name=" disabling" (change)="setProhibitedChangeFlag()"
+                                      >
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2" >
+                                  <div class="form-group" id="filterAll">
+                                      <label>Method of Detection: </label>                                                                  
+                                      <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                        <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="detectionDropdownSettings"  [data]="detectionMethodList" 
+                                          [(ngModel)]="selectedDetectionList" id="selectedDetectionMethod"
+                                          (onSelect)="onDetectionItemSelect($event)"
+                                          (onSelectAll)="onDetectionSelectAll($event)"                 
+                                          
+                                          name="selectedDetectionMethod" #selectedDetectionMethod="ngModel" 
+                                          required
+                                          >                   
+                                        </ng-multiselect-dropdown> 
+                                  </div>
+                                </div>                                                 
+                              </div>
+                              <div class="row">
+                                <div class="col-md-5 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Item Description/Additional Information:</label>
+                                    <input class="form-control" placeholder="Item Description/Additional Information" type="text" name="itemDescription" id="itemDescription" 
+                                     [(ngModel)]="incidentProhibitedModel.itemDescription" (change)="setProhibitedChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label> Photo(s) Taken</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isPhotoTaken"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentProhibitedModel.isPhotoTaken"
+                                        appearance="outline"
+                                        name="isPhotoTaken"      
+                                        (change)=" setDirtyFlag();setProhibitedChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Photo(s) Attached?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isPhotoAttach"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentProhibitedModel.isPhotoAttach"
+                                        appearance="outline"
+                                        name="isPhotoAttach"      
+                                        (change)=" setDirtyFlag();setProhibitedChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!incidentProhibitedModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddProhibitedItemsRecord(1)" id="btnAdd">   Save                                  
+                                        
+                                    </button>
+                                    &nbsp;
+                                    <button *ngIf="!incidentProhibitedModel.inedit" class="btn btn-primary btn-sm" type="button" (click)="clearProhibited()">
+                                      <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="incidentProhibitedModel.inedit" class="btn btn-success btn-sm" type="button"
+                                        (click)="UpdateProhibitedRecord(incidentProhibitedModel,1)" id="btnUpdate">
+                                        <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                        </span>
+                                      </button>
+                                     
+                                  </div>
+                                </div> 
+                              </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="prohibitedItemsTable"
+                                  class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                  <thead>
+                                    <tr style="background-color: #484D56; color: white;">
+                                      <th><span 
+                                          class="sort">&nbsp;&nbsp;Explosives</span>
+                                      </th>
+                                      <th><span class="sort">
+                                        &nbsp;&nbsp;Gun</span>
+                                      </th>
+                                      <th><span  class="sort">
+                                        &nbsp;&nbsp;Sharp Objects</span>
+                                      </th>                                    
+                                      <th ><span 
+                                        class="sort">&nbsp;&nbsp;Incendiaries</span>
+                                      </th>
+                                      <th ><span 
+                                        class="sort">&nbsp;&nbsp;Disabling</span>
+                                      </th>
+                                      <th ><span 
+                                        class="sort">&nbsp;&nbsp;Method of Detection</span>
+                                      </th>
+                                      <th *ngIf="!view" style="width: 10%;">
+                                        Action
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let event of this.incidentinfo.incidentProhibitedItems;let i = index">
+                                      <td>
+                                        <span>{{event.explosivesName}}</span>                                                             
+                                      </td>
+                                      <td>                                  
+                                        <span>{{event.gunsName}}</span>                                                                                              
+                                      </td>
+                                      <td>
+                                        <span>{{event.sharpObjectsName}}</span>                                                      
+                                      </td>
+                                    
+                                      <td>
+                                        <span>{{event.incendiariesName}}</span>                                  
+                                      </td> 
+                                      <td><span>{{event.disablingName}}</span></td>  
+                                      <td><span>{{event.detectionMethodName}}</span></td>    
+                                      <td *ngIf="!view">
+                                        <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                        (click)="onProhibitedEditClick( i,event)">
+                                          <span><i class="bi bi-pencil"></i>
+                                          </span></button>                                 
+                                        <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteProhibited(i,event)" >
+                                          <span><i class="bi bi-trash"></i>
+                                          </span></button>
+                                      </td>                      
+                                    </tr>                             
+                                  </tbody>                           
+                              </table>
+                            </div>
+                            
+                          </div>
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; " (click)="showFirearmInfo(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isFirearminformation"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isFirearminformation"></i>
+                                  FIREARMS INFORMATION
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="isFirearminformation">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Firearm Loaded?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isFirearmLoaded"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentFirearmModel.isFirearmLoaded"
+                                        appearance="outline"
+                                        name="isFirearmLoaded"      
+                                        (change)=" setDirtyFlag();setFirearmChangeFlag();"  
+                                        required                                        
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Make</label>
+                                    <input class="form-control" placeholder="Make" type="text" name="make" id="make" 
+                                     [(ngModel)]="incidentFirearmModel.make" required (change)="setFirearmChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Model</label>
+                                    <input class="form-control" placeholder="Model" type="text" name="model" id="model" 
+                                     [(ngModel)]="incidentFirearmModel.model" required (change)="setFirearmChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Caliber</label>
+                                    <input class="form-control" placeholder="Caliber" type="text" name="caliber" id="caliber" 
+                                     [(ngModel)]="incidentFirearmModel.caliber" (change)="setFirearmChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Location Discovered</label>
+                                    <input class="form-control" placeholder="Location Discovered" type="text" name="locationDiscovered" id="locationDiscovered" 
+                                     [(ngModel)]="incidentFirearmModel.locationDiscovered" (change)="setFirearmChangeFlag()"/>
+                                  </div>
+                                </div>                                
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!incidentFirearmModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddFirearmRecord(1)" id="btnAdd"> Save                                
+                                       
+                                    </button>&nbsp;
+                                    <button *ngIf="!incidentFirearmModel.inedit" class="btn btn-primary btn-sm" type="button" 
+                                    (click)="clearFirearm()"> <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="incidentFirearmModel.inedit" class="btn btn-success btn-sm" type="button"
+                                        (click)="UpdateFireRecord(incidentFirearmModel,1)" id="btnUpdate">
+                                        <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                        </span>
+                                      </button>
+                                      
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                           
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="firearmItemsTable"
+                                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Firearm Loaded</span>
+                                    </th>
+                                    <th><span class="sort">
+                                      &nbsp;&nbsp;Make</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;Model</span>
+                                    </th>
+                                    
+                                    <th style="width: 30%;"><span 
+                                        class="sort">&nbsp;&nbsp;Caliber</span>
+                                      </th>
+                                      <th><span  class="sort">
+                                        &nbsp;&nbsp;Location Discovered</span>
+                                      </th>
+                                      <th *ngIf="!view" style="width: 10%;">
+                                        Action
+                                      </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.incidentFirearmInformation;let i = index">
+                                    <td>
+                                      <span>{{event.isFirearmLoaded=='1'?'Yes':'No'}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.make}}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.model}}</span>                                                      
+                                    </td>
+                                  
+                                    <td>
+                                      <span>{{event.caliber}}</span>                                  
+                                    </td>  
+                                    <td>
+                                      <span>{{event.locationDiscovered}}</span>
+                                    </td>    
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onFireEditClick( i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteFire(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>                      
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                            
+                          </div>
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1" >                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; "  (click)="showVehcleInfo(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isVehicleinformation"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isVehicleinformation"></i>
+                                  MOTOR VEHICLE INFORMATION
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="isVehicleinformation">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Type</label>
+                                    <input class="form-control" placeholder="type" type="text" name="type" id="type" 
+                                     [(ngModel)]="incidentVehicleModel.type" required (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Make</label>
+                                    <input class="form-control" placeholder="make" type="text" name="makeVehicle" id="makeVehicle" 
+                                     [(ngModel)]="incidentVehicleModel.makeVehicle" required (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Model</label>
+                                    <input class="form-control" placeholder="Model" type="text" name="modelVehicle" id="modelVehicle" 
+                                     [(ngModel)]="incidentVehicleModel.modelVehicle" required (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Color</label>
+                                    <input class="form-control" placeholder="Color" type="text" name="color" id="color" 
+                                     [(ngModel)]="incidentVehicleModel.color" (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                              </div>
+                               <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Year</label>
+                                    <input class="form-control" placeholder="Year" type="text" name="year" id="year" 
+                                     [(ngModel)]="incidentVehicleModel.year" (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>License State:</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="licenseState"
+                                        #select
+                                        [items]="incidentStatList"
+                                        bindLabel="state"
+                                        placeholder="Select Option"
+                                        bindValue="id"
+                                        [(ngModel)]="incidentVehicleModel.licenseState"
+                                        appearance="outline"
+                                        name="licenseState" (change)="setMotorChangeFlag()"     
+                                                                              
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>License #:</label>
+                                    <input class="form-control" placeholder="License" type="text" name="license" id="license" 
+                                     [(ngModel)]="incidentVehicleModel.license" (change)="setMotorChangeFlag()"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label> Photo(s) Taken</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isPhotoTaken"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentVehicleModel.isPhotoTaken"
+                                        appearance="outline"
+                                        name="isPhotoTaken"      
+                                        (change)=" setDirtyFlag();setMotorChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Photo(s) Attached?</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isPhotoAttach"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentVehicleModel.isPhotoAttach"
+                                        appearance="outline"
+                                        name="isPhotoAttach"      
+                                        (change)=" setDirtyFlag();setMotorChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-xs-12 col-md-1" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!incidentVehicleModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddVehicleRecord(1)" id="btnAdd"> Save                                      
+                                        <!-- <span><i class="bi bi-plus-lg "></i>
+                                        </span> -->
+                                    </button>&nbsp;
+                                    <button *ngIf="!incidentVehicleModel.inedit" class="btn btn-primary btn-sm" type="button" 
+                                    (click)="clearVehicle()"> <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="incidentVehicleModel.inedit" class="btn btn-success btn-sm" type="button"
+                                        (click)="UpdateVehicleRecord(incidentVehicleModel,1)" id="btnUpdate">
+                                        <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                        </span>
+                                      </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="vehicleItemsTable"
+                                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Type</span>
+                                    </th>
+                                    <th><span class="sort">
+                                      &nbsp;&nbsp;Make</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;Model</span>
+                                    </th>
+                                    
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Year</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;License State</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;License</span>
+                                    </th>
+                                    <th *ngIf="!view" style="width: 10%;">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.incidentVehicleInformation;let i = index">
+                                    <td>
+                                      <span>{{event.type}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.makeVehicle}}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.modelVehicle}}</span>                                                      
+                                    </td>
+                                  
+                                    <td>
+                                      <span>{{event.year}}</span>                                  
+                                    </td>  
+                                    <td>
+                                      <span>{{event.licenseStateName}}</span>
+                                    </td> 
+                                    <td>
+                                      <span>{{event.license}}</span>
+                                    </td> 
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onVehicleEditClick( i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteVehicle(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>                      
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                            
+                          </div>
+                        </ng-container>
+                        <br>
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; " (click)="showAtachInfo(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isAttachInfo"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isAttachInfo"></i>
+                                  ATTACHMENTS
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="isAttachInfo">
+                            <div *ngIf="!view">
+                              <div class="row">
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>Type</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="type"
+                                        #select
+                                        [items]="this.incidentAttachmentTypesList"
+                                        bindLabel="attachmentTypeName"
+                                        placeholder="Select Option"
+                                        bindValue="id"
+                                        [(ngModel)]="incidentAttachModel.type"
+                                        appearance="outline"
+                                        name="type"      
+                                        (change)="showTypeTextvalue(); setDirtyFlag();setAttachmentChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>                              
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div class="form-group">
+                                    <label>CCTV Retained</label>                                     
+                                    <ng-select
+                                        appendTo="body"
+                                        id="isCCTVRetained"
+                                        #select
+                                        [items]="boolndlOptions"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentAttachModel.isCctvretained"
+                                        appearance="outline"
+                                        name="isCCTVRetained"      
+                                        (change)=" setDirtyFlag();setAttachmentChangeFlag()"                                          
+                                      >
+                                      </ng-select>
+                                  </div>
+                                </div>   
+                                <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                  <div id="upload_button" >
+                                    <label>Retained CCTV Location, file name, etc.
+                                      <input type="file" ngf-select ng-Model="new_files" (change)="addFile(input.files)" #input
+                                      [(ngModel)]="incidentAttachModel.fileName" (change)="setAttachmentChangeFlag()">                                     
+                                      <span class="btn btn-success">
+                                        <i class="bi bi-pin-angle"></i> Upload</span>
+                                        <span>{{incidentAttachModel.fileName}}</span>
+                                    </label>
+                                   
+                                  </div>
+                                
+                                </div>
+
+                                  <div class="col-md-2 pr-md-1 pt-md-2 pb-mb-2" *ngIf="incidentAttachModel.inedit" >
+                                    <img class="ui bordered small image imagescale" [hidden]="incidentAttachModel.inedit"
+                                        src="{{
+                                        'data:image/png;base64,'  + this.incidentAttachModel.thumbnailImage 
+                                    }}" />                                  
+                                    
+                                  </div>                                 
+                                </div>
+                                <div class="row">
+                                <div class="col-xs-12 col-md-1 pt-md-2" style="text-align: center;">
+                                  <div class="form-group"><br>
+                                    <button *ngIf="!incidentAttachModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                      (click)="validateAndAddAttachmentRecord(1)" id="btnAdd">  Save                                     
+                                       
+                                    </button>&nbsp;
+                                    <button *ngIf="!incidentAttachModel.inedit" class="btn btn-primary btn-sm" type="button" 
+                                    (click)="clearAttachment()"> <i class="bi bi-arrow-clockwise"></i> </button>
+                                    <button *ngIf="incidentAttachModel.inedit" class="btn btn-success btn-sm" type="button"
+                                        (click)="UpdateAttachRecord(incidentAttachModel,1)" id="btnUpdate">
+                                        <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                        </span>
+                                      </button>
+                                  </div>
+                                </div>                                                         
+                              </div>
+                              <div class="row">
+                                <div *ngIf="showTextForAttachment">
+                                  <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                    <div class="form-group">
+                                      <label>Other Type</label>
+                                      <input class="form-control" placeholder="Other Type" type="text" name="otherAttachmentTypevalue" id="otherAttachmentTypevalue" 
+                                       [(ngModel)]="incidentAttachModel.otherAttachmentTypevalue"/>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-8"></div>
+                                
+                              </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="vehicleItemsTable"
+                                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white;">
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Type</span>
+                                    </th>
+                                    <th><span class="sort">
+                                      &nbsp;&nbsp;CCTV Retained</span>
+                                    </th>
+                                    <th><span  class="sort">
+                                      &nbsp;&nbsp;Retained CCTV Info.</span>
+                                    </th>
+                                    <th *ngIf="!view" style="width: 10%;">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of  this.incidentinfo.incidentAttachments;let i = index">
+                                    <td>
+                                      <span>{{event.typeName}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.isCctvretained =='1'?'Yes':'No'}}</span>                                                                                              
+                                    </td>
+                                    <td>                                      
+                                      <span (click)="downloadFile(event.id, event.fileName)" style="color: blue; cursor: pointer;"><u>{{event.fileName}}</u></span>                                                      
+                                    </td>  
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onAttachEditClick( i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteAttach(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>                   
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                            
+                          </div>
+                        </ng-container>
+                        <br>
+
+                        <ng-container>
+                          <div class="row">
+                            <div class="col-md-12 pr-md-1">                              
+                              <div class=" form-group" style="background-color: lightblue;">                                
+                                <span class="btn btn-primary" style="background-color: lightblue;
+                                border-color: lightblue;
+                                color: black;
+                                font-weight: bold; " (click)="showHotwash(1)">
+                                  <i class="bi bi-caret-down-fill" *ngIf="this.isHotwashInfo"></i> 
+                                  <i class="bi bi-caret-right-fill" *ngIf="!this.isHotwashInfo"></i>
+                                  HOTWASH & ROOT CAUSE ANALYSIS
+                                </span>                              
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="isHotwashInfo">
+                            <div *ngIf="!view">
+                              <div class="row">                                
+                                <div class="col-md-3 mt-2">
+                                  <label> Hot-wash date and time:</label>                 
+                                  <div class="input-group">
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="hotwashDate.toggle()"
+                                        ngbDatepicker
+                                        #hotwashDate="ngbDatepicker"
+                                        [(ngModel)]="incidentHotWashModel.hotwashDate"
+                                        name="hotwashDate"
+                                        placeholder="mm/dd/yyyy"   
+                                        required  (change)="setHotwashChangeFlag()"                         
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="hotwashDate.toggle()" 
+                                      type="button" (change)="setHotwashChangeFlag()"></button>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pl-md-1 mt-2" >
+                                  <div class="form-group" id="filterAll">
+                                    <label>Attendees: </label>                                                                  
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                          <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="attendeesDropdownSettings" [data]="attendeesList" 
+                                            [(ngModel)]="selectedAttendeesList"  id="selectedAttendees"
+                                            (onSelect)="onAttendeesItemSelect($event)"
+                                            (onSelectAll)="onAttendeesSelectAll($event)"                 
+                                            
+                                            name="selectedAttendees" #selectedAttendees="ngModel" 
+                                            required
+                                            >                   
+                                          </ng-multiselect-dropdown>
+                                  </div>
+                                </div>
+  
+                                <div class="col-md-3 pl-md-1 mt-2" >
+                                  <div class="form-group" id="filterAll">
+                                    <label>Hotwash Topics: </label>                                                                  
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                      <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'" [settings]="hotwashDropdownSettings" [data]="hotwashList" 
+                                            [(ngModel)]="selectedHotwashList"  id="selectedHotwashTopic"
+                                            (onSelect)="onItemSelectTopic($event)" (onDeSelect)="onItemDeselectTopic($event)"
+                                            (onSelectAll)="onSelectAllTopic($event)" (onDeSelectAll)="onItemDeselectTopicAll($event)"
+                                            name="selectedHotwashTopic" #selectedHotwashTopic="ngModel" required                                          
+                                            >                   
+                                      </ng-multiselect-dropdown>
+                                  </div>
+                                </div>
+  
+                                <div class="col-md-3 pl-md-1 mt-2" >
+                                  <div class="form-group" id="filterAll">
+                                    <label>Root Cause: </label>                                                                  
+                                    <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>                            
+                                      <ng-multiselect-dropdown class="displayselect" [placeholder]="'Select Option'"  [settings]="rootCauseDropdownSettings" [data]="rootCauseList" 
+                                            [(ngModel)]="selectedRootcauseList" id="selectedRootCause"
+                                            (onSelect)="onItemSelect($event)"
+                                            (onSelectAll)="onSelectAll($event)"
+                                            name="selectedRootCause" #selectedRootCause="ngModel" [required]="this.rootcauseRequired ? 'true':'false'"                                       
+                                            >                   
+                                      </ng-multiselect-dropdown>
+                                  </div>
+                                </div>                                
+                              </div>
+                              
+                                <div class="row" >
+                                  <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                                    <div class="form-group">
+                                      <label>Additional Information</label>
+                                      <input class="form-control" placeholder="Additional Information" type="text" name="additionalInfo" id="additionalInfo" 
+                                       [(ngModel)]="incidentHotWashModel.additionalInfo" (change)="setHotwashChangeFlag()"/>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row" >                                  
+                                  <div class="col-xs-12 col-md-1 pt-md-2" style="text-align: center;">
+                                    <div class="form-group"><br>
+                                      <button *ngIf="!incidentHotWashModel.inedit" class="btn btn-primary btn-sm" type="button"
+                                        (click)="validateAndAddHotwashRecord(1)" id="btnAdd"> Save                                   
+                                        
+                                      </button>&nbsp;
+                                      <button *ngIf="!incidentHotWashModel.inedit" class="btn btn-primary btn-sm" type="button" 
+                                      (click)="clearHotwash()"> <i class="bi bi-arrow-clockwise"></i> </button>
+                                      <button *ngIf="incidentHotWashModel.inedit" class="btn btn-success btn-sm" type="button"
+                                      (click)="UpdateHotwashRecord(incidentHotWashModel,1)" id="btnUpdate">
+                                      <span><i class="bi bi-file-earmark-text btn-sm"></i>
+                                      </span>
+                                    </button>
+                                    </div>
+                                  </div>
+  
+                                  
+                                  
+                                </div>
+                            </div>
+                           
+                            
+                            <div class="table-responsive">
+                              <table style="width: 100%;" id="HotwashItemsTable"
+                                class="table table-striped table-bordered row-border hover mt-2" id="dt1">
+                                <thead>
+                                  <tr style="background-color: #484D56; color: white; width: 20%;" >
+                                    <th><span 
+                                        class="sort">&nbsp;&nbsp;Hot-wash date and time</span>
+                                    </th>
+                                    <th><span class="sort" style="width: 20%;">
+                                      &nbsp;&nbsp;Attendees</span>
+                                    </th>
+                                    <th><span  class="sort"  style="width: 30%;">
+                                      &nbsp;&nbsp;Hotwash Topics</span>
+                                    </th>
+                                    <th><span  class="sort"  style="width: 20%;">
+                                      &nbsp;&nbsp;Root Cause</span>
+                                    </th>
+                                    <th *ngIf="!view" style="width: 10%;">
+                                      Action
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let event of this.incidentinfo.incidentHotWash;let i = index">
+                                    <td>
+                                      <span>{{event.newHotwashDate | date: "MM/dd/yyyy"}}</span>                                                             
+                                    </td>
+                                    <td>                                  
+                                      <span>{{event.attendeesName}}</span>                                                                                              
+                                    </td>
+                                    <td>
+                                      <span>{{event.hotwashTopicName}}</span>                                                      
+                                    </td> 
+                                    <td>
+                                      <span>{{event.rootCauseName}}</span>                                                      
+                                    </td> 
+                                    <td *ngIf="!view">
+                                      <button [hidden]="event.inedit"  type="button" class="btn btn-info mr-2 btn-sm"
+                                      (click)="onHotwashEditClick( i,event)">
+                                        <span><i class="bi bi-pencil"></i>
+                                        </span></button>                                 
+                                      <button [hidden]="event.inedit" class="btn btn-danger mr-2 btn-sm" type="button" (click)="deleteHotwash(i,event)" >
+                                        <span><i class="bi bi-trash"></i>
+                                        </span></button>
+                                    </td>                    
+                                  </tr>                             
+                                </tbody>                           
+                              </table>
+                            </div>
+                            
+                          </div>
+                        </ng-container>
+                        <br>
+                        <div class="row">
+                          <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                            <div class="form-group">
+                              <label>Date </label>                                     
+                              <div class="input-group">
+                                <input
+                                  class="form-control"
+                                  type="text"
+                                  (click)="dateReview.toggle()"
+                                  ngbDatepicker
+                                  #dateReview="ngbDatepicker"
+                                  [(ngModel)]="incidentinfo.dateReview"
+                                  name="dateReview"
+                                  placeholder="mm/dd/yyyy" 
+                                  required   [disabled]="view"                                                                               
+                                />
+                                <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dateReview.toggle()" type="button"></button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">                          
+                            <div class="form-group">
+                              <label>Time </label>
+                                <input
+                                type="time"
+                                class="form-control"
+                                id="timeReview"
+                                [(ngModel)]="incidentinfo.timeReview"
+                                name="timeReview"
+                                #timeReview="ngModel" [readonly]="view"     
+                                                                                            
+                              />
+                            </div>
+                          </div>
+                          
+                          <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                            <div class="form-group">
+                              <label>Airport Official: </label>
+                              <span class="form-control">{{this.incidentinfo.airportOfficial }}</span>
+                              
+                            </div>
+                          </div>
+                          <div class="col-md-3 pr-md-1 pt-md-2 pb-mb-2">
+                            <div class="form-group">
+                              <label>Update:</label>
+                              <input class="form-control" placeholder="Update" type="text" name="updateReview" id="updateReview" 
+                               [(ngModel)]="incidentinfo.updateReview" [readonly]="view" />
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div>
+                          <ng-container>
+                            <div class="row">
+                              <div class="col-md-12 pr-md-1">                              
+                                <div class=" form-group" style="background-color: lightblue;">                                
+                                  <span class="btn btn-primary" style="background-color: lightblue;
+                                  border-color: lightblue;
+                                  color: black;
+                                  font-weight: bold;" (click)="showReview(1)">
+                                    <i class="bi bi-caret-down-fill" *ngIf="this.isReviewInfo"></i> 
+                                    <i class="bi bi-caret-right-fill" *ngIf="!this.isReviewInfo"></i>
+                                    REVIEWING OFFICIAL
+                                  </span>                              
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="isReviewInfo">
+                              <div class="row">
+                                <div class="col-md-3 mt-2">
+                                  <div class="form-group">
+                                    <label>Incident Status:</label>                                                                   
+                                    <ng-select
+                                        appendTo="body"
+                                        id="incidentStatus"
+                                        #select
+                                        [items]="reviewIncidentStatus"
+                                        bindLabel="label"
+                                        placeholder="Select Option"
+                                        bindValue="value"
+                                        [(ngModel)]="incidentinfo.incidentStatus"
+                                        appearance="outline"
+                                        name="incidentStatus"  [required]="isStatusRequird"    
+                                        (change)=" setDirtyFlag(); checkStatus();" [readonly]="view" [disabled]="this.user.rolename != 'StaffAdmin'"                                        
+                                      >
+                                      </ng-select>
+                                  </div>                      
+                                </div>
+                                <div class="col-md-2 mt-2">
+                                  <label> Date Approved:</label>                 
+                                  <div class="input-group">
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        (click)="dateApproved.toggle()"
+                                        ngbDatepicker
+                                        #dateApproved="ngbDatepicker"
+                                        [(ngModel)]="incidentinfo.dateApproved"
+                                        name="dateApproved"
+                                        placeholder="mm/dd/yyyy" [disabled]="view || this.user.rolename != 'StaffAdmin'"                            
+                                      />
+                                      <button class="btn btn-outline-secondary bi bi-calendar4" (click)="dateApproved.toggle()" type="button"></button>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pr-md-1 pt-md-2">
+                                  <div >
+                                    <div class="form-group">
+                                      <label>Approving Official</label>
+                                      <input class="form-control" placeholder="Approving Official" type="text" name="approvingOfficial" id="approvingOfficial" 
+                                       [(ngModel)]="incidentinfo.approvingOfficial" readonly/>
+                                    </div>
+                                  </div>
+                                 
+                                </div>
+                                <div class="col-md-4 pr-md-1 pt-md-2 pb-md-2">
+                                  <div class="form-group">
+                                    <label> Comment</label>
+                                      <textarea
+                                          class="form-control"
+                                          placeholder=""
+                                          id="returnedComment"
+                                          name="returnedComment"
+                                          [(ngModel)]="incidentinfo.returnedComment"   (change)="setDirtyFlag();" [required]="this.returcommentrequired ? 'true':'false'" 
+                                          [readonly]="view || this.user.rolename != 'StaffAdmin'"                                  
+                                      ></textarea>                                  
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                        
+
+                        <div *ngIf="!view">
+                          <div class="card-footer" style="text-align: center;" >
+                            <button class=" btn btn-fill btn-success" type="submit" [disabled]="enableSave()"  id="btnSave" >Save</button> 
+                            <button class=" btn btn-fill btn-danger" type="button"  style="margin-left:2px;" (click)="GetIncidentDetails()" id="btnClose">Close</button>  
+                            
+                              <button class=" btn btn-fill btn-primary" type="button" style="margin-left:2px;" [disabled]="enableSave()" (click)="SubmitByUser()"
+                              id="btnInspSubmit">Submit</button> 
+                            
+                                              
+                          </div>
+                        </div>
+                        <div *ngIf="view">
+                          <div class="card-footer" style="text-align: center;" >
+                            <button class=" btn btn-fill btn-danger" type="button"  style="margin-left:2px;" (click)="GetIncidentDetails()" id="btnClose">Close</button>  
+                          </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <ng-template #template>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          NOV/COU
+        </h4>
+        <button type="button" class="close" aria-label="Cancel" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                                 
+        <div class="row border border-default p-1">                              
+          <div class="col-md-3">
+            <div class="form-group">
+                <strong> From Date </strong>   
+                <div class="input-group">           
+                    <input
+                    class="form-control"
+                    type="text"
+                    (click)="fromDate.toggle()"
+                    ngbDatepicker
+                    #fromDate="ngbDatepicker"
+                    [(ngModel)]="fromToDates.fromDate"
+                    name="fromDate"
+                    placeholder="mm/dd/yyyy"                         
+                  />
+                  <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()" type="button"></button>
+                </div>
+            </div>
+        </div>
+        <div class=" col-md-3">
+            <div class=" form-group">
+                <strong> To Date </strong>  
+                <div class="input-group">             
+                    <input
+                    class="form-control"
+                    type="text"
+                    (click)="toDate.toggle()"
+                    ngbDatepicker
+                    #toDate="ngbDatepicker"
+                    [(ngModel)]="fromToDates.toDate"
+                    name="this.toDate"
+                    placeholder="mm/dd/yyyy"                         
+                  />
+                  <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()" type="button"></button>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-2 mt-3">                                
+              <span class="btn btn-primary me-1 btn-sm" (click)="basicSearchCitations()" style="text-align: center; float: left;">
+                <i class="bi bi-search"></i>&nbsp;</span>  
+                <span class="btn btn-primary btn-sm" (click)="clearCitations()" style="text-align: left; float: left;">
+                  <i class="bi bi-arrow-clockwise"></i> &nbsp;</span>
+          </div>                             
+        </div>
+        <div class="card-body">
+            <div class="row">
+              <div class="col-md-6" style="float: left;">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  <label>Rows</label>
+                  <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6" >
+                <div class="p-2 bd-highlight" style="float: right;">
+                  <input
+                    type="text"
+                    [(ngModel)]="mobileViewData.searchQuery"
+                    id="searchQuery"
+                    placeholder="Search"
+                   
+                  />&nbsp;
+                  <button (click)="searchtable()" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                  <span class="btn btn-primary" style="margin-left:2px;" (click)="clearSearch()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </span>
+                </div>
+              </div>
+            </div>             
+            
+            <div class=" table-responsive" style="overflow: auto;">                     
+            <table class="table  table-bordered table-striped table-hover ">
+              <thead class="text-primary">
+                <tr style="background-color: #484D56; color: white;">
+                                   
+                  <th  width="8%">CIT #</th>
+                  <th>CIT. Type</th>
+                  <th>Company</th>                                      
+                  <th>Status</th>
+                  <th width="15%">Action</th>                                      
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of citationList; "                                   
+                >
+                 
+                  <td width="8%">{{ item.novNo}}</td>
+                  <td>{{ item.type }}</td>
+                  <td>{{ item.companyName }}</td>
+                 
+                  <td [ngClass]="
+                  item.status === 'Closed'
+                    ? 'Closed'
+                    : item.status === 'PendingCompletion'
+                    ? 'PendingCompletion'
+                    : item.status === 'InProcess'
+                    ? 'InProcess'
+                    : item.status === 'Submitted'
+                    ? 'Submitted'
+                    : item.status === 'ReturnedToIssuer'
+                    ? 'returnedToIssuerColor'
+                    : item.status === 'ReturnedToAS'
+                    ? 'returnedToASColor'
+                    : 'openColor'
+                ">{{item.statusDisplayName }} </td>
+                  
+                  <td><a [routerLink]="['/admin/incident/incidentreportadd']" title="Associate" 
+                    (click)="getAssociNov(item.id)" >  Associate </a></td>               
+                </tr>
+              </tbody>
+              
+
+            </table>
+            <div class=" row">
+              <div class="col-md-3">
+                <div class="p-2 flex-grow-1 bd-highlight" style="float: left;">
+                  Showing total
+                  {{ pageHeaders.totalItems }} entries
+                </div>
+              </div>
+              <div class="col-md-3"></div>
+              <div class="col-md-6" >
+                <ngb-pagination style="float: right;" 
+                [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize" [collectionSize]="pageHeaders.totalItems"
+                [maxSize]="1" (pageChange)="onPageChange($event)">
+                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                <ng-template ngbPaginationNext>Next</ng-template>
+              </ngb-pagination>
+              </div>
+            </div>
+            
+           
+          </div>                             
+        </div>                            
+      </div>
+    </ng-template>  
+    
+    <ng-template #templateInsp>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Inspection
+        </h4>
+        <button type="button" class="close" aria-label="Cancel" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                                 
+        <div class="row border border-default p-1">                              
+          <div class="col-md-3">
+            <div class="form-group">
+                <strong> From Date </strong>   
+                <div class="input-group">           
+                    <input
+                    class="form-control"
+                    type="text"
+                    (click)="fromDate.toggle()"
+                    ngbDatepicker
+                    #fromDate="ngbDatepicker"
+                    [(ngModel)]="fromToDates.fromDate"
+                    name="fromDate"
+                    placeholder="mm/dd/yyyy"                         
+                  />
+                  <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()" type="button"></button>
+                </div>
+            </div>
+        </div>
+        <div class=" col-md-3">
+            <div class=" form-group">
+                <strong> To Date </strong>  
+                <div class="input-group">             
+                    <input
+                    class="form-control"
+                    type="text"
+                    (click)="toDate.toggle()"
+                    ngbDatepicker
+                    #toDate="ngbDatepicker"
+                    [(ngModel)]="fromToDates.toDate"
+                    name="this.toDate"
+                    placeholder="mm/dd/yyyy"                         
+                  />
+                  <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()" type="button"></button>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-2 mt-3">                                
+              <span class="btn btn-primary me-1 btn-sm" (click)="basicSearchCitations()" style="text-align: center; float: left;">
+                <i class="bi bi-search"></i>&nbsp;</span>  
+                <span class="btn btn-primary btn-sm" (click)="clearCitations()" style="text-align: left; float: left;">
+                  <i class="bi bi-arrow-clockwise"></i> &nbsp;</span>
+          </div>                             
+        </div>
+        <div class="card-body">
+            <div class="row">
+              <div class="col-md-6" style="float: left;">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  <label>Rows</label>
+                  <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6" >
+                <div class="p-2 bd-highlight" style="float: right;">
+                  <input
+                    type="text"
+                    [(ngModel)]="mobileViewData.searchQuery"
+                    id="searchQuery"
+                    placeholder="Search"
+                   
+                  />&nbsp;
+                  <button (click)="searchtable()" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                  <span class="btn btn-primary" style="margin-left:2px;" (click)="clearSearch()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </span>
+                </div>
+              </div>
+            </div>             
+            
+            <div class=" table-responsive" style="overflow: auto;">                     
+            <table class="table  table-bordered table-striped table-hover ">
+              <thead class="text-primary">
+                <tr style="background-color: #484D56; color: white;">
+                  <th>INSP #</th>
+                  <th>INSP Type</th>
+                  <th style="width: 15%;">Door / Gate Number</th>  
+                  <th>Date and Time</th>                      
+                  <th>NOV #</th>                     
+                  <th>Status </th>                 
+                  <th>Action</th>           
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of inspectionList; index as i; trackBy: identify">                                  
+                  <td>{{ item.inspectionRecordNo}}</td>
+                  <td>{{ item.inspType }}</td>
+                  <td title ="{{item.doorNamesForEachInspection}}" class="showDoors">{{ item.doorNamesForEachInspection}}</td>                  
+                  <td>{{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm'}}</td>                                 
+                  <td>{{ item.novNoMappingForEachInspection}}</td>                                   
+                  <td [ngClass]="
+                    item.statusDisplayName === 'Closed'
+                      ? 'Closed'                        
+                      : item.statusDisplayName === 'Draft'
+                      ? 'Draft'
+                      : 'openColor'
+                  ">
+                  {{ item.statusDisplayName }}
+                  </td>                   
+
+                  <td><a [routerLink]="['/admin/incident/incidentreportadd']" title="Associate" 
+                    (click)="getAssociInsp(item.id)" >  Associate </a>                 
+                  </td>                
+                  
+                  
+                </tr>
+              </tbody>
+              
+
+            </table>
+            <div class=" row">
+              <div class="col-md-3">
+                <div class="p-2 flex-grow-1 bd-highlight" style="float: left;">
+                  Showing total
+                  {{ pageHeaders.totalItems }} entries
+                </div>
+              </div>
+              <div class="col-md-3"></div>
+              <div class="col-md-6" >
+                <ngb-pagination style="float: right;" 
+                [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize" [collectionSize]="pageHeaders.totalItems"
+                [maxSize]="1" (pageChange)="onPageChange($event)">
+                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                <ng-template ngbPaginationNext>Next</ng-template>
+              </ngb-pagination>
+              </div>
+            </div>
+            
+           
+          </div>                             
+        </div>                            
+      </div>
+    </ng-template> 
+    
+    <ng-template #templatePerimeter>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Category Perimeter Breach
+        </h4>
+        <button type="button" class="close" aria-label="Cancel" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color: #484D56;">
+                                    <th style="width: 15%;">Category</th>
+                                    <th>Description</th>
+                                    <!-- <th>Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let catlst of incidentPerimeterList" 
+                                    >
+                                    <td style="width: 15%;color: blue; cursor: pointer;"  >
+                                      <a [routerLink]="['/admin/incident/incidentreportadd']" (click)="getCatId(catlst.id)" >
+                                        <u>{{catlst.categoryName}}</u></a></td>
+                                    <td style="padding-bottom: 0px;"><div [innerHTML] = "catlst.catDesc"> 
+                                    </div></td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+        </div>
+        
+
+        
+      </div>
+    </ng-template>  
+    <ng-template #templateShowCategory>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Category {{this.incidentPerimeterListbyid.id}} Perimeter Breach
+        </h4>
+        <button type="button" class="close" aria-label="Cancel" (click)="closedesc()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div [innerHTML] = "this.incidentPerimeterListbyid.catDesc"> 
+        </div>                                             
+      </div>
+    </ng-template> 
+</div>

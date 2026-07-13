@@ -1,0 +1,101 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800');
+
+// / TOASTR BUGFIX /
+#toast-container > div {
+    opacity: 1;
+  }
+  .toast {
+    font-size: initial !important;
+    border: initial !important;
+    backdrop-filter: blur(0) !important;
+  }
+  .toast-success {
+    background-color: #51A351 !important;
+  }
+  .toast-error {
+    background-color: #BD362F !important;
+  }
+  .toast-info {
+    background-color: #2F96B4 !important;
+  }
+  .toast-warning {
+    background-color: #F89406 !important;
+  }
+
+  .card-title
+{    
+    font-weight: bold !important;
+    color: #484D56 !important;
+    font-size: 25px !important;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.header-3
+{
+  font-size: 1.4rem;
+  color: #484D56!important;
+}
+
+.changeText {
+  background-color:#F7F991 !important;   
+}
+.openColor {
+  background-color:white !important;   
+}
+
+.card{
+  border-radius:25px
+}
+.btn-primary {
+    background-color: #7B913B !important;
+    border-color: #7B913B !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #65782f !important;
+    border-color: #65782f !important;
+    color: #ffffff !important;
+}
+.bg-primary {
+    background-color: #7B913B !important;
+}
+.btn-success {
+    color: #ffffff !important;
+    background-color: #58B0BB !important;
+    border-color: #58B0BB !important;
+}
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: #3d8e99 !important;
+    border-color: #3d8e99 !important;
+    color: #fff !important;
+}
+.btn-warning {
+    color: #ffffff !important;
+    background-color: #F6B243 !important;
+    border-color: #F6B243 !important;
+}
+.btn-danger {
+    color: #ffffff !important;
+    background-color: #E98056 !important;
+    border-color: #E98056 !important;
+}
+ .btn-outline-primary {
+     color: #7B913B !important;
+     border-color: #7B913B !important;
+      background-color: transparent !important;
+ }
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #7B913B !important;
+    border-color: #7B913B !important;
+    color: #fff !important;
+}

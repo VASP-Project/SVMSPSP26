@@ -1,0 +1,403 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-10 text-primary text-center">
+            <span
+              style="
+                font-size: 25px;
+                color: #003594;
+                font-weight: bold;
+                margin-left: 18px;
+              "
+              >Badge Audit Module</span
+            >
+          </div>
+          <div class="col-md-2 float-right">
+            <button
+              class="btn btn-sm btn-danger mt-2"
+              (click)="closeAudit(templateclose)"
+              *ngIf="this.badgeauditinfo.status == 'LAUNCHED'"
+            >
+              Close Out Audit
+            </button>
+            <button
+              type="button"
+              [routerLink]="['/admin/badgelisting']"
+              class="btn btn-primary btn-sm mt-2"
+              style="float: right; margin-right: 18px"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+        <div class="row mt-2">
+          
+          <div class="col-md-4" >
+            <label
+              ><strong
+                >TOTAL : {{ badgeAuditAuthCountViewModel.totalIssued }}</strong
+              ></label
+            ><br />
+            <label
+              ><strong
+                >ACTIVE : {{ badgeAuditAuthCountViewModel.active }}</strong
+              ></label
+            ><br />
+            <label
+              ><strong
+                >ACCOUNTABLE :
+                {{ badgeAuditAuthCountViewModel.accountableConfirmed }}</strong
+              ></label
+            ><br />
+            <label
+              ><strong
+                >UNACCOUNTABLE :
+                {{
+                  badgeAuditAuthCountViewModel.unaccountableConfirmed
+                }}</strong
+              ></label
+            ><br />
+            <label
+              ><strong
+                >UNACCOUNTABLE %:
+                {{
+                  badgeAuditAuthCountViewModel.percentUnaccountable
+                }} %</strong
+              ></label
+            ><br />
+            <label
+              ><strong
+                >PENDING :
+                {{
+                  badgeAuditAuthCountViewModel.pending
+                }}
+                </strong
+              ></label
+            >
+          </div>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-6">
+                <label><strong>Name : </strong>{{ badgeauditinfo.auditName }}</label>
+              </div>
+                           
+            
+            
+              <!-- <div class="col-md-6">
+                <label><strong>Audit %  : </strong>{{ badgeauditinfo.auditPercent }}</label>
+              </div> -->
+              <div class="col-md-6">
+                <label><strong>Audit Type : </strong>{{ badgeauditinfo.auditType }}</label>
+              </div>
+                            
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label><strong>Audit Start Date : </strong>{{ badgeauditinfo.auditFromDate | date: "MM/dd/yyyy" }}</label>
+              </div>
+              <div class="col-md-6">
+                <label><strong>Audit End Date : </strong>{{ badgeauditinfo.auditToDate | date: "MM/dd/yyyy" }}</label>
+              </div>              
+            </div>                      
+          </div>
+        </div>
+        <hr>
+        <div class="row mt-2">
+          <div class="col-md-10">
+            <div class="table-responsive" style="overflow: auto;">
+              <table
+                class="table table-sm table-stripped"
+                style="width: 60%; margin: auto"
+              >
+                <tr>
+                  <td style="font-size: 12px"><b>Badge Color</b></td>
+                  <td style="font-size: 12px"><b># Accountable</b></td>
+                  <td style="font-size: 12px"><b># Unaccountable</b></td>
+                  <!-- <td style="font-size: 12px"><b>Count</b></td> -->
+                  <td style="font-size: 12px"><b>Total</b></td>
+                  <td style="font-size: 12px"><b>Percent Unaccountable</b></td>
+                </tr>
+                <tr
+                  *ngFor="let item of badgeHolderColorCount"
+                  style="font-size: 12px"
+                >
+                  <td>{{ item.accountableBadgeColor }}</td>
+                  <td style="text-align: center;">{{ item.accountableBadgeCount }}</td>
+                  <!-- <td>{{ item.unAccountableBadgeColor }}</td> -->
+                  <td style="text-align: center;">{{ item.unAccountableBadgeCount }}</td>
+                  <td style="text-align: center;">{{ item.total }}</td>
+                  <td style="text-align: center;">{{ item.percentUnaccountable }}%</td>
+                </tr>
+              </table>
+              <table
+                class="table table-sm table-stripped mt-3"
+                style="width: 60%; margin: auto"
+              >
+                <tr style="font-size: 12px">
+                  <td><b style="font-size: 12px">Badge Access Type</b></td>
+                  <td><b style="font-size: 12px"># Accountable</b></td>
+                  <td><b style="font-size: 12px"># Unaccountable</b></td>
+                  <!-- <td><b style="font-size: 12px">Count</b></td> -->
+                  <td><b style="font-size: 12px">Total</b></td>
+                  <td><b style="font-size: 12px">Percent Unaccountable</b></td>
+                </tr>
+                <tr
+                  *ngFor="let item of badgeHolderSeraCount"
+                  style="font-size: 12px"
+                >
+                  <td >{{ item.accountableBadgeColor }}</td>
+                  <td style="text-align: center;">{{ item.accountableBadgeCount }}</td>
+                  <!-- <td>{{ item.unAccountableBadgeColor }}</td> -->
+                  <td style="text-align: center;">{{ item.unAccountableBadgeCount }}</td>
+                  <td style="text-align: center;">{{ item.total }}</td>
+                  <td style="text-align: center;">{{ item.percentUnaccountable }}%</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-3">
+            <!-- <div class="form-group">
+              <strong> Audit by Completion Date </strong>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  (click)="violatorBirthDate.toggle()"
+                  ngbDatepicker
+                  #violatorBirthDate="ngbDatepicker"
+                  [(ngModel)]="completionDate"
+                  name="violatorBirthDate"
+                  placeholder="mm/dd/yyyy"
+                  style="border-left: 5px solid white"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar4"
+                  (click)="violatorBirthDate.toggle()"
+                  type="button"
+                ></button>
+              </div>
+            </div> -->
+          </div>
+          <div class="col-md-6"></div>
+        </div>
+        <div class="row mt-2" *ngIf="(windowRef?.innerWidth >= 768)">
+          <div class="col-md-12">
+            <div class="table-responsive" style="overflow: auto;">
+              <table class="table table-sm table-bordered">
+                <tr style="color: white; background-color: #484D56">
+                  <td><b>Company</b></td>
+                  <!-- <td><b>Audit Start Date</b></td>
+                  <td><b>Audit Completion Date</b></td> -->
+                  <td><b>Total Badges</b></td>
+                  <td><b>Total Accountable</b></td>
+                  <td><b>Total Unaccountable</b></td>
+                  <td><b>Total % Unaccountable</b></td>
+                  <td><b>Submitted</b></td>
+                  <td><b></b></td>
+                  <td><b>By</b></td>
+                  <td><b>Date</b></td>
+                  <td><b>Comment</b></td>
+                  <td><b>Download</b></td>
+                </tr>
+                <tr
+                  *ngFor="let item of auditCompanysList"
+                 
+                >
+                  <td>{{ item.companyName | uppercase  }}</td>
+                  <!-- <td (click)="showemployee(template, item.companyName)">{{ item.auditFromDate | date: "MM/dd/yyyy" }}</td>
+                  <td>{{ item.auditToDate | date: "MM/dd/yyyy" }}</td> -->
+                  <td>{{ item.totalBadges }}</td>
+                  <td>{{ item.totalAccountable }}</td>
+                  <td>{{ item.totalUnAccountable }}</td>
+                  <td>{{ item.totalPercentageUnAccountable }}%</td>
+                  <td>{{ item.isSubmitted == true?'Submitted' : 'Not Submitted'  }}</td>
+                  <td ><div *ngIf = "item.auditStatus == 'LAUNCHED' && item.isSubmitted == true " >
+                              <button type="submit"                  
+                              class="btn btn-sm btn-primary"
+                              style="cursor:pointer; padding: 2px; align-items: center;" (click)="submittolaunch(template,item.companyName, item.auditId)">Send Back</button>
+                              </div>
+                             
+                              
+                  </td>
+                  
+                      
+                  <td >{{ item.isSubmitted == true?item.submittedBy : ''  }}</td>
+                  <td>{{ item.isSubmitted == true?(item.submittedDate | date: "MM/dd/yyyy") : ''}}</td>
+                  
+                  <td  type="submit" class="btn btn-primary" (click)="showcomment(commenttemplate, item.authsignerComment)" 
+                  style="cursor:pointer; padding: 2px; align-items: center;"> <i class="bi bi-eye-fill"></i>View</td>
+  
+                  <td><a  type="submit" class="btn btn-success"                 
+                    style="padding: 1px; background-color: #06d79c;align-items: center;"
+                    [routerLink]="['/admin/badgeauditexcel/']"
+                    [queryParams]="{
+                      auditId: item.auditId,
+                      companyName: item.companyName             
+                    }"  
+                    skipLocationChange
+                  ><i class="bi bi-file-text"></i>
+                  Details
+                  </a>  </td>
+                </tr>
+              </table>
+            </div>
+           
+          </div>
+        </div>
+
+        <div *ngIf="(windowRef?.innerWidth < 768)">
+          <div class="card-body">                        
+            <div class="list-group">
+              <a *ngFor="let item of auditCompanysList; 
+                 "
+                skipLocationChange class="list-group-item list-group-item-action">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Company:</span>
+                    {{ item.companyName }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Total Badges:</span>
+                    {{ item.totalBadges }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Total Accountable:</span>
+                    {{ item.totalAccountable }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Total Unaccountable:</span>
+                    {{ item.totalUnAccountable }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Total % Unaccountable:</span>
+                    {{ item.totalPercentageUnAccountable }}%
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Submitted:</span>
+                    {{ item.isSubmitted == true?'Submitted' : 'Not Submitted'  }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                      <div *ngIf = "item.auditStatus == 'LAUNCHED' && item.isSubmitted == true " >
+                      <button type="submit"                  
+                      class="btn btn-sm btn-primary"
+                      style="cursor:pointer; padding: 2px; align-items: center;" (click)="submittolaunch(template,item.companyName, item.auditId)">Send Back</button>
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">By:</span>
+                    {{ item.isSubmitted == true?item.submittedBy : ''  }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Date:</span>
+                    {{ item.isSubmitted == true?(item.submittedDate | date: "MM/dd/yyyy") : ''}}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Comment:</span>
+                    <div  type="submit" class="btn btn-primary" (click)="showcomment(commenttemplate, item.authsignerComment)" 
+                style="cursor:pointer; padding: 2px; align-items: center;"> <i class="bi bi-eye-fill"></i>View</div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                    <span style="font-weight: bold;">Download:</span>
+                    <a  type="submit" class="btn btn-success"                 
+                      style="padding: 1px; background-color: #06d79c;align-items: center;"
+                      [routerLink]="['/admin/badgeauditexcel/']"
+                      [queryParams]="{
+                        auditId: item.auditId,
+                        companyName: item.companyName             
+                      }"  
+                      skipLocationChange
+                    ><i class="bi bi-file-text"></i>
+                    Details
+                    </a>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-12">
+            <label><strong>Audit Description : </strong>{{ badgeauditinfo.auditDescription }}</label>
+          </div>
+          <!-- <div class="col-md-6">
+            <label><strong>Authorized Signer Comment : </strong>{{ badgeauditinfo.authsignerComment }}</label>
+          </div>   -->
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #commenttemplate>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Authorized Signer Comment
+    </h4>
+    <button type="button" class="close" aria-label="Cancel" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div [innerHTML]= "this.badgeauditinfo.authsignerComment"  ></div> -->
+    <div>{{this.authSignerCom}}</div>
+  
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="modal-header ">
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <h4 >Are you sure you want to send submitted audit back to the authorized signer?</h4>
+    </div>
+    <button style="float: right;margin-left: 2px;" (click)="saveSubmitToLaunch(); close()" class="btn btn-success"
+      type="button">
+      <span aria-hidden="true">Yes</span>
+    </button>
+    &nbsp;&nbsp;
+    <button style="float: right;" (click)="close();" class="btn btn-danger" type="button">
+      <span aria-hidden="true">No</span>
+    </button>
+
+  </div>
+</ng-template>
+
+<ng-template #templateclose>
+  <div class="modal-header ">
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="close()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <h5 >Do you want to confirm to close the Audit {{ this.badgeauditinfo.auditName}} {{ this.badgeauditinfo.auditToDate |date: "MM/dd/yyyy"}}?</h5>
+    </div>
+    <button style="float: right;margin-left: 2px;" (click)="closeAuditConfirm(); close()" class="btn btn-primary"
+      type="button">
+      <span aria-hidden="true">Yes</span>
+    </button>
+    &nbsp;&nbsp;
+    <button style="float: right;" (click)="close();" class="btn btn-primary" type="button">
+      <span aria-hidden="true">No</span>
+    </button>
+
+  </div>
+</ng-template>

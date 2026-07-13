@@ -1,0 +1,35 @@
+.table-responsive {
+    margin: 10px;
+  }
+  .sjs-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #0b0000;
+  }
+  .sjs-table thead th {
+    font-weight: bold;
+    padding: 10px;
+    border-right: 1px solid #0d0404;
+    border-bottom: 1px solid #0d0404;
+  }
+  
+  .sjs-table tbody td {
+    padding: 10px;
+    border-right: 1px solid #0d0404;
+    border-bottom: 1px solid #0d0404;
+  }
+  .btn-success{
+    float: right;
+  }
+  .btn-primary{
+    float: left;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+ }
+ 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}

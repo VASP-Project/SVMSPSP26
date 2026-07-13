@@ -1,0 +1,38 @@
+.card {
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 10;
+}
+
+.card-body  {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+:host {
+    display: block;
+    position: relative;
+  
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  ::ng-deep .ng-dropdown-panel {
+    z-index: 9999999!important;
+  }
+  
+  .cdk-overlay-container {
+    z-index: 1050 !important;
+  }
+  ::ng-deep .cdk-overlay-container {
+    z-index: 1050 !important;
+   }
+
+
+
+

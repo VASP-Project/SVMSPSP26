@@ -1,0 +1,189 @@
+<div class="content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Doors-Gates</h3>
+                    <button type="button" class="btn btn-primary" style="float: right; margin-right: 18px;"
+                            [routerLink]="['/admin/locationedit']" [queryParams]="{ isEdit: 0, isView: 0 }">
+                            Add Door / Gate
+                        </button>
+                </div>
+                <div>
+                  <div class="card-body">                        
+                    <table id="dt1" class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                    [dtTrigger]="dtTrigger">
+                        <thead>
+                            <tr style="background-color: #484D56; color: white;">
+                                
+                                <th>Facility</th>
+                                <th>Company</th>
+                                <th>Door / Gate</th>
+                                <!-- <th>Photo(s)</th> -->
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let Location of locations"
+                                (click)="viewLocation(Location.id, 1)" class="pointerCursor">
+                                <td style="width: 15%;"> 
+                                    {{ Location.facilityName }}</td>
+                                  <td style="width: 15%;"> 
+                                    {{ Location.companyName }}</td>
+                                <td style="width: 20%;">{{ Location.location }}</td>
+                                <!-- <td>
+                                    <div *ngFor="let file of Location.locationPhotos; let i = index">
+                                  <div class="filedisplay">
+                                    <div *ngIf="
+                                        file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                                        file.filePath.toLowerCase().split('.', 2)[1] == 'PNG' ||
+                                        file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                                        file.filePath.toLowerCase().split('.', 2)[1] ==
+                                          'jpeg' ||
+                                        file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                                      ">
+                                      
+
+                                  <img id="myImg" src="{{'data:image/png;base64,' + this.file.thumbnailImage}}" 
+                                 width="80" height="80">
+                                     
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                                </td> -->
+                                <td style="width: 12%;" (click)="$event.preventDefault(); $event.stopPropagation();">
+                                    <div>
+                                        <button [routerLink]="['/admin/locationedit']"
+                                            class="btn btn-warning btn-sm"
+                                            [queryParams]="{ locationId: Location.id, isEdit: 1, isView: 0 }">
+                                            <span><i class="bi bi-pencil"></i>
+                                            </span></button>
+                                        &nbsp;
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            (click)="deleteLocation(Location.id)">
+                                            <span><i class="bi bi-trash"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>  
+
+                    <!-- <div>
+                        <div class="card-body">  
+                            <div class="table-responsive">
+                                <div class="d-flex bd-highlight">
+                                  <div class="p-2 flex-grow-1 bd-highlight">
+                                    <label>Rows:</label>
+                                    <select
+                                    [(ngModel)]="queryParam.pageSize"
+                                    (change)="onPageSizeChange()"
+                                    id="pageSize"
+                                  >
+                                    <option value="10">10</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                  </select>
+                                  </div>
+                                  <div class="p-2 bd-highlight">
+                                   <input type="text" placeholder="Search" [(ngModel)]="queryParam.searchQuery" id="searchQuery" (keyup)="searchtable()">
+                                  </div>
+                                </div>                                          
+                                <table
+                                  class="table table-bordered table-striped table-hover"
+                                  id="dt1">
+                                    <thead class="text-primary">
+                                        <tr style="background-color: #003594">
+                                            <th>Facility<i (click)="onSortClick($event, 'FacilityName')" class="my-icon fa fa-chevron-up"></i></th>
+                                            <th>Door / Gate<i (click)="onSortClick($event, 'Location')" class="my-icon fa fa-chevron-up"></i></th>
+                                            <th>Photo(s)</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                        *ngFor="
+                                            let item of locationList
+                                            | paginate
+                                                : {
+                                                    itemsPerPage: pageHeaders.pageSize,
+                                                    currentPage: pageHeaders.pageNumber,
+                                                    totalItems: pageHeaders.totalItems
+                                                }
+                                        "
+                                        >
+                                        <td (click)="viewLocation(item.id)" style="width: 15%;"> 
+                                          {{ item.facilityName }}</td>
+                                      <td (click)="$event.preventDefault(); $event.stopPropagation();" style="width: 20%;">{{ item.location }}</td>
+                                        <td>
+                                            <div *ngFor="let file of item.locationPhotos; let i = index">
+                                          <div class="filedisplay">
+                                            <div *ngIf="
+                                                file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                                                file.filePath.toLowerCase().split('.', 2)[1] == 'PNG' ||
+                                                file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                                                file.filePath.toLowerCase().split('.', 2)[1] ==
+                                                  'jpeg' ||
+                                                file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                                              ">
+                                              
+    
+                                          <img id="myImg" src="{{'data:image/png;base64,' + this.file.thumbnailImage}}" 
+                                         width="80" height="80">
+                                             
+                                            </div>
+                                            
+                                          </div>
+                                        </div>
+                                        </td>
+                                        <td style="width: 12%;">
+                                            <div>
+                                                <button [routerLink]="['/admin/locationedit']"
+                                                    class="btn btn-warning btn-sm"
+                                                    [queryParams]="{ locationId: item.id, isEdit: 1, isView: 0 }">
+                                                    <span><i class="bi bi-pencil"></i>
+                                                    </span></button>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    (click)="deleteLocation(item.id)">
+                                                    <span><i class="bi bi-trash"></i>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight">
+                                  Showing {{ pageHeaders.pageNumber }} to
+                                  {{ pageHeaders.pageSize }} of
+                                  {{ pageHeaders.totalItems }} entries
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                  <pagination-controls
+                                    (pageChange)="onPageChange($event)"
+                                    class="my-pagination"
+                                  ></pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  -->
+                </div>
+  
+                <!-- <div>
+                    <table datatable id='reportTable' [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                      class="row-border hover table"></table>
+                  </div> -->
+            </div>
+        </div>
+  
+    </div>
+  </div>

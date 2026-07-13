@@ -1,0 +1,848 @@
+<div class="content" *ngIf="!isConcessionaireUser">
+  <div class="row">
+    <div style="width: 100%">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12 pe-2" *ngIf="isIssuer || isStaffAdmin">
+          <label class="card-title">Citations</label>
+
+          <div style="float: right">
+            <!-- <button
+              type="submit"
+              (click)="openModalPeri(bottemplate)"
+              title="Chat With AI"
+              class="btn btn-success btn-sm mt-2 ms-1"
+              data-bs-toggle="modal"
+              data-bs-target="#chatModal"
+            >
+              <i class="bi bi-robot"></i>
+            </button> -->
+            <button
+              class="btn btn-primary btn-sm mt-2 ms-1"
+              *ngIf="!isTSA"
+              routerLink="/admin/nov/counseling"
+              [queryParams]="{ isEdit: 0 }"
+              skipLocationChange
+            >
+              Add COU
+            </button>
+            <button
+              class="btn btn-primary btn-sm mt-2 ms-1"
+              style="margin-left: 2px"
+              routerLink="/admin/nov/details"
+              [queryParams]="{ isEdit: 0 }"
+              skipLocationChange
+            >
+              Add NOV
+            </button>
+          </div>
+        </div>
+
+        <!-- <div class="d-flex flex-row bd-highlight ps-2 pe-2" >
+          <div class="form-group pe-2">
+            <strong> First Name </strong>
+            <input class="form-control" placeholder="First Name" type="text" [(ngModel)]="fromToDates.violatorFirstName"
+              name="ViolatorFirstName" [readonly]="isAdvanceSearch"/>
+          </div>
+
+          <div class="form-group pe-1">
+            <strong> Last Name </strong>
+            <input class="form-control" placeholder="Last Name" type="text" [(ngModel)]="fromToDates.violatorLastName"
+              name="ViolatorLastName" [readonly]="isAdvanceSearch"/>
+          </div>
+
+          <div class="form-group pe-2">
+            <strong> DOB </strong>
+            
+
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  (click)="violatorBirthDate.toggle()"
+                  ngbDatepicker
+                  #violatorBirthDate="ngbDatepicker"
+                  [(ngModel)]="fromToDates.violatorBirthDate"
+                  name="violatorBirthDate"
+                  placeholder="mm/dd/yyyy"  
+                  style="border-left: 5px solid white;"                  
+                />
+                <button class="btn btn-outline-secondary bi bi-calendar4" (click)="violatorBirthDate.toggle()" type="button"></button>
+              </div>            
+          </div>
+
+          <div class="form-group pe-2">
+            <strong> From Date </strong>   
+            <div class="input-group">           
+                <input
+                class="form-control"
+                type="text"
+                (click)="fromDate.toggle()"
+                ngbDatepicker
+                #fromDate="ngbDatepicker"
+                [(ngModel)]="fromToDates.fromDate"
+                name="fromDate"
+                placeholder="mm/dd/yyyy"                         
+              />
+              <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()" type="button"></button>
+            </div>
+        </div>
+
+        <div class=" form-group pe-2">
+          <strong> To Date </strong>  
+          <div class="input-group">             
+              <input
+              class="form-control"
+              type="text"
+              (click)="toDate.toggle()"
+              ngbDatepicker
+              #toDate="ngbDatepicker"
+              [(ngModel)]="fromToDates.toDate"
+              name="this.toDate"
+              placeholder="mm/dd/yyyy"                         
+            />
+            <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()" type="button"></button>
+          </div>
+          </div>
+
+          <div class="mt-4 pe-2">
+            
+              <span class="btn btn-primary" (click)="basicSearchCitations()" style="text-align: center; height: 38px;">
+                <i class="bi bi-search"></i>&nbsp;</span>                                  
+            
+          </div>
+
+          <div class="mt-4 pe-2">
+            <span class="btn btn-primary" (click)="clearCitations()" style="text-align: center; height: 38px;">
+              <i class="bi bi-arrow-clockwise"></i> &nbsp;</span> 
+          </div>
+
+          <div class="mt-4">
+            <span [ngClass]="isAdvanceSearch == true ? 'btn btn-success' : 'btn btn-primary'" (click)="clickSearch()" style="float: right;"
+                *ngIf="showAdvanceSearch()" >
+                <i class="bi bi-search"></i> &nbsp;Advanced Search</span>
+          </div>          
+
+        </div> -->
+
+        <div class="row border border-default p-1">
+          <div class="col-md-2">
+            <div class="form-group">
+              <strong> First Name </strong>
+              <input
+                class="form-control"
+                placeholder="First Name"
+                type="text"
+                [(ngModel)]="fromToDates.violatorFirstName"
+                name="ViolatorFirstName"
+                [readonly]="isAdvanceSearch"
+              />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <strong> Last Name </strong>
+              <input
+                class="form-control"
+                placeholder="Last Name"
+                type="text"
+                [(ngModel)]="fromToDates.violatorLastName"
+                name="ViolatorLastName"
+                [readonly]="isAdvanceSearch"
+              />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <strong> DOB </strong>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  (click)="violatorBirthDate.toggle()"
+                  ngbDatepicker
+                  #violatorBirthDate="ngbDatepicker"
+                  [(ngModel)]="fromToDates.violatorBirthDate"
+                  name="violatorBirthDate"
+                  placeholder="mm/dd/yyyy"
+                  style="border-left: 5px solid white"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar4"
+                  (click)="violatorBirthDate.toggle()"
+                  type="button"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <strong> From Date </strong>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  (click)="fromDate.toggle()"
+                  ngbDatepicker
+                  #fromDate="ngbDatepicker"
+                  [(ngModel)]="fromToDates.fromDate"
+                  name="fromDate"
+                  placeholder="mm/dd/yyyy"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar4"
+                  (click)="fromDate.toggle()"
+                  type="button"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <strong> To Date </strong>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="text"
+                  (click)="toDate.toggle()"
+                  ngbDatepicker
+                  #toDate="ngbDatepicker"
+                  [(ngModel)]="fromToDates.toDate"
+                  name="this.toDate"
+                  placeholder="mm/dd/yyyy"
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar4"
+                  (click)="toDate.toggle()"
+                  type="button"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 mt-3">
+            <span
+              class="btn btn-primary me-1 btn-sm"
+              (click)="basicSearchCitations()"
+              style="text-align: center; float: left"
+            >
+              <i class="bi bi-search"></i>&nbsp;</span
+            >
+
+            <span
+              class="btn btn-primary btn-sm"
+              (click)="clearCitations()"
+              style="text-align: left; float: left"
+            >
+              <i class="bi bi-arrow-clockwise"></i> &nbsp;</span
+            >
+            &nbsp;
+            <span
+              [ngClass]="
+                isAdvanceSearch == true
+                  ? 'btn btn-success btn-sm'
+                  : 'btn btn-primary btn-sm'
+              "
+              (click)="clickSearch()"
+              *ngIf="showAdvanceSearch() && this.windowRef.innerWidth >= 768"
+            >
+              Adv &nbsp;<i class="bi bi-search"></i
+            ></span>
+          </div>
+          <!-- <div class="col-md-1 mt-3">
+            <span class="btn btn-primary" (click)="clearCitations()" style="text-align: left; float: right;">
+              <i class="bi bi-arrow-clockwise"></i> &nbsp;</span> 
+          </div>           -->
+        </div>
+        <!-- <div class="row ">
+          <div class="col-md-12">
+            <span [ngClass]="isAdvanceSearch == true ? 'btn btn-success' : 'btn btn-primary'" (click)="clickSearch()" style="float: right;"
+                *ngIf="showAdvanceSearch()" class="mt-2">
+                <i class="bi bi-search"></i> &nbsp;Advanced Search</span>
+          </div>
+        </div> -->
+
+        <div class="row" *ngIf="isAdvanceSearch">
+          <div class="col-md-12 mt-2">
+            <table
+              class="table table-bordered table-sm"
+              style="margin-left: 5px; margin-right: 10px"
+            >
+              <thead>
+                <tr>
+                  <th class="mythColor" style="width: 40%">Field Name</th>
+                  <th class="mythColor" style="width: 40%">Field Value</th>
+                  <th class="mythColor" style="width: 10%">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dynamic of dynamicArray; let i = index">
+                  <td>
+                    <ng-select
+                      appendTo="body"
+                      id="fieldName"
+                      #select
+                      [items]="advancedSearchOptions"
+                      bindLabel="label"
+                      placeholder="Select Field"
+                      bindValue="value"
+                      [(ngModel)]="dynamic.fieldName"
+                      appearance="outline"
+                      name="fieldName"
+                    >
+                    </ng-select>
+                  </td>
+                  <td>
+                    <input
+                      [(ngModel)]="dynamicArray[i].fieldValue"
+                      class="form-control"
+                      type="text"
+                    />
+                  </td>
+                  <td (click)="deleteRow(i)" *ngIf="i > 0">
+                    <button class="btn btn-danger btn-sm">
+                      <span>
+                        <i class="bi bi-trash"></i>
+                      </span>
+                    </button>
+                  </td>
+                  <td (click)="addRow(i)" *ngIf="i == 0">
+                    <button class="btn btn-warning btn-sm">
+                      <span><i class="bi bi-plus-lg"></i> </span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-4 pl-md-1"></div>
+          <div class="col-md-4 pl-md-1" style="text-align: center">
+            <span class="btn btn-primary" (click)="searchCitations()">
+              <i class="bi bi-search"></i>&nbsp;Search</span
+            >
+            <span
+              class="btn btn-primary"
+              style="margin-left: 2px"
+              (click)="clearCitations()"
+            >
+              <i class="bi bi-arrow-clockwise"></i>&nbsp;Clear
+            </span>
+          </div>
+          <div class="col-md-4 pl-md-1"></div>
+        </div>
+        <div *ngIf="windowRef.innerWidth >= 768">
+          <div class="card-body">
+            <div class="table-responsive">
+              <!--  class="table-responsive" -->
+              <table
+                class="table table-bordered table-sm"
+                datatable
+                [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger"
+                id="dt1"
+              >
+                <thead class="text-primary">
+                  <tr style="background-color: #484D56;">
+                    <th hidden>D</th>
+                    <th>CIT #</th>
+                    <th>CIT. Type</th>
+                    <th>Company</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Citation Date</th>
+                    <th>Citation Reason</th>
+                    <th>Status</th>
+                    <th width="15%">Action</th>
+                    <!-- <th hidden>SecurityBadgeNo</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let item of citationList; trackBy: identify"
+                    [ngClass]="item.isDueDate == true ? 'redbg' : ''"
+                  >
+                    <td hidden>
+                      {{
+                        item.createdDate | dateTimeFormatFilter : "MM/DD/yyyy"
+                      }}
+                    </td>
+                    <td>{{ item.novNo }}</td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.companyName }}</td>
+                    <td>
+                      {{ item.violatorFirstName }}
+                      {{ item.violatorLastName }}
+                    </td>
+                    <td>{{ item.violationType }}</td>
+                    <td>
+                      {{
+                        item.violationDate | dateTimeFormatFilter : "MM/DD/YYYY"
+                      }}
+                    </td>
+                    <td>{{ item.citationReason }}</td>
+                    <td
+                      [ngClass]="
+                        item.status === 'Closed'
+                          ? 'Closed'
+                          : item.status === 'PendingCompletion'
+                          ? 'PendingCompletion'
+                          : item.status === 'InProcess'
+                          ? 'InProcess'
+                          : item.status === 'Submitted'
+                          ? 'Submitted'
+                          : item.status === 'ReturnedToIssuer'
+                          ? 'returnedToIssuerColor'
+                          : item.status === 'ReturnedToAS'
+                          ? 'returnedToASColor'
+                          : 'openColor'
+                      "
+                    >
+                      {{ item.statusDisplayName }}
+                    </td>
+                    <!-- <td hidden>{{item.securityBadgeNo}}</td> -->
+                    <!-- <td>{{item.violatorBirthDate | date : 'MM/dd/yyyy'}}</td> -->
+
+                    <td *ngIf="item.type === 'NOV'" width="15%">
+                      <a
+                        title="Edit"
+                        [routerLink]="['/admin/nov/details/']"
+                        *ngIf="showEditButton(item)"
+                        [queryParams]="{
+                          citationId: item.id,
+                          isEdit: 1,
+                          isClone: 0,
+                          inspectionId: 0
+                        }"
+                        skipLocationChange
+                      >
+                        Edit
+                      </a>
+                      |
+                      <a
+                        title="View"
+                        [routerLink]="['/admin/nov/view/']"
+                        [queryParams]="{ citationId: item.id, isEdit: 0 }"
+                        skipLocationChange
+                        >View</a
+                      >
+                      |
+                      <a
+                        title="Clone"
+                        [routerLink]="['/admin/nov/details/']"
+                        *ngIf="
+                          user.rolename != 'TSA User' &&
+                          user.rolename != 'AuthSigner' &&
+                          user.rolename != 'Superadmin'
+                        "
+                        [queryParams]="{
+                          citationId: item.id,
+                          isEdit: 1,
+                          isClone: 1,
+                          inspectionId: 0
+                        }"
+                        >Clone</a
+                      >
+                      |
+                      <a
+                        [routerLink]="['/admin/nov']"
+                        title="delete"
+                        *ngIf="user.rolename == 'Superadmin'"
+                        (click)="DeleteCitation(item.id)"
+                        >Delete</a
+                      >
+                    </td>
+                    <td *ngIf="item.type === 'COU'" width="15%">
+                      <a
+                        title="Edit"
+                        [routerLink]="['/admin/nov/counseling/']"
+                        [queryParams]="{
+                          couId: item.id,
+                          isEdit: 1,
+                          isClone: 0
+                        }"
+                        skipLocationChange
+                        *ngIf="showEditButton(item)"
+                      >
+                        Edit
+                      </a>
+                      |
+                      <a
+                        title="View"
+                        [routerLink]="['/admin/nov/counselingview/']"
+                        [queryParams]="{ couId: item.id, isEdit: 0 }"
+                        skipLocationChange
+                        >View</a
+                      >
+                      |
+                      <a
+                        title="Clone"
+                        [routerLink]="['/admin/nov/counseling/']"
+                        *ngIf="
+                          user.rolename != 'TSA User' &&
+                          user.rolename != 'AuthSigner' &&
+                          user.rolename != 'Superadmin'
+                        "
+                        [queryParams]="{
+                          couId: item.id,
+                          isEdit: 1,
+                          isClone: 1
+                        }"
+                        >Clone</a
+                      >
+                      |
+                      <a
+                        [routerLink]="['/admin/nov']"
+                        title="delete"
+                        *ngIf="user.rolename == 'Superadmin'"
+                        (click)="DeleteCitation(item.id)"
+                        >Delete</a
+                      >
+                      
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--  class="table-responsive" -->
+          </div>
+        </div>
+        <div *ngIf="windowRef?.innerWidth < 768">
+          <div class="card-body">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <label>Rows</label>
+              <select
+                [(ngModel)]="mobileViewData.pageSize"
+                (change)="onPageSizeChange()"
+                id="pageSize"
+              >
+                <option value="10">10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+              </select>
+            </div>
+            <!-- <div class="p-2 bd-highlight">
+              <input
+                type="text"
+                [(ngModel)]="mobileViewData.searchQuery"
+                id="searchQuery"
+                placeholder="Search"
+               
+              />&nbsp;
+              <button (click)="searchtable()" class="btn btn-primary"><i class="bi bi-search"></i></button>
+              <span class="btn btn-primary" style="margin-left:2px;" (click)="clearSearch()">
+                <i class="bi bi-arrow-clockwise"></i>
+              </span>
+            </div> -->
+
+            <div class="list-group">
+              <a
+                *ngFor="let item of citationList; trackBy: identify; index as i"
+                [ngClass]="item.isDueDate == true ? 'redbg' : ''"
+                skipLocationChange
+                class="list-group-item list-group-item-action"
+              >
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">CIT:</span>
+                    {{ item.novNo }} {{ item.type }}
+                  </div>
+                  <!-- <div class="col-md-4">
+                    <span style="font-weight: bold;">CIT. Type:</span>
+                    
+                  </div> -->
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Company:</span>
+                    <span
+                      title="{{ item.doorNamesForEachInspection }}"
+                      class="showDoors"
+                    >
+                      {{ item.companyName }}</span
+                    >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Name:</span>
+                    {{ item.violatorFirstName }} {{ item.violatorLastName }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Category:</span>
+                    {{ item.violationType }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Citation Date:</span>
+                    {{
+                      item.violationDate | dateTimeFormatFilter : "MM/DD/YYYY"
+                    }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Citation Reason:</span>
+                    {{ item.citationReason }}
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold">Status:</span>
+                    <span
+                      [ngClass]="
+                        item.status === 'Closed'
+                          ? 'Closed'
+                          : item.status === 'PendingCompletion'
+                          ? 'PendingCompletion'
+                          : item.status === 'InProcess'
+                          ? 'InProcess'
+                          : item.status === 'Submitted'
+                          ? 'Submitted'
+                          : item.status === 'ReturnedToIssuer'
+                          ? 'returnedToIssuerColor'
+                          : item.status === 'ReturnedToAS'
+                          ? 'returnedToASColor'
+                          : 'openColor'
+                      "
+                    >
+                      {{ item.statusDisplayName }}
+                    </span>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 d-flex">
+                      <span style="font-weight: bold">Action:</span>
+
+                      <div *ngIf="item.type === 'NOV'">
+                        <a
+                          title="Edit"
+                          [routerLink]="['/admin/nov/details/']"
+                          *ngIf="showEditButton(item)"
+                          [queryParams]="{
+                            citationId: item.id,
+                            isEdit: 1,
+                            isClone: 0,
+                            inspectionId: 0
+                          }"
+                          skipLocationChange
+                        >
+                          Edit
+                        </a>
+                        |
+                        <a
+                          title="View"
+                          [routerLink]="['/admin/nov/view/']"
+                          [queryParams]="{ citationId: item.id, isEdit: 0 }"
+                          skipLocationChange
+                          >View</a
+                        >
+                        |
+                        <a
+                          title="Clone"
+                          [routerLink]="['/admin/nov/details/']"
+                          *ngIf="
+                            user.rolename != 'TSA User' &&
+                            user.rolename != 'AuthSigner' &&
+                            user.rolename != 'Superadmin'
+                          "
+                          [queryParams]="{
+                            citationId: item.id,
+                            isEdit: 1,
+                            isClone: 1,
+                            inspectionId: 0
+                          }"
+                          >Clone</a
+                        >
+                        |
+                        <a
+                          [routerLink]="['/admin/nov']"
+                          title="delete"
+                          *ngIf="user.rolename == 'Superadmin'"
+                          (click)="DeleteCitation(item.id)"
+                          >Delete</a
+                        >
+                      </div>
+                      <div *ngIf="item.type === 'COU'">
+                        <a
+                          title="Edit"
+                          [routerLink]="['/admin/nov/counseling/']"
+                          [queryParams]="{
+                            couId: item.id,
+                            isEdit: 1,
+                            isClone: 0
+                          }"
+                          skipLocationChange
+                          *ngIf="showEditButton(item)"
+                        >
+                          Edit
+                        </a>
+                        |
+                        <a
+                          title="View"
+                          [routerLink]="['/admin/nov/counselingview/']"
+                          [queryParams]="{ couId: item.id, isEdit: 0 }"
+                          skipLocationChange
+                          >View</a
+                        >
+                        |
+                        <a
+                          title="Clone"
+                          [routerLink]="['/admin/nov/counseling/']"
+                          *ngIf="
+                            user.rolename != 'TSA User' &&
+                            user.rolename != 'AuthSigner' &&
+                            user.rolename != 'Superadmin'
+                          "
+                          [queryParams]="{
+                            couId: item.id,
+                            isEdit: 1,
+                            isClone: 1
+                          }"
+                          >Clone</a
+                        >
+                        |
+                        <a
+                          [routerLink]="['/admin/nov']"
+                          title="delete"
+                          *ngIf="user.rolename == 'Superadmin'"
+                          (click)="DeleteCitation(item.id)"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <ngb-pagination
+                [(page)]="pageHeaders.pageNumber"
+                [pageSize]="pageHeaders.pageSize"
+                [collectionSize]="pageHeaders.totalItems"
+                [maxSize]="1"
+                (pageChange)="onPageChange($event)"
+              >
+                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                <ng-template ngbPaginationNext>Next</ng-template>
+              </ngb-pagination>
+            </div>
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total
+                {{ pageHeaders.totalItems }} entries
+              </div>
+              <div class="p-2 bd-highlight">
+                <pagination-controls
+                  (pageChange)="onPageChange($event)"
+                  class="my-pagination"
+                ></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    style="display: none"
+    id="btnModal"
+    class="btn btn-primary"
+    (click)="openModal(template)"
+  ></button>
+
+  <!-- <ng-template #template let-modal>
+    <div class="modal-content">
+      <br />
+      <div class="modal-body" style="text-align: center;">
+        <label style="font-size: 1.4rem; font-weight:500;">{{this.securityMsg }} </label>
+        <br />
+        <div style="text-align: right;">
+          <button type="button" class="btn btn-primary" (click)="modalRef.hide()" id="btnAcknowledge">
+            I acknowledge
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template> -->
+
+  <ng-template #template let-modal>
+    <!-- <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div> -->
+    <div class="modal-body" style="text-align: center">
+      <label style="font-size: 1.4rem; font-weight: 500"
+        >{{ this.securityMsg }}
+      </label>
+      <br />
+      <div style="text-align: right">
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="btnAcknowledge"
+          (click)="modal.close('Save click')"
+        >
+          I acknowledge
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<div class="content" *ngIf="isConcessionaireUser">
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <button
+          type="button"
+          style="display: none"
+          id="btnModal"
+          class="btn btn-primary"
+          (click)="openModal(template)"
+        ></button>
+
+        <ng-template #template let-modal>
+          <!-- <div class="modal-header">
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div> -->
+          <div class="modal-body" style="text-align: center">
+            <label style="font-size: 1.4rem; font-weight: 500"
+              >{{ this.securityMsg }}
+            </label>
+            <br />
+            <div style="text-align: right">
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="btnAcknowledge"
+                (click)="modal.close('Save click')"
+              >
+                I acknowledge
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #bottemplate let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h5 class="modal-title mb-0" style="color: #003594; font-weight: bold">
+      AI Assistant
+    </h5>
+
+    <button
+      type="button"
+      class="close btn-danger"
+      aria-label="Cancel"
+      (click)="close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+   <app-citationchatbot></app-citationchatbot> 
+
+  </div>
+</ng-template>

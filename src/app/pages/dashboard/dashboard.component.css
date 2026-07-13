@@ -1,0 +1,157 @@
+.container,
+.container-fluid {
+  padding-left: 1.0rem;
+  padding-right: 1.0rem;
+}
+
+.cardBoxOuter{
+  min-width: 195px;
+  margin-bottom: 2px;
+}
+
+.cardBox {
+  border-radius: 5%;
+  border: 1px solid silver;
+  border-bottom: 4px solid silver;
+  background-color: white ;
+  margin-bottom: 15px;
+  min-height: 131px;
+  cursor: pointer;
+}
+
+.mypiechart{
+    /* height: 258px; */
+    width: 516px;
+    /* position: relative; */
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    position: absolute;
+}
+.mycardbox{
+  margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 96%;
+    position: absolute;
+}
+.cardText {
+  color: #666;
+  font: 17px Arial, sans-serif;
+
+  cursor: pointer;
+
+}
+
+.cardHeader{
+   border-radius: 10px 10px 0px 0px;
+   background-color: #d9edf7;
+/*   border: 0px solid silver;  */
+}
+.cardHeader label{
+  color: #333;
+  font: 20px Arial, sans-serif;
+  font-weight: bold;
+  padding-bottom: 5px; 
+  padding-top: 10px;
+  cursor: pointer;
+}
+
+
+
+.cardLeft{
+  float:left;
+  width:40%;
+  overflow:hidden;
+  margin-top: 15px;
+  cursor: pointer;
+  }
+
+  .cardRight{
+  float:left;
+  width:60%;
+  overflow:hidden;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 15px;
+  cursor: pointer;
+  } 
+
+
+  .numberCircle{
+    border-radius: 50% 50% 50% 50%;
+    padding: -1px;
+    /* width: 60%; */
+    height: 65px;
+    padding-top: 15px;
+    text-align: center;
+    font: 29px Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  .numberCircleGray {
+    background: #f9f9f9;
+    /* border: 5px solid lightgray; */
+    color: #666;
+  }
+
+  .labeltext{
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 15px;
+  }
+
+  .table thead td, table thead th{
+    border: 1px solid white !important;
+  }
+
+  #dtCitationData th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+}
+
+.multiselect-dropdown .dropdown-btn {
+  background-color: white;
+}
+
+.lightcyan{
+  
+  background-color: #ef5350;
+  
+ 
+}
+.afterchange{
+  background-color:  #003594; /*#f6aecf*/
+}
+/* .fontcolor{
+  color: white;
+} */
+
+.Data{
+    width: 100%;
+    overflow: hidden;
+}
+
+.bodyData {
+    padding: 10;
+}
+
+.bodyData {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+    .canvasImg {
+      max-width: 100%;
+      height: auto;
+      
+    }
+  

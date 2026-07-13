@@ -1,0 +1,177 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3 class="card-title" style="padding-left: 10px">
+          Request Prohibited Item
+        </h3>
+        <div class="card-body">
+          <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+            <!-- <div class="row mb-3">
+             
+              <!-- Switch + Label -->
+              <!-- <div class="col-md-4 pr-md-1" *ngIf="this.isEdit != 1">
+                <label class="form-label">Use Existing Item</label><br />
+                <label class="custom-toggle">
+                  <input type="checkbox" [(ngModel)]="isShortDescDropdown" name="toggleShortDesc"
+                    (click)="onExistingItem()" />
+                  <span class="custom-slider"></span>
+                </label>
+              </div> 
+            </div> -->
+
+            
+            <div class="row mb-3">
+              <div  class="col-md-4 pr-md-1">
+                <label>Item ID</label>
+                <input type="text" class="form-control" [(ngModel)]="prohibitedModel.itemId"
+                  name="itemId" placeholder="Enter Item ID"  [ngStyle]="isEdit == 1 ? { 'background-color': 'rgb(247 255 205)' } : {}" />
+              </div>
+
+              <div  class="col-md-4 pr-md-1">
+                <label>Description</label>
+                <input type="text" class="form-control" [(ngModel)]="prohibitedModel.shortDescription"
+                  name="shortDescriptionInput" placeholder="Enter Description"  required   [ngStyle]="isEdit == 1 ? { 'background-color': 'rgb(247 255 205)' } : {}"/>
+              </div>
+
+              <!-- <div *ngIf="isShortDescDropdown" class="col-md-3 pr-md-1">
+                <label>Description</label>
+                <ng-select [items]="shortDesc" bindLabel="shortDescription"
+                  [(ngModel)]="prohibitedModel.shortDescription" name="shortDescDropdown"
+                  placeholder="Select Description" appendTo="body" (change)="onShortDescChange($event)" required>
+                </ng-select>
+              </div>
+
+              <div *ngIf="isShortDescDropdown" class="col-md-3 pr-md-1">
+                <div class="form-group">
+                  <label>Photo</label><br />
+                  <img *ngIf="selectedThumbnailImage" [src]="selectedThumbnailImage" width="80" height="80"
+                    alt="Selected Item Image" class="img-thumbnail" />
+                </div>
+              </div>
+
+               <div *ngIf="isShortDescDropdown" class="col-md-2 pr-md-1">
+                <label>Location</label>
+                <input type="text" class="form-control" [(ngModel)]="prohibitedModel.location"
+                  name="location" disabled  />
+              </div>
+
+              <div *ngIf="isShortDescDropdown" class="col-md-2 pr-md-1">
+                <div class="form-group">
+                  <label>Existing Quantity :</label>
+                  <input type="text" class="form-control" name="quantityAllowed"
+                    [(ngModel)]="prohibitedModel.quantityAllowed" required disabled />
+                </div>
+              </div>
+              <div *ngIf="isShortDescDropdown" class="col-md-2 pr-md-1">
+                <div class="form-group">
+                  <label>Quantity Requested</label>
+                  <input type="text" class="form-control" name="newQuantityAllowed"
+                    [(ngModel)]="prohibitedModel.newQuantityAllowed" required />
+                </div>
+              </div> -->
+              <!-- <div *ngIf="!isShortDescDropdown" class="col-md-3 pr-md-1">
+                <div class="form-group">
+                  <label> Quantity Requested</label>
+                  <input type="text" class="form-control" name="quantityAllowed"
+                    [(ngModel)]="prohibitedModel.quantityAllowed" required />
+                </div>
+              </div> -->
+            </div>
+            <div class="row mb-3">
+              <div  class="col-md-4 pr-md-1">
+                <label>Select Location</label>
+                <ng-select [items]="locationList" bindLabel="location"
+                  [(ngModel)]="prohibitedModel.locationId" name="locationId" bindValue="id"
+                  placeholder="Select Location" appendTo="body"  (change)="onLocationChanged()" 
+                  [ngClass]="{ 'edit-highlight': isEdit == 1 }" >
+                </ng-select>
+              </div>
+
+              <div  class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>Upload Photo</label> <br />&nbsp;
+                  <div id="upload_button">
+                    <label>
+                      <!-- <input type="file" accept="image/*" ngf-select ng-Model="new_files"
+                        (change)="addFile(input.files)" #input [(ngModel)]="prohibitedModel.filePath" /> -->
+                        <!-- <input 
+                          type="file" 
+                          accept="image/*" 
+                          (change)="addFile($event.target.files)" 
+                          #myInputVariable 
+                        /> -->
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png"
+                          (change)="addFile($event)"
+                          #myInputVariable
+                        />
+                      <span class="btn btn-success" id="btnUpload">
+                        <i class="bi bi-pin-angle"></i> Upload</span>
+                      &nbsp;
+                      <span>{{ prohibitedModel.filePath }}</span>
+                      <br />
+                      <img *ngIf="prohibitedModel.thumbnailImage" [src]="prohibitedModel.thumbnailImage" width="80"
+                        height="80" alt="Uploaded Image Preview" class="img-thumbnail" />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div  class="row mb-3">
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>Comment</label>
+                  <textarea type="text" class="form-control" [(ngModel)]="prohibitedModel.description"
+                    placeholder="Enter Comment" name="description" [ngStyle]="isEdit == 1 ? { 'background-color': 'rgb(247 255 205)' } : {}" ></textarea>
+                </div>
+              </div>
+               <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>Company</label>
+                  <input type="text" class="form-control" name="companyName" [(ngModel)]="prohibitedModel.companyName"
+                    disabled required />
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <button class=" btn btn-fill btn-primary" type="submit" style="width: inherit" 
+              [disabled]="!isFormValid()">Submit</button>
+
+              <!-- <button type="submit" class="btn btn-success" [disabled]="!isFormValid()">Save</button> -->
+              <button type="button" class="btn btn-fill btn-danger" style="margin-left: 2px" (click)="goBack()">
+                Close
+              </button>
+            </div>
+          </form>
+           <ng-template #template>
+          <!-- <div class="modal-header" style="color: primary">
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="closemodel()"
+            ></button> -->
+    
+
+          <div class="modal-body text-center">
+            <p class="fs-5 fw-semibold mt-3 mb-4">
+              Do not bring in a PI until you have received an approval from
+              <strong>SBO</strong>.
+            </p>
+
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              (click)="closemodel()"
+            >
+              OK, Got It
+            </button>
+          </div>
+        </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

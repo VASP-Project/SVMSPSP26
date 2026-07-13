@@ -1,0 +1,37 @@
+export class InputParameters {
+  id: number = 0;
+  apsNumber: number;
+  points: number;
+  category: string;
+  weeklyHours: number = 0;
+  shift1StartTime: number = 6;
+  shift2StartTime: number = 18;
+  shift3StartTime: number = 22;
+  shift1EndTime: number = 18;
+  shift2EndTime: number = 22;
+  shift3EndTime: number = 24;
+  shift1Hours: number;
+  shift2Hours: number;
+  shift3Hours: number;
+  totalHours: number;
+  shift1Burden: number = 15;
+  shift2Burden: number = 5;
+  shift3Burden: number = 3;
+  totalBurden: number;
+  scheduleStartDate: string;
+  newScheduleStartDate: string;
+  shiftStartTime: number;
+  shiftCloseTime: number;
+  isMoreThanOneShift: string;
+  numberOfShifts: string;
+  isRunAll: string;
+  thisShift: string;
+  isSpecificDoor: string;
+  isVerified: boolean = false;
+  verifiedText: string = "";
+  isSubmitted: boolean = false;
+  submittedBy: string;
+  submittedDate: Date;
+  approvedBy: string;
+  approvedDate: string;
+}

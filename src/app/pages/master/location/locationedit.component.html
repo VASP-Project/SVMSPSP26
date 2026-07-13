@@ -1,0 +1,290 @@
+<div class="content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                
+                <div *ngIf="!view">
+                    <div class="col-md-12">
+                        <h3 class=" card-title">Add new Door/Gate</h3>
+                    </div>
+                    <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+                        <input type="hidden" id="id" [(ngModel)]="location.id" name="id" #id="ngModel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Facility</label>
+                                    <!-- <select id="facilityId" #Id="ngModel" class="form-control" 
+                                        [(ngModel)]="location.facilityId" name="facilityId" required>                                        
+                                        <option disabled selected value>Select Facility</option>
+                                        <option [ngValue]="k.id" *ngFor="let k of allFacilities">
+                                            {{k.facilityName}}
+                                        </option>
+                                    </select>    -->
+                                    <ng-select
+                                      appendTo="body"
+                                      id="facilityId"
+                                      #select
+                                      [items]="allFacilities"
+                                      bindLabel="facilityName"
+                                      placeholder="Select Facility"
+                                      bindValue="id"
+                                      [(ngModel)]="location.facilityId"
+                                      appearance="outline"
+                                      name="facilityId"
+                                      required
+                                    >
+                                    </ng-select>                                      
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+  
+                                    <label>Door/Gate</label>
+                                    <input type="text" class="form-control" id="Location" required
+                                        [(ngModel)]="location.location" name="Location" #Location="ngModel">                                        
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Company</label>
+                                    
+                                    <ng-select
+                                      appendTo="body"
+                                      id="companyId"
+                                      #select
+                                      [items]="allCompanyList"
+                                      bindLabel="companyName"
+                                      placeholder="Select Company"
+                                      bindValue="id"
+                                      [(ngModel)]="location.companyId"
+                                      appearance="outline"
+                                      name="companyId"
+                                      
+                                    >
+                                    </ng-select>                                      
+                                   
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Upload Photo(s)</label> &nbsp;
+                                    <div id="upload_button">
+                                        <label>
+                                          <input type="file" accept='image/*' ngf-select ng-model="new_files" (change)="addFile(input.files)" multiple
+                                            #input>
+                                          <span class="btn btn-success" id="btnUpload">
+                                            <i class="bi bi-pin-angle"></i> Upload</span>
+                                        </label>
+                                      </div>                                                                        
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="row">
+                                <div *ngFor="let file of locationPhotosAttachment; index as i">
+                                  <div class="filedisplay">
+                                    <div 
+                                      *ngIf="file.filePath.split('.', 2)[1].toLowerCase() =='png' || file.filePath.toLowerCase().split('.', 2)[1] =='jpg' || file.filePath.toLowerCase().split('.', 2)[1] =='jpeg' || file.filePath.toLowerCase().split('.', 2)[1] =='gif'">
+                                      <button title="Delete File" type="button" (click)="deleteFile(file)"
+                                        class="btn btn-danger btn-sm bi bi-x-lg" style="float: right;"> 
+                                      </button>&nbsp;
+                                      <!-- <br /> -->
+                                      <!-- <a href="{{
+                                      'data:image/png;base64,' + this.file.thumbnailImage
+                                          }}" data-lightbox="image"
+                                          data-title="{{file.filePath}}">                                -->
+                                      
+                                          <!-- <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName,'data:image/png;base64,' + this.file.thumbnailImage)" 
+                                           src="{{
+                                                  'data:image/png;base64,' + this.file.thumbnailImage
+                                              }}" />   -->
+
+                                       <!-- <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" 
+                                      (mouseover)="openModal(template, 'data:image/png;base64,' + this.file.thumbnailImage)" (mouseout)="closeModal()"
+                                        src="{{
+                                                  'data:image/png;base64,' + this.file.thumbnailImage
+                                              }}" />                                                                                                                                                                                                         -->
+
+                                      <!-- <img class="ui bordered small image" src="{{imgfileurl}}{{file.filePath}}" /> -->
+                                      <!-- </a> -->
+
+                                      <img id="myImg" src="{{'data:image/png;base64,' + this.file.thumbnailImage}}" 
+                                     width="100" height="100" (click)="openImage(file.id)">
+                                      </div>
+                                   
+                                    <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                                      [src]="this.imgfileurl + file.filePath" /> -->
+                                    </div>                            
+                                </div>
+                              </span>
+                        </div>
+                        <div class="row">
+                            <div *ngFor="let file of this.files">
+                              <div class="filedisplay">
+                                <div>
+                                  <span>{{ file.name }} </span>
+                                  <span style="color: red;font-size: 14px;font-weight: bolder;"
+                                    class="bi bi-x-lg" title="Delete File" (click)="removeFile(file)">
+                                  </span>&nbsp;
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-2">
+                            <!-- <label>In Inspection</label>
+                                          <input type="text" class="form-control" [(ngModel)]="location.inInspection"  >            -->
+                            <div class="form-group">
+                              <label for="checkbox">Enabled for Incident </label>
+                              <div class="form-check" style="margin-left: 10px;">
+                                <label class="form-check-label">
+                                  <input class="form-check-input checkbox-size" type="checkbox" [checked]="location.inIncident"
+                                    [(ngModel)]="location.inIncident" (click)="checkBoxChange($event)"[ngModelOptions]="{ standalone: true }"
+                                    style="font-size: 20px;" />&nbsp;
+                                  <span class="form-check-sign">
+                                    <span class="check"> </span>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Map Grid Row#</label>
+                              <input type="text" class="form-control" [(ngModel)]="location.xCoordinate" name="xCoordinate" id="xCoordinate">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Map Grid Column#</label>
+                              <input type="text" class="form-control" [(ngModel)]="location.yCoordinate" name="yCoordinate" id="yCoordinate">
+                            </div>
+                          </div>
+                        </div>
+                        <br/>
+                        <div class="form-group" style="margin-top: 5px;">
+                            <button type="submit" class="btn btn-success" [disabled]="!formData.form.valid">Save</button>
+                            <button type="button" (click)="hideaddform()" style="margin-left:2px;" class=" btn btn-fill btn-danger">Close</button>
+                        </div>
+                    </form>
+  
+                </div>
+                <div *ngIf="view">
+                    <div class="col-md-12">
+                        <h3 class=" card-title">Door/Gate Information</h3>
+                    </div>
+                        <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">                                            
+                                        <strong>Facility: </strong>
+                                        <label>{{location.facilityName}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="hidden" id="id" [(ngModel)]="location.id" name="id" #id="ngModel">
+                                    <strong>Door / Gate: </strong>
+                                    <label>{{location.location}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="row">
+                                    <div *ngFor="
+                                        let file of locationPhotosAttachment;
+                                        let i = index
+                                      ">
+                                      <div class="filedisplay">
+                                        <div *ngIf="
+                                            file.filePath.toLowerCase().split('.', 2)[1] == 'png' ||
+                                            file.filePath.toLowerCase().split('.', 2)[1] == 'PNG' ||
+                                            file.filePath.toLowerCase().split('.', 2)[1] == 'jpg' ||
+                                            file.filePath.toLowerCase().split('.', 2)[1] ==
+                                              'jpeg' ||
+                                            file.filePath.toLowerCase().split('.', 2)[1] == 'gif'
+                                          ">
+                                          <!-- <img class="ui bordered small image imagescale" (click)="viewFile(file.id, file.fileName)" src="{{
+                                          'data:image/png;base64,' + this.file.thumbnailImage
+                                      }}" /> -->
+
+                                      <img id="myImg" src="{{'data:image/png;base64,' + this.file.thumbnailImage}}" 
+                                     width="100" height="100" (click)="openImage(file.id)">
+                                          <!-- <a
+                                            href="{{ imgfileurl }}{{ file.filePath }}"
+                                            data-lightbox="image"
+                                            data-title="{{ file.filePath }}"
+                                          >
+                                            <img
+                                              class="ui bordered small image"
+                                              src="{{ imgfileurl }}{{ file.filePath }}"
+                                            />
+                                          </a> -->
+                                          <!-- (click)="downloadFile(file.filePath) -->
+                                          <!-- <button type="button" (click)="showUndoBtn(file.id, file.filePath)"
+                                                                class="btn btn-primary tim-icons icon-image-02">
+                                                            </button>&nbsp; -->
+                                        </div>
+                                        <!-- <img height="300" [attr.id]="'undoBtn'+file.id" *ngIf="showBtn===file.id"
+                                                            [src]="this.imgfileurl + file.filePath" /> -->
+                                      </div>
+                                    </div>
+                                  </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                  <input type="hidden" id="id" [(ngModel)]="location.id" name="id" #id="ngModel">
+                                  <strong>Enabled for Incident </strong>
+                                  <label>{{location.inIncident == true?'Enable':'Disable'}}</label>
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="hidden" id="id" [(ngModel)]="location.id" name="id" #id="ngModel">
+                                <strong>Map Grid Row#: </strong>
+                                <label>{{location.xCoordinate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                              <input type="hidden" id="id" [(ngModel)]="location.id" name="id" #id="ngModel">
+                              <strong>Map Grid Column#: </strong>
+                              <label>{{location.yCoordinate}}</label>
+                          </div>
+                      </div>
+                      </div>
+                        <div class="form-group" style="margin-top: 5px;">
+                            <button type="button" (click)="hideaddform()" class=" btn btn-fill btn-danger">Close</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+
+  <!-- new code -->
+  <!-- Trigger the Modal -->                                  
+  <!-- The Modal -->
+  <div id="myModal" class="modal"
+  style="position:absolute; height: auto; padding-top: 50px; margin-top: 80px; margin-left: 20px;">
+  <!-- The Close Button -->
+  <span class="close" (click)="close()">
+    <span><i class="bi bi-x-lg"></i>
+    </span>
+  </span>
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img01" style="height: 500px;">
+  <!-- Modal Caption (Image Text) -->
+  <div id="caption"></div>

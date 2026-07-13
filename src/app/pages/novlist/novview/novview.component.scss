@@ -1,0 +1,148 @@
+  h3{
+    padding-left: 10px;
+  }
+  .logo-img {
+    width: 95px !important;
+    height:75px !important;
+    //background-color: #003594;
+  }
+  .logo-img img{
+    width: 95px !important;
+    height:70px !important;
+  }
+
+  
+.filedisplay div{
+  float:left;
+  overflow:auto;
+  margin:15px;
+  background-color: whitesmoke;
+  padding: 5px;
+  border: 1px silver solid;
+  border-radius: 5px;
+}
+.filedisplay span{
+  padding-left:5px;
+  padding-right:5px
+}
+
+b, strong {
+  font-weight: 500 !important;
+}
+
+// @media print {
+//     .content{      
+//       padding-left: 0px !important;
+//     }
+// }
+.filedisplay a img{
+  width: 40px;
+  height: 40px;
+}
+
+.imagescale{
+  height: 100px;
+  width: 100px;
+}
+.link-text {
+  color: blue;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 18px;
+}
+
+.disabled-text {
+  color: gray;
+  cursor: default;
+  text-decoration: none;
+}
+
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120vh;
+
+  background-color: rgba(0,0,0,0.5);
+  z-index: 9999;
+
+  display: flex;              
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;          
+}
+
+
+/* Modal box */
+.modal-content {
+  background: white;
+  width: 950px;
+  max-width: 100%;
+
+  max-height: 90vh;           
+  overflow: auto;         
+margin-top: 20px;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Scroll only table section */
+.table-scroll-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 600px;          
+}
+
+
+/* Sticky header */
+.table-scroll-wrapper thead th {
+  position: sticky;
+  top: 0;
+  background-color: #484D56 !important;
+  color: #fff;
+  z-index: 2;
+}
+
+
+/* Table header style */
+table th {
+  color: #fff !important;
+  font-weight: bold;
+  background-color: #484D56 !important;
+  text-align: left;
+}
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-badge {
+  background-color: #484D56; /* deep blue */
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.close-btn {
+  background: transparent;
+  border: 1px solid #333;
+  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}

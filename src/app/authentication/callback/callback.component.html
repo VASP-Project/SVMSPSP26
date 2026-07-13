@@ -1,0 +1,66 @@
+<div>
+    <ng-template #template let-modal>
+
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title" style="color: #003594; font-weight: bold;">
+                Verify Identity - Authentication Code </h4>
+            <button type="button" class="close" aria-label="Cancel" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form #formData="ngForm" (keyup.enter)="onAuthCodeSubmit()">
+                <span> We are now sending <span *ngIf="this.emailid != ''"> an email</span>
+                    <span *ngIf="this.emailid != '' && this.phone != ''">,</span>
+                    <span *ngIf="this.phone != ''"> SMS </span>
+                    containing a confirmation code to your following
+                    <span *ngIf="this.emailid != ''"> email address</span><span
+                        *ngIf="this.phone == ''">.</span>
+                    <span *ngIf="this.emailid != '' && this.phone != ''">,</span>
+                    <span *ngIf="this.phone != ''"> mobile number.</span>
+                    <br><br>
+                    <span *ngIf="this.emailid != ''"><strong> Your email address: {{ email }} </strong>
+                        <br></span>
+                    <span *ngIf="this.phone != ''"><strong> Your mobile number: {{ phone }} </strong><br></span>
+                </span>
+                <br>
+                <span>Enter the confirmation code below. After entering the confirmation code, you will be
+                    authorized to continue.</span> <br><br>
+                <span>If you didn't receive the <span *ngIf="this.emailid != ''"> email </span>
+                    <span *ngIf="this.emailid != '' && this.phone != ''">OR</span>
+                    <span *ngIf="this.phone != ''"> SMS </span>
+                    within 5 minutes or had other problems wait for</span>&nbsp;
+                <strong *ngIf="!showresend">{{ display }}</strong>&nbsp; <button *ngIf="showresend"
+                    type="button" class="btn btn-primary" (click)="resendcode()"
+                    style="margin-left: 5px;">Resend</button>
+                <br>
+                <br>
+
+                <label><strong>Confirmation Code:</strong> </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="text" name="code" ngbAutoFocus [(ngModel)]="this.authenticationcode"
+                    placeholder="Confirmation Code" autocomplete="off">
+                <br><br><br>
+                <strong>Would You Like Us to Remember this Computer? </strong><br>
+
+                <input id="yes" type="radio" value="yes" name="saveuser" checked="this.saveuseryes"
+                    (click)="saveuser(1)">&nbsp;
+                <label class="custom-control-label" for="yes"> Yes. I plan to use this computer in the future to
+                    access my account.</label>
+                <br>
+                <input id="no" type="radio" value="no" name="saveuser" (click)="saveuser(0)">&nbsp;
+                <label class="custom-control-label" for="no"> No. This is a public computer or one I do not plan
+                    on using often to access my account.</label>
+
+
+                <div style="text-align: center; padding-top: 5px;">
+                    <button type="submit" class="btn btn-success" style="margin-right: 5px;"
+                        (click)="onAuthCodeSubmit()">Submit</button>
+
+                </div>
+            </form>
+        </div>
+
+    </ng-template>
+</div>

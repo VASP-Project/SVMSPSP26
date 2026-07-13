@@ -1,0 +1,43 @@
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <form class="card" autocomplete="off" novalidate>
+        
+          <div class="col-md-6">
+            <h3 class="card-title">Badge Details</h3>
+          </div>
+  
+          <div class="card-body">
+            <div class="row">
+            
+           
+            
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label> Badge Number </label>
+                  <input class="form-control" placeholder="Badge Number" type="text"
+                   [(ngModel)]="badgeData.badgeNo"
+                    name="badgeNo" />
+                </div>
+              </div>
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label> Company </label>
+                  <input class="form-control" placeholder="Company" type="text"
+                   [(ngModel)]="badgeData.company"
+                    name="company"  />
+                </div>
+              </div>
+            </div>
+           <div class="row">
+            <div>
+              <!-- <img [src]="photoUrl" alt="Photo" /> -->
+              <img *ngIf="photoUrl" width="200" height="200" [src]="photoUrl" alt="photo" class="img-thumbnail">
+            </div>
+           </div>
+          </div>
+         
+        </form>
+      </div>
+    </div>
+  </div>

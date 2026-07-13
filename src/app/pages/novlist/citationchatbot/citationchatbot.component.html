@@ -1,0 +1,17 @@
+<div class="chat-window">
+  <div class="messages">
+    <!-- <div *ngFor="let msg of messages"
+         [ngClass]="msg.sender === 'You' ? 'msg-user' : 'msg-bot'">
+      <strong>{{ msg.sender }}:</strong> {{ msg.text }}
+    </div> -->
+  </div>
+
+  <div class="input-area">
+    <input type="text"
+           [(ngModel)]="userInput"
+           placeholder="Type here..."
+           class="form-control" />
+
+    <button class="btn btn-primary ms-2" (click)="sendMessage()">Send</button>
+  </div>
+</div>

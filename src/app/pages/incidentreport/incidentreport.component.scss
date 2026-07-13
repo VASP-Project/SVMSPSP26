@@ -1,0 +1,32 @@
+.showLocation
+{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  max-width:100px;
+  cursor: default;
+}
+.Closed {
+  // color:white;
+  background-color: #cacaca;
+}
+.PendingCompletion {
+  background-color: #ffa726;
+}
+.InProcess {
+  background-color: #93ed89;
+}
+.Submitted {
+  background-color: yellow;
+}
+.openColor {
+  background-color: white;
+}
+.returnedToIssuerColor {
+  background-color: #faebd7;
+}
+@media only screen and (min-width: 768px){
+  .testareawidth {
+      width: 12%;
+  }
+  }

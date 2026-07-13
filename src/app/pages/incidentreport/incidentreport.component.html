@@ -1,0 +1,157 @@
+<div class="content">
+    <div class="row"> 
+        <div style="width: 100%;">        
+            <div class="card" >
+            
+                <div class="col-md-12">
+                    <label class="card-title"> Security Incident</label>            
+                </div> 
+
+                <div class="row" >  
+                    <div class="col-md-2 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;" >
+                        <div class="form-group">
+                            <strong> From Date </strong> 
+                            <div class="input-group" style="padding-right: 5px;">              
+                                <input
+                                class="form-control"
+                                type="text"
+                                (click)="fromDate.toggle()"
+                                ngbDatepicker
+                                #fromDate="ngbDatepicker"
+                                [(ngModel)]="fromToDates.fromDate"
+                                name="fromDate"
+                                placeholder="mm/dd/yyyy"                         
+                            />
+                            <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-md-2 pr-md-1 pl-md-1 testareawidth" style="margin-left: 5px;">
+                        <div class=" form-group">
+                            <strong> To Date </strong>  
+                            <div class="input-group" style="padding-right: 5px;">            
+                                <input
+                                class="form-control"
+                                type="text"
+                                (click)="toDate.toggle()"
+                                ngbDatepicker
+                                #toDate="ngbDatepicker"
+                                [(ngModel)]="fromToDates.toDate"
+                                name="this.toDate"
+                                placeholder="mm/dd/yyyy"                         
+                            />
+                            <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>          
+                    <div class="col-md-1 pr-md-1 mt-3">              
+                        <div class="form-group">
+                            <span class="btn btn-primary" (click)="basicSearchInspection()">
+                                <i class="bi bi-search"></i>&nbsp;Search
+                            </span>                   
+                        </div>
+                    </div>                  
+                    <div class="col-md-6 mt-3">              
+                        <ng-select
+                                appendTo="body"
+                                id="incidentType"
+                                #select
+                                [items]="allIncidentTypeDisplayNameList"
+                                bindLabel="incidentType"
+                                placeholder="Add Incident"
+                                bindValue="id"
+                                [(ngModel)]="incidentinfo.incidentType"
+                                appearance="outline"
+                                name="incidentType"                        
+                                >
+                        </ng-select>
+                    </div>
+                    <div class="col-md-1 mt-3">
+                        <button  *ngIf="showGobutton" class="btn btn-primary" id="btnGo" name="btnGo" (click)="goToEdit()"
+                        skipLocationChange>
+                        Go
+                        </button>
+                    </div>
+                </div>   
+                <div class="card-body">
+                    <div class="table-responsive" style="overflow: auto;">
+                      
+                      <table class="table table-bordered" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                        id="dt1">
+                        <thead class="text-primary">
+                          <tr style="background-color: #484D56; color: white;">                                
+                            <th>INC #</th>
+                            <th style="width: 15%;">Type</th>
+                            <th style="width: 15%;">Location</th>  
+                            <th>Date and Time</th>  
+                            <th>Rpt Agency</th>  
+                            <th>AOA Classification</th>                                              
+                            <th>Status </th>                 
+                            <th>Action</th>           
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of incidentList; index as i; trackBy: identify" >                                  
+                            <td style="border-bottom: 1px solid black;" >{{item.incidentRecordNo}}</td>
+                            <td style="border-bottom: 1px solid black;">{{item.inciType}}</td>
+                            <td style="border-bottom: 1px solid black;">{{ item.incidentDoorName}}</td>                            
+                            <td style="border-bottom: 1px solid black;">{{item.incidentDateTime | date: 'MM/dd/yyyy HH:mm'}}</td>                            
+                            <td style="border-bottom: 1px solid black;">{{item.reportingAgencyName}}</td>
+                            <td style="border-bottom: 1px solid black;">{{item.perimeterBreachName}}</td>
+                            <td [ngClass]="
+                            item.incidentStatusDisplay === 'Closed'
+                                                  ? 'Closed'
+                                                  
+                                                  : item.incidentStatusDisplay === 'Submitted'
+                                                  ? 'Submitted'
+                                                  : item.incidentStatusDisplay === 'Returned'
+                                                  ? 'returnedToIssuerColor'
+                                                  
+                                                  : 'openColor'
+                          " style="border-bottom: 1px solid black;">{{item.incidentStatusDisplay}}</td>
+                            
+                            <td width="15%" style="border-bottom: 1px solid black;">
+                                <a title="Edit" [routerLink]="['/admin/incident/incidentreportadd']" *ngIf="showEditButton(item)"  [queryParams]="{
+                                    incidentId: item.id,
+                                    isEdit: 1,
+                                    isClone: 0,
+                                    isView: 0,
+                                    inciTypeName: item.inciType
+                                          }" skipLocationChange >
+                                  Edit |
+                                </a>     
+                                <!-- <a title="View" [routerLink]="['/admin/incident/incidentreportview']" *ngIf="showViewButton(item) && user.rolename == 'Superadmin'" [queryParams]="{
+                                    incidentId: item.id,
+                                    isEdit: 1,
+                                    isClone: 0,
+                                    isView: 1,
+                                    inciTypeName: item.inciType
+                                          }" skipLocationChange >
+                                          
+                                 Edit |
+                                </a>    -->
+                                <a title="View" [routerLink]="['/admin/incident/incidentreportview']" *ngIf="showViewButton(item)" [queryParams]="{
+                                    incidentId: item.id,
+                                    isEdit: 1,
+                                    isClone: 0,
+                                    isView: 1,
+                                    inciTypeName: item.inciType
+                                          }" skipLocationChange >
+                                          
+                                 View |
+                                </a>             
+                                
+                                 <a [routerLink]="['/admin/incident']" title="delete" *ngIf="user.rolename == 'Superadmin'"
+                                (click)="DeleteIncident(item.id)">Delete</a>
+                              </td>
+
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                   
+                </div>   
+            </div>
+        </div>
+    </div>
+</div>

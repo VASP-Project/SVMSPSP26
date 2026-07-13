@@ -1,0 +1,24 @@
+.fontSetting{
+text-align: justify;
+//text-justify: inter-word;
+font-size: 14; 
+//color: #e9ecef;
+color: white;
+background-color: #003594;
+padding: 4px 4px 4px 10px;
+font-weight: 400;
+}
+
+
+.showText
+{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  max-width:100px;
+  cursor: default;
+}
+
+.red-color {
+  color:red;
+}

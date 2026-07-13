@@ -1,0 +1,445 @@
+<div class="content">
+  <div class="row">
+    <div style="width: 100%;">
+      <div class="card">
+
+        <div class="col-md-12" *ngIf="isIssuer || isStaffAdmin ">
+          <label class="card-title">Inspections</label>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 pr-md-1 pl-md-1">
+            <div class="form-group">
+              <strong> From Date </strong>
+              <div class="input-group">
+                <input class="form-control" type="text" (click)="fromDate.toggle()" ngbDatepicker
+                  #fromDate="ngbDatepicker" [(ngModel)]="fromToDates.fromDate" name="fromDate"
+                  placeholder="mm/dd/yyyy" />
+                <button class="btn btn-outline-secondary bi bi-calendar4" (click)="fromDate.toggle()"
+                  type="button"></button>
+              </div>
+            </div>
+          </div>
+          <div class=" col-md-2 pr-md-1 pl-md-1">
+            <div class=" form-group">
+              <strong> To Date </strong>
+              <div class="input-group">
+                <input class="form-control" type="text" (click)="toDate.toggle()" ngbDatepicker #toDate="ngbDatepicker"
+                  [(ngModel)]="fromToDates.toDate" name="this.toDate" placeholder="mm/dd/yyyy" />
+                <button class="btn btn-outline-secondary bi bi-calendar4" (click)="toDate.toggle()"
+                  type="button"></button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 pr-md-1 mt-3">
+            <div class="form-group">
+              <span class="btn btn-primary" (click)="basicSearchInspection()">
+                <i class="bi bi-search"></i>&nbsp;Search
+              </span>
+              <span [ngClass]="isAdvanceSearch == true ? 'btn btn-success' : 'btn btn-primary'" (click)="clickSearch()"
+                *ngIf="showAdvanceSearch()&& this.windowRef.innerWidth >= 768" style="margin-left:2px;">
+                <i class="bi bi-search"></i> &nbsp;Advanced
+                Search</span>
+            </div>
+          </div>
+          <div class="col-md-3 mt-3">
+            <ng-select appendTo="body" id="inspectionType" #select [items]="allInspectionTypeDisplayNameList"
+              bindLabel="displayName" placeholder="Add Inspection" bindValue="id"
+              [(ngModel)]="inspectioninfo.inspectionType" appearance="outline" name="inspectionType">
+            </ng-select>
+          </div>
+          <div class="col-md-1 mt-3">
+            <button class="btn btn-primary" id="btnGo" name="btnGo"
+              *ngIf="user.rolename === 'StaffAdmin' || user.rolename === 'Issuer' || user.rolename =='Security'"
+              (click)="goToEdit()" skipLocationChange>
+              Go
+            </button>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="isAdvanceSearch">
+          <div class="col-md-12 mt-2">
+            <table class="table table-bordered table-sm" style="margin-left: 5px; margin-right: 10px;">
+              <thead>
+                <tr>
+                  <th class="mythColor" style="width: 40%;">Field Name</th>
+                  <th class="mythColor" style="width: 40%;">Field Value</th>
+                  <th class="mythColor" style="width: 10%;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dynamic of dynamicArray; let i = index">
+                  <td>
+                    <ng-select appendTo="body" id="fieldName" #select [items]="advancedSearchOptions" bindLabel="label"
+                      placeholder="Select Field" bindValue="value" [(ngModel)]="dynamic.fieldName" appearance="outline"
+                      name="fieldName">
+                    </ng-select>
+                  </td>
+                  <td>
+                    <input [(ngModel)]="dynamicArray[i].fieldValue" class="form-control" type="text" />
+                  </td>
+                  <td (click)="deleteRow(i)" *ngIf="i > 0">
+                    <button class="btn btn-danger btn-sm">
+                      <span>
+                        <i class="bi bi-trash"></i>
+                      </span>
+                    </button>
+                  </td>
+                  <td (click)="addRow(i)" *ngIf="i == 0">
+                    <button class="btn btn-warning btn-sm">
+                      <span><i class="bi bi-plus-lg"></i> </span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-md-4 pl-md-1"></div>
+          <div class="col-md-4 pl-md-1" style="text-align: center;">
+            <span class="btn btn-primary" (click)="searchInspection()">
+              <i class="bi bi-search"></i>&nbsp;Search</span>
+            <span class="btn btn-primary" (click)="clearInspection()" style="margin-left: 3px;">
+              <i class="bi bi-arrow-clockwise"></i>&nbsp;Clear
+            </span>
+          </div>
+          <div class="col-md-4 pl-md-1"></div>
+        </div>
+        <!-- <div *ngIf="(windowRef.innerWidth >= 768)">
+            <div class="card-body">
+              <div class="table-responsive" style="overflow: auto;">
+               
+                <table class="table table-bordered" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                  id="dt1">
+                  <thead class="text-primary">
+                    <tr style="background-color: #003594;">                                
+                      <th>INSP #</th>
+                      <th>INSP Type</th>
+                      <th style="width: 15%;">Door / Gate Number</th>  
+                      <th>Date and Time</th>  
+                      <th>Duration</th>  
+                      <th>Finding</th>  
+                      <th>NOV #</th>            
+                      <th>Company(s) Inspected</th>
+                                         
+                      <th>Status </th>                 
+                      <th>Action</th>           
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of inspectionList; index as i; trackBy: identify">                                  
+                      <td>{{ item.inspectionRecordNo}}</td>
+                      <td>{{ item.inspType }}</td>
+                      <td title ="{{item.doorNamesForEachInspection}}" class="showDoors">{{ item.doorNamesForEachInspection}}</td>
+                     
+                      <td>{{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm'}}</td>
+                      <td>{{ item.hours}} hrs &nbsp; {{item.minutes}} mins</td>
+                      <td>{{ item.inspectionFinding == 'True' ? 'Yes' : 'No'}}</td>
+                      <td>{{ item.novNoMappingForEachInspection}}</td>
+                      
+                      <td>{{ item.companyNamesForEachBadgeholder }}{{item.companyNamesForEachCompanyInfo}}</td>
+                    
+                      <td [ngClass]="
+                        item.statusDisplayName === 'Closed'
+                          ? 'Closed'                        
+                          : item.statusDisplayName === 'Draft'
+                          ? 'Draft'
+                          : 'openColor'
+                      ">
+                      {{ item.statusDisplayName }}
+                      </td>                   
+    
+                      <td>
+                        <a title="Edit" [routerLink]="['/admin/inspection/details/']"
+                        *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
+                        && user.rolename != 'TSA User' && user.rolename === 'Issuer' && user.id === item.createdBy )                       
+                        || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')"
+                         
+                          [queryParams]="{
+                            inspectionId: item.id,
+                            isEdit: 1,
+                            isClone: 0}" skipLocationChange>
+                          Edit
+                        </a>
+                        |
+                        <a title="View" [routerLink]="['/admin/inspection/view/']"
+                          [queryParams]="{ inspectionId: item.id, isEdit: 0 }" skipLocationChange>View</a>
+                        |
+                        <a title="Clone" [routerLink]="['/admin/inspection/details/']" 
+                        *ngIf="user.rolename != 'TSA User' && user.rolename != 'AuthSigner' && user.rolename != 'Superadmin'"
+                          [queryParams]="{
+                            inspectionId: item.id,
+                            isEdit: 1,
+                            isClone: 1
+                          }">Clone</a>
+                          
+                          <a [routerLink]="['/admin/inspection']" title="delete" *ngIf="user.rolename == 'Superadmin'"
+                          (click)="DeleteInspection(item.id)">Delete</a>                    
+                      </td>
+                      
+                      
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+            </div> 
+          </div> -->
+
+        <div *ngIf="(windowRef?.innerWidth >= 768)">
+          <div class="card-body">
+            <div class="table-responsive">
+              <div class="d-flex bd-highlight">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  <label>Rows</label>
+                  <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </div>
+                <div class="p-2 bd-highlight">
+                  <input type="text" 
+                  [(ngModel)]="mobileViewData.searchQuery" 
+                  id="searchQuery" 
+                  (ngModelChange)="onSearchChange($event)"
+                  placeholder="Search" />
+                </div>
+                <button (click)="searchtable()"><i class="fa fa-search"></i></button>
+              </div>
+
+              <table class="table table-bordered  table-hover" id="dt1">
+                <thead class="text-primary">
+                  <tr style="background-color: #484D56;">
+                    <th style="width: 10%;">
+                      INSP #
+                      <i (click)="onSortClick($event, 'InspectionRecordNo')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      INSP Type
+                      <i (click)="onSortClick($event, 'InspType')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Door / Gate Number
+                      <i (click)="onSortClick($event, 'DoorNamesForEachInspection')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Date and Time
+                      <i (click)="onSortClick($event, 'InspectionDateTime')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Duration
+                      <i (click)="onSortClick($event, 'Duration')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Finding
+                      <i (click)="onSortClick($event, 'Finding')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      NOV #
+                      <i (click)="onSortClick($event, 'NOV')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Company(s) Inspected
+                      <i (click)="onSortClick($event, 'Company')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">
+                      Status
+                      <i (click)="onSortClick($event, 'Status')" class="my-icon fa fa-chevron-up"></i>
+                    </th>
+                    <th style="width: 10%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="
+                      let item of inspectionList 
+                | paginate : { 
+                    itemsPerPage: pageHeaders.pageSize,
+                    currentPage: pageHeaders.pageNumber,
+                    totalItems: pageHeaders.totalItems
+                };  " >
+                    
+                    <td>{{ item.inspectionRecordNo }}</td>
+
+                    <td>{{ item.inspType }}</td>
+                    <td title="{{item.doorNamesForEachInspection}}" class="showDoors">{{
+                      item.doorNamesForEachInspection}}</td>
+                    <td>{{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
+                    <td>{{ item.hours}} hrs &nbsp; {{item.minutes}} mins</td>
+                    <td>{{ item.inspectionFinding == 'True' ? 'Yes' : 'No'}}</td>
+                    <td>{{ item.novNoMappingForEachInspection}}</td>
+
+                    <td>{{ item.companyNamesForEachBadgeholder }}{{item.companyNamesForEachCompanyInfo}}</td>
+                    <td [ngClass]="
+                        item.statusDisplayName === 'Closed'
+                          ? 'Closed'                        
+                          : item.statusDisplayName === 'Draft'
+                          ? 'Draft'
+                          : 'openColor'
+                      ">
+                      {{ item.statusDisplayName }}
+                    </td>
+                    <td>
+                      <a title="Edit" [routerLink]="['/admin/inspection/details/']" *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
+                        && user.rolename != 'TSA User' && user.rolename === 'Issuer' && user.id === item.createdBy )                       
+                        || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
+                            inspectionId: item.id,
+                            isEdit: 1,
+                            isClone: 0}" skipLocationChange>
+                        Edit
+                      </a>
+                      |
+                      <a title="View" [routerLink]="['/admin/inspection/view/']"
+                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" skipLocationChange>View</a>
+                      |
+                      <a title="Clone" [routerLink]="['/admin/inspection/details/']"
+                        *ngIf="user.rolename != 'TSA User' && user.rolename != 'AuthSigner' && user.rolename != 'Superadmin'"
+                        [queryParams]="{
+                            inspectionId: item.id,
+                            isEdit: 1,
+                            isClone: 1
+                          }">Clone</a>
+
+                      <a [routerLink]="['/admin/inspection']" title="delete" *ngIf="user.rolename == 'Superadmin'"
+                        (click)="DeleteInspection(item.id)">Delete</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total
+                {{ pageHeaders.totalItems }} entries
+              </div>
+              <div class="p-2 bd-highlight">
+                <pagination-controls (pageChange)="onPageChange($event)" class="my-pagination"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="(windowRef?.innerWidth < 768)">
+          <div class="card-body">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <label>Rows</label>
+              <select [(ngModel)]="mobileViewData.pageSize" (change)="onPageSizeChange()" id="pageSize">
+                <option value="10">10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+              </select>
+            </div>
+
+            <div class="list-group" class="small-font">
+              <a *ngFor="let item of inspectionList; index as i; trackBy: identify"
+                [routerLink]="['/admin/inspection/view/']" [queryParams]="{ inspectionId: item.id, isEdit: 0 }"
+                skipLocationChange class="list-group-item list-group-item-action">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">INSP. Examples:</span>
+                    {{ item.inspectionRecordNo}} {{ item.inspType }}
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Door / Gate Number:</span>
+                    <span title="{{item.doorNamesForEachInspection}}" class="showDoors">{{
+                      item.doorNamesForEachInspection}}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Date and Time:</span>
+                    {{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm'}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Duration:</span>
+                    {{ item.hours}} hrs &nbsp; {{item.minutes}} mins
+                  </div>
+
+                </div>
+                <div class="row">
+
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">Company(s) Inspected:</span>
+                    <span>{{ item.companyNamesForEachBadgeholder }}{{item.companyNamesForEachCompanyInfo}}</span>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Status:</span>
+                      <span [ngClass]="
+                                                      item.statusDisplayName === 'Closed'
+                                                      ? 'Closed'                        
+                                                      : item.statusDisplayName === 'Draft'
+                                                      ? 'Draft'
+                                                      : 'openColor'
+                                                    ">
+                        {{ item.statusDisplayName }}
+                      </span>
+                    </div>
+                    <div class="col-md-4">
+                      <span style="font-weight: bold;">Action:</span>
+                      <a title="Edit" [routerLink]="['/admin/inspection/details/']"
+                        *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
+                                                    && user.rolename != 'TSA User' && user.rolename === 'Issuer' && user.id === item.createdBy )                       
+                                                    || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
+                                                        inspectionId: item.id,
+                                                        isEdit: 1,
+                                                        isClone: 0}" skipLocationChange>
+                        Edit
+                      </a>
+                      |
+                      <a title="View" [routerLink]="['/admin/inspection/view/']"
+                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" skipLocationChange>View</a>
+                      |
+                      <a title="Clone" [routerLink]="['/admin/inspection/details/']"
+                        *ngIf="user.rolename != 'TSA User' && user.rolename != 'AuthSigner' && user.rolename != 'Superadmin'"
+                        [queryParams]="{
+                                                        inspectionId: item.id,
+                                                        isEdit: 1,
+                                                        isClone: 1
+                                                      }">Clone</a>
+
+                      <a [routerLink]="['/admin/inspection']" title="delete" *ngIf="user.rolename == 'Superadmin'"
+                        (click)="DeleteInspection(item.id)">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <div class="row">
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-3">
+                  <ngb-pagination [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize"
+                    [collectionSize]="pageHeaders.totalItems" [maxSize]="1" (pageChange)="onPageChange($event)">
+                    <ng-template ngbPaginationPrevious>Prev</ng-template>
+                    <ng-template ngbPaginationNext>Next</ng-template>
+                  </ngb-pagination>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                Showing total
+                {{ pageHeaders.totalItems }} entries
+              </div>
+              <div class="p-2 bd-highlight">
+                <pagination-controls (pageChange)="onPageChange($event)" class="my-pagination"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

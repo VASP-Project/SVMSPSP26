@@ -1,0 +1,227 @@
+<div class=" content">
+    <div class=" row">
+      <div class=" col-md-12">
+        <div class=" card" >
+          <!-- <br> -->
+          <div class="col-md-12">
+            <h3 class="card-title">References</h3>
+          </div>
+
+          <div class="pt-0">
+            <button type="button"  [routerLink]="['/admin/referenceguides']" [queryParams]="{ refCatid: 0 }"
+            class="btn btn-primary" style="float: right; margin-right: 18px;">Back
+            </button>
+          </div>
+          <div class="card-body pt-0">
+            
+            <form #updateForm="ngForm" (ngSubmit)="addUpdate(updateForm)">
+              <!--  (ngSubmit)="addUpdate(updateForm)" -->
+  
+              <div class="row" *ngIf="isStaffAdmin">
+                <input type="hidden" id="uid" [(ngModel)]="this.updates.id" name="uid" #name="ngModel" value="">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Guide Description</label>
+                    <textarea class="form-control" id="comment" name="comment" placeholder="Enter label here"
+                      [(ngModel)]="this.updates.comments" #comment="ngModel" cols="10" rows="2"> </textarea>
+                  </div>
+                </div>
+  
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label> Role </label>
+                    <!-- <select (change)="onRoleChange($event)" id="rolename" #rolenameText="ngModel" class="form-control" 
+                      [(ngModel)]="rolename" name="rolename" required>
+                      <option disabled selected value>Select Role</option>
+                      <option [value]="k.name" [innerHtml]="k.name" *ngFor="let k of roleList">
+                      </option>
+                    </select> -->
+  
+                    <ng-select
+                            appendTo="body"
+                            id="rolename"
+                            #select
+                            [items]="roleList"
+                            bindLabel="name"
+                            placeholder="Select Role"
+                            bindValue="name"
+                            [(ngModel)]="rolename"
+                            appearance="outline"
+                            name="rolename"
+                            required
+                            (change)="onRoleChange($event)"
+                          >
+                          </ng-select>
+                  </div>
+                </div>
+              <div class="col-md-4">
+              <label>Select Category</label>
+              <ng-select
+              appendTo="body"
+              id="referenceCategoryId"
+              #select
+              [items]="allReferenceCategoriesList"
+              bindLabel="referenceCategory"
+              bindValue="id"
+              [(ngModel)]="referenceCategoryId"
+              appearance="outline"
+              name="referenceCategoryId" 
+              required=""                       
+              >
+              </ng-select>
+            </div>
+          </div>
+          <br>
+  
+              <div class="row" *ngIf="isStaffAdmin ">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <!-- <label> Web URL/ Image/Document </label> -->
+                    <!-- <br> -->
+                    <input type="radio"  id="isLink" name="rdStatus" 
+                    (click)="CheckedStatus('link');" [checked]="isLink" [disabled]="this.files.length > 0" > Web URL
+                  
+                    <input type="radio"  id="isLink" name="rdStatus" 
+                      (click)="CheckedStatus('upload');" [checked]="!isLink" [disabled]="this.linkList.length > 0">  Image/Document
+  
+                  </div>
+                </div>
+                <div class="col-md-6" *ngIf="isLink" >
+                  <!-- <div class="row"> -->
+                    <div class="form-group">
+                      <label > Add link </label>
+                    <!-- </div> -->
+                    <div class="row">
+                      <input class="form-control" style="width: 75%;" placeholder="linkname" type="Add link" [(ngModel)]="linkname" name="linkname" />
+                      
+                    <!-- </div>
+                    <div class="form-group"> -->
+                      <!-- <button class="btn btn-warning btn-sm" (click)="addRow()" type="button">
+                        <span><i class="bi bi-plus-lg"></i>
+                        </span></button> -->
+                    </div>
+                    </div>
+                  <!-- </div> -->
+                  
+                  
+                  <div  *ngFor="let dynamic of linkList; let i = index;">
+                    <input type="hidden" id="id{{i}}" [(ngModel)]="dynamic.id" name="id{{i}}" #name="ngModel">
+                    <!-- <div class="col-md-8"> -->
+                      <div class="form-group">
+                        <div class="row">
+  
+                          <!-- <label> Link - {{i+1}} &nbsp; {{dynamic.name}}</label> -->
+                          <!-- <h4>Link - {{i+1}}  &nbsp; </h4><input class="form-control" disabled style="width: 65%;" placeholder="{{dynamic.name}}" value=" &nbsp; {{dynamic.name}}" /> -->
+                          <!-- <div class="col-md-4" (click)="deleteRow(i, dynamic.id)" > -->
+                        <!-- <div class=" form-group">
+                          <button class="btn btn-danger btn-sm"  (click)="deleteRow(i, dynamic.id)" type="button">
+                            <span>
+                              <i class="bi bi-trash"></i>
+                            </span></button>
+                        </div> -->
+                      <!-- </div> -->
+                        <!-- </div> -->
+  
+                        </div>
+                      </div>
+                  </div>
+                  <!-- <div>
+                    <div *ngIf="this.reflink">
+                      {{findreferenceurl(this.updates.fileName)}}
+                    </div>
+                  </div> -->
+                </div>
+                <div class="col-md-3"  *ngIf="!isLink">
+                  <div id="upload_button" *ngIf="this.files.length==0">
+                    <label>
+                      <input type="file" ngf-select ng-Model="new_files" (change)="addFile(input.files)" #input>
+                      <!-- <span style="font-size: 0.9rem;font-family: sans-serif;" class="btn btn-info">Upload</span> -->
+                      <span class="btn btn-success">
+                        <i class="bi bi-pin-angle"></i> Upload</span>
+                    </label>
+                  </div>
+                  <br>
+                        <!-- <div *ngFor="let file of referenceImg; index as i"> -->
+                        <div class="filedisplay">
+                          <div *ngIf="this.showImage">
+                            <!-- <button type="button" (click)="deleteFile2(showImage)" title="Delete Image"
+                              class="btn btn-danger btn-sm bi bi-x-lg" style="float: right;">
+                            </button>&nbsp; -->
+                            <img class="ui bordered small image imagescale" 
+                              src="{{
+                              'data:image/png;base64,'  + this.updates.thumbnailImage 
+                          }}" />
+                          </div>
+                        </div>
+                      <!-- </div> -->
+                          <!-- <div *ngFor="let file of referenceFile; index as i"> -->
+                            <div class="filedisplay">
+                              <div
+                                *ngIf="this.showFile">
+                                <span
+                                  *ngIf="(updates.fileName)!= null || (updates.fileName) != undefined || (updates.fileName) != ''">
+                                  {{(updates.fileName) }}
+                                </span>
+                                <span
+                                  *ngIf="(updates.fileName) == null || (updates.fileName) == undefined || (updates.fileName) == ''">
+                                  {{(updates.fileName) }}
+                                </span>
+                                <!-- <button type="button" (click)="deleteFile3(showFile)" title="Delete File"
+                                  class="btn btn-danger btn-sm bi bi-x-lg">
+                                </button>&nbsp; -->
+                                <!-- <button type="button" title="Download File" (click)="showUndoBtn(file.id, file.filePath)"
+                                  class="btn btn-info btn-sm bi bi-cloud-download">
+                                </button>&nbsp;
+                                <button
+                                  *ngIf="file.filePath.toLowerCase().split('.', 2)[1] === 'pdf' || file.filePath.toLowerCase().split('.', 2)[1] === 'txt'"
+                                  type="button" title="View File" (click)="viewFile(file.id, file.filePath)"
+                                  class="btn btn-primary btn-sm bi bi-card-image">
+                                </button>&nbsp; -->
+                              </div>
+                            </div>
+                          <!-- </div> -->
+                          
+
+                      
+                  <div class="row">
+                    <div *ngFor="let file of this.files">
+                      <div class="filedisplay">
+                        <div>
+                          <span>{{file.name}}</span>
+                          <button type="button" (click)="removeFile(file)"
+                            class="btn btn-danger btn-sm bi bi-x-lg">
+                          </button>&nbsp;
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <br>
+                
+
+                </div>
+              </div>
+                <div class="row" *ngIf="isStaffAdmin">
+                  <div class="col-md-4"></div>
+                <div class="col-md-3">
+                  <div *ngIf="isLink">
+                  <button type="submit" class="btn btn-success" [disabled]="!updateForm.form.valid"
+                    (click)="addRow();" style="margin-top: 5px;">
+                    <span>Save</span>
+                  </button>
+                </div>
+                  <div *ngIf="!isLink">
+                  <button type="submit" class="btn btn-success" [disabled]="!updateForm.form.valid"
+                   style="margin-top: 5px;">
+                  <span>Save</span>
+                </button>
+              </div>
+                </div>
+                <hr />
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

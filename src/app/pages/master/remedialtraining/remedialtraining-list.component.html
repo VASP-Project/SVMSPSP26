@@ -1,0 +1,76 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Corrective Action</h3>
+                    <button [routerLink]="['/admin/remedialtrainingedit']" class="btn btn-primary" 
+                    style="float: right; margin-right: 18px;"
+                            [queryParams]="{ isEdit: 0, isView: 0 }"> Add Corrective Action</button>
+                </div>
+
+                <div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color: #484D56; color: white;">
+                                    <th>Corrective Action</th>
+                                    <th>Activate</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let training of remedialTraining" class="pointerCursor"
+                                    
+                                    >
+
+                                    <!-- (click)="viewRemedialTraining(training.id)" -->
+                                    <td (click)="viewRemedialTraining(training.id)">{{training.remedialTrainingType}}</td>
+                                    <td>
+                                        <label class="switch">
+                                            <input name="active_{{training.id}}" type="checkbox" [(ngModel)]="training.isActive"  (click)="CheckBoxChange($event,training.id)"  />
+                                            <span class="slider square small"></span>
+                                        </label>
+
+                                        <!-- <input   name="active_{{training.id}}" type="checkbox" [checked]="training.isActive"
+                                        [(ngModel)]="training.isActive" [ngModelOptions]="{ standalone: true }"
+                                        (click)="CheckBoxChange($event,training.id)" /> -->
+                                        <!-- <div class="form-check">
+                                            <label class="form-check-label">
+                                              <input class="form-check-input"  name="active_{{training.id}}" type="checkbox" [checked]="training.isActive"
+                                                [(ngModel)]="training.isActive" [ngModelOptions]="{ standalone: true }"
+                                                (click)="CheckBoxChange($event)" />&nbsp;
+                                              <span class="form-check-sign">
+                                                <span class="check"> </span>
+                                              </span>
+                                            </label>
+                                          </div> -->
+                                    </td>
+                                    <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                        <div>
+                                            <button [disabled]="!training.isActive"
+                                                [routerLink]="['/admin/remedialtrainingedit']" class="btn btn-warning btn-sm"
+                                                [queryParams]="{ id: training.id, isEdit: 1, isView: 0 }">
+                                                <span><i class="bi bi-pencil"></i>
+                                                </span></button>
+                                            &nbsp;
+
+                                            <button  [disabled]="!training.isActive" type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteRemedialTraining(training.id)">
+                                                <span><i class="bi bi-trash"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

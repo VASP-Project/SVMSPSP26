@@ -1,0 +1,58 @@
+<div class=" content">
+    <div class=" row">
+        <div class=" col-md-12">
+            <div class=" card" >
+                <!-- <br> -->
+                <div class="col-md-12">
+                    <h3 class="card-title">Reference Categories</h3>
+                    <button [routerLink]="['/admin/referencecategoriesedit']" 
+                    class="btn btn-primary" style="float: right; margin-right: 18px;"
+                            [queryParams]="{ isEdit: 0, isView: 0 }"> Add Reference Category</button>
+                </div>
+
+                <div>
+                    <div class="card-body">     
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover " datatable [dtOptions]="dtOptions"
+                            [dtTrigger]="dtTrigger" id="dt1">
+                            <thead>
+                                <tr style="background-color: #484D56; color: white;">
+                                    <th>Reference Category</th>
+                                    <th>Order By</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let refCategory of referenceCategories" 
+                                (click)="viewreferencecategories(refCategory.id, 1)" class="pointerCursor">
+                                    <td>{{refCategory.referenceCategory}}</td>
+                                    <td>{{refCategory.sortOrder}}</td>
+
+                                <td (click)="$event.preventDefault(); $event.stopPropagation();">
+                                     <div>
+                                        <button [routerLink]="['/admin/referencecategoriesedit']" class="btn btn-warning btn-sm"
+                                            [queryParams]="{ referencescategoryId: refCategory.id, isEdit: 1, isView: 0 }">
+                                            <span><i class="bi bi-pencil"></i>
+                                            </span></button>
+                                        &nbsp;
+
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            (click)="deleteReferenceCategory(refCategory.id)">
+                                            <span><i class="bi bi-trash"></i>
+                                            </span>
+                                        </button>
+                                    </div>   
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>            
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

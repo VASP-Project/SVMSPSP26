@@ -1,0 +1,181 @@
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <br> -->
+        <div class="col-md-12">
+          <h3 class="card-title">Query Details
+            <button [routerLink]="['/admin/queryanalyzer']" class="btn btn-primary"
+              style="float: right; margin-right: 18px">
+              Back
+            </button>
+          </h3>
+        </div>
+        <div class="card-body" *ngIf="notRun">
+          <form #formData="ngForm" (ngSubmit)="showExecutionResult(formData)" *ngIf="notRun">
+            <div class="row" style="margin-left: 5px; margin-right: 5px">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <input type="hidden" id="id" [(ngModel)]="queryList.id" name="id" #id="ngModel">
+                  <label> <strong>Description</strong></label>
+                  <textarea type="text" class="form-control" id="name" name="name" [(ngModel)]="queryList.name"
+                    #name="ngModel" autocomplete="off" required> </textarea>
+                </div>
+              </div>
+
+              <div class="col-md-5 testareawidth">
+                <div class="form-group">
+                  <label><strong>Query</strong> </label>
+                  <textarea class="form-control" placeholder="Enter Query" id="query" name="query" #query="ngModel"
+                    [(ngModel)]="queryList.query" rows="4" required></textarea>
+                </div>
+              </div>
+              <div class="col-md-2 buttonwidth" style="margin-top: 20px;">
+                <!-- <button type="submit" class="btn btn-primary">
+                  Execute
+                </button> -->
+                <button type="button" class="btn btn-success" (click)="saveQuery(formData)"
+                [disabled]="!formData.form.valid">
+                  Save
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+        <div class="card-body">
+          
+            <!-- <div class="row"  *ngIf="notRun">
+              <div class="col-md-6">
+                <b>Query</b>
+              </div>
+              <div class="col-md-6">
+                <button
+                      class="button button-success"
+                      (click)="toggleDisplayDiv()"
+                    >
+                      {{ showSQLBtnName }}
+                    </button>
+              </div>
+            </div> -->
+          
+            <div class="row" *ngIf="!notRun">
+              <div class="col-md-6">
+                <span style="font-size: 18px;"><b>Description</b></span>
+              </div>
+              <div>
+                <span style="font-size: 15px;">{{ queryList.name }}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div *ngIf="isShowDiv" style="background-color: lightgrey; border-style: groove;">
+                <span>{{ queryList.query.toUpperCase() }}</span>
+              </div>
+            </div>
+            <!-- <div class="row">
+              <span style="
+              font-style: italic;
+              color: dodgerblue;
+              padding-top: 10px;
+              padding-bottom: 10px;
+            ">Note: Date parameter values, if any, to be given in MM-DD-YYYY
+                format.</span>
+            </div> -->
+           
+            <table   style="width: 100%;">
+              <tr *ngFor="let val of qtd; let i = index">
+                <td>
+                  <table style="width: 100%;">
+                    <tr>
+                      <td style="width: 200px; padding-bottom: 20px;">
+                        {{ val.fieldName.replace('@','') }}
+                      </td>
+                      <td style="padding-bottom: 20px;">
+                        <input
+                          style="width: 200px;"
+                          type="text"
+                          class="form-control"
+                          id="qtd{{ i }}"
+                          name="qtd{{ i }}"
+                          [(ngModel)]="val.value"
+                          #name="ngModel"
+                          maxlength="100"
+                        />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="showQueryResult()"
+                  >
+                    Show Result
+                  </button>
+                </td>
+              </tr>
+            </table>
+          
+          
+          <br>
+          <div *ngIf="displayTable" class="table-responsive" >
+            <table style="background-color: #484D56; color: white;"
+              class="table table-striped table-bordered table-sm row-border hover"
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              id="reportTable"
+            ></table>
+            <br>
+            <!-- <div class="table-responsive" >
+              <table class="table  table-bordered table-striped " datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger" id="dt1">
+                 <thead>
+                  <tr style="background-color:#003594">
+                    <th *ngFor="let item of headers; let k = index">{{ item }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+         
+                  <tr *ngFor="let item of this.sampleData; let j = index">
+                   
+                    <td *ngFor="let item1 of item | keyvalue; let i = index">
+                      {{ getData(item1.value)}}
+                    </td>
+                  </tr>
+                </tbody>
+  
+              </table>
+  
+            </div> -->
+
+          </div>
+          <div *ngIf="NoDataFound">
+            <div
+              class="alert alert-info"
+              id="alertError"
+              runat="server"
+              visible="false"
+            >
+              No data found!
+            </div>
+          </div>
+          <div *ngIf="errorFound">
+            <div
+              class="alert alert-danger"
+              id="alertError"
+              runat="server"
+              visible="false"
+            >
+              Error occurred while processing the query. Please check the query or
+              query parameter values for correctness.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
