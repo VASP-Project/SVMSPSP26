@@ -411,9 +411,12 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
       ViolatorLastName: this.cou.violatorLastName,
       // ViolatorBirthDate: this.datePipe.transform(this.cou.violatorBirthDate, 'MM/dd/yyyy'),
       // ViolationDate: this.datePipe.transform(this.cou.violationDate, 'MM/dd/yyyy'),
-      ViolatorBirthDate: this.dateAdapter.toModel(
-        this.fromModel(this.badgeholder.birthDate),
-      ),
+      
+       ViolatorBirthDate: this.badgeholder.birthDate
+    ? this.dateAdapter.toModel(
+        this.fromModel(this.badgeholder.birthDate)
+      )
+    : null,
       ViolationDate: this.dateAdapter.toModel(
         this.fromModel(this.cou.violationDate),
       ),
@@ -553,12 +556,18 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
               if (data != null) {
                 this.badgeholder = data as Badgeholder;
                 //this.badgeholder.birthDate = this.dateAdapter.toModel(this.fromModel(this.badgeholder.birthDate));
-                this.badgeholder.birthDate = this.formatDateToMMDDYYYY(
+               
+               if(this.badgeholder.birthDate){
+ this.badgeholder.birthDate = this.formatDateToMMDDYYYY(
                   this.badgeholder.birthDate,
                 );
                 this.badgeholder.birthDate = this.dateAdapter.toModel(
                   this.fromModel(this.badgeholder.birthDate),
                 );
+               }else{
+                this.badgeholder.birthDate = null;
+               }
+               
                 this.cou.phone = this.badgeholder.mobileNumber;
                 this.cou.personUniqueId = this.badgeholder.personUniqueId; //person unique id
                 this.cou.zip = this.badgeholder.zipCode;

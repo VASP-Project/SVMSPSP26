@@ -646,7 +646,11 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
       NovNo: this.citation.novNo,
       ViolatorFirstName: this.citation.violatorFirstName,
       ViolatorLastName: this.citation.violatorLastName,
-      ViolatorBirthDate: this.dateAdapter.toModel(this.fromModel(this.badgeholder.birthDate)),
+      ViolatorBirthDate: this.badgeholder.birthDate
+    ? this.dateAdapter.toModel(
+        this.fromModel(this.badgeholder.birthDate)
+      )
+    : null,
       ViolationDate: this.dateAdapter.toModel(this.fromModel(this.citation.violationDate)),
       ViolationTime: this.onTimeChange(this.citation.violationTime),
       ViolationTypeId: this.citation.violationTypeId,
@@ -1629,7 +1633,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
           this.badgeholder.lastName = this.citation.violatorLastName;
           this.badgeholder.personUniqueId = this.citation.personUniqueId;          
           // this.badgeholder.dob = this.dateAdapter.toModel(this.fromModel(this.citation.violatorBirthDate));
-          this.badgeholder.birthDate = this.dateAdapter.toModel(this.fromModel(this.citation.violatorBirthDate));
+          this.badgeholder.birthDate = this.citation.violatorBirthDate ? this.dateAdapter.toModel(this.fromModel(this.citation.violatorBirthDate)): null;
           //this.badgeholder.licenseExpirationDate = this.dateAdapter.toModel(this.fromModel(this.citation.licenseExpirationDate));
           this.citation.violationDate = this.dateAdapter.toModel(this.fromModel(this.citation.violationDate));
           // this.badgeholder.recpt_email_address = this.citation.email;
@@ -2523,8 +2527,12 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
               // const year = date.getFullYear();
               // const formattedDate = `${month}/${day}/${year}`;
               // this.badgeholder.birthDate = formattedDate
+              if(this.badgeholder.birthDate){
               this.badgeholder.birthDate = this.formatDateToMMDDYYYY(this.badgeholder.birthDate)
               this.badgeholder.birthDate = this.dateAdapter.toModel(this.fromModel(this.badgeholder.birthDate));
+              }else{
+                  this.badgeholder.birthDate = null;
+              }
               //this.badgeholder.licenseExpirationDate = this.dateAdapter.toModel(this.fromModel(this.badgeholder.licenseExpirationDate));
               this.citation.email = this.badgeholder.emailAddress;
               this.citation.phone = this.badgeholder.mobileNumber
