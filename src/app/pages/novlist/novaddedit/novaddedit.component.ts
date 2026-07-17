@@ -852,7 +852,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
       citationDetails.Address = this.badgeholder.streetAddress;
       citationDetails.City = this.badgeholder.city;
       citationDetails.State = this.badgeholder.state;
-      citationDetails.Zip = this.badgeholder.zip;
+      citationDetails.Zip = this.badgeholder.zipCode;
       citationDetails.DriversLicenseNo = this.badgeholder.driversLicenseNo;
       //citationDetails.LicenseState = this.badgeholder.licenseState;
 
@@ -1059,7 +1059,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
         this.citation.address = this.badgeholder.streetAddress;
         this.citation.city = this.badgeholder.city;
         this.citation.state = this.badgeholder.state;
-        this.citation.zip = this.badgeholder.zip;
+        this.citation.zip = this.badgeholder.zipCode;
         this.citation.driversLicenseNo = this.badgeholder.driversLicenseNo;
        // this.citation.licenseState = this.badgeholder.licenseState;
         if (this.CheckRequiredFields()) {
@@ -1627,7 +1627,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
           this.badgeholder.company = this.citation.companyName;
           this.badgeholder.firstName = this.citation.violatorFirstName;
           this.badgeholder.lastName = this.citation.violatorLastName;
-          this.personUniqueId = this.citation.personUniqueId;
+          this.badgeholder.personUniqueId = this.citation.personUniqueId;          
           // this.badgeholder.dob = this.dateAdapter.toModel(this.fromModel(this.citation.violatorBirthDate));
           this.badgeholder.birthDate = this.dateAdapter.toModel(this.fromModel(this.citation.violatorBirthDate));
           //this.badgeholder.licenseExpirationDate = this.dateAdapter.toModel(this.fromModel(this.citation.licenseExpirationDate));
@@ -1638,7 +1638,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
           this.badgeholder.streetAddress = this.citation.address;
           this.badgeholder.city = this.citation.city;
           this.badgeholder.state = this.citation.state;
-          this.badgeholder.zip = this.citation.zip;
+          this.badgeholder.zipCode = this.citation.zip;
           this.badgeholder.driversLicenseNo = this.citation.driversLicenseNo;
           //this.badgeholder.licenseState = this.citation.licenseState;
           if (this.citation.phone != "" && this.citation.email == "") {
@@ -2510,7 +2510,7 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
               this.citation.state = this.badgeholder.state
               this.citation.city = this.badgeholder.city
               this.citation.driversLicenseNo = this.badgeholder.driversLicenseNo
-              this.citation.zip = this.badgeholder.zip
+              this.citation.zip = this.badgeholder.zipCode
               this.citation.licenseState = this.badgeholder.dlState
               this.citation.personUniqueId = this.badgeholder.personUniqueId;
               this.citation.isBadgeAutoFilled = true

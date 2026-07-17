@@ -454,7 +454,7 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
       KeyValue: this.key,
       IscctvAvailable: this.cou.iscctvAvailable,
       IsBadgeAutoFilled: this.cou.isBadgeAutoFilled,
-    personUniqueId: this.cou.personUniqueId,
+      personUniqueId: this.cou.personUniqueId,
     };
 
     return couDetails;
@@ -561,6 +561,7 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
                 );
                 this.cou.phone = this.badgeholder.mobileNumber;
                 this.cou.personUniqueId = this.badgeholder.personUniqueId; //person unique id
+                this.cou.zip = this.badgeholder.zipCode;
                 this.cou.isBadgeAutoFilled = true;
                 // this.cou.email = this.badgeholder.emailAddress
                 var company = this.allCompanyList.find(
@@ -1212,6 +1213,7 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
         this.badgeholder.company = this.cou.companyName;
         this.badgeholder.firstName = this.cou.violatorFirstName;
         this.badgeholder.lastName = this.cou.violatorLastName;
+        this.badgeholder.zipCode = this.cou.zip;
         // this.badgeholder.dob = this.datePipe.transform(this.cou.violatorBirthDate, 'MM/dd/yyyy');
         // this.badgeholder.dob = this.dateAdapter.toModel(this.fromModel(this.cou.violatorBirthDate));
         this.badgeholder.birthDate = this.dateAdapter.toModel(

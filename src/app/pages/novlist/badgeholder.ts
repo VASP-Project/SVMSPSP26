@@ -19,5 +19,5 @@ export class Badgeholder{
     mobileNumber:string;
     dlState :string;
     personUniqueId: string;
-
+    zipCode: string;
 }

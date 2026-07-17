@@ -774,7 +774,12 @@ finalSubmit(modal: any) {
   this.companyMasterService
     .UpdateProhibitedDailySummary(this.LogId, this.auditedBy, auditComment)
     .subscribe(
-      (response: any) => {
+      (response: boolean) => {
+        if (!response) {
+          this.toastr.error('Audit submission failed. Please contact support.');
+          this.GetProhibitedItemList();
+          return;
+        }
         this.GetProhibitedItemList();
         this.toastr.success('Audit Submitted Successfully!');
         modal.close('Audit submitted');
