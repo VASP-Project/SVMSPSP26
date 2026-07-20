@@ -558,13 +558,13 @@ export class CouComponent extends FormCanDeactivate implements OnInit {
                 //this.badgeholder.birthDate = this.dateAdapter.toModel(this.fromModel(this.badgeholder.birthDate));
                
                if(this.badgeholder.birthDate){
- this.badgeholder.birthDate = this.formatDateToMMDDYYYY(
+                  this.badgeholder.birthDate = this.formatDateToMMDDYYYY(
                   this.badgeholder.birthDate,
-                );
-                this.badgeholder.birthDate = this.dateAdapter.toModel(
+                  );
+                  this.badgeholder.birthDate = this.dateAdapter.toModel(
                   this.fromModel(this.badgeholder.birthDate),
-                );
-               }else{
+                  );
+                }else{
                 this.badgeholder.birthDate = null;
                }
                

@@ -28,6 +28,7 @@ export class BadgeverificationComponent implements OnInit {
   hideSubmitButton: boolean = false
   showData: boolean = false
   accessLevels: any[] = [];
+  badgeAccessLevel: string[] =[];
 
   constructor(private toastr: ToastrService,
     private spinner: NgxSpinnerService,
@@ -141,6 +142,11 @@ export class BadgeverificationComponent implements OnInit {
 
           // If you want to use accessLevels separately
           this.accessLevels = this.badge.AccessLevel;
+          
+    this.badgeAccessLevel = apiBadge.badgeAccess.split("&");
+        
+
+          
         }
         else {
           const apiBadge = res.data[0];
@@ -179,6 +185,7 @@ export class BadgeverificationComponent implements OnInit {
 
           // If you want to use accessLevels separately
           this.accessLevels = this.badge.AccessLevel;
+          this.badgeAccessLevel = apiBadge.badgeAccess.split("&");
           this.inactive = true
           this.active = false
           this.showData = true

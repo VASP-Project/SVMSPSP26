@@ -99,5 +99,6 @@ export class BadgeVerification {
     BadgeNo: number;
     BadgeIcon: string;
     SealColor: string;
+    badgeAccess :string;
 }
 
