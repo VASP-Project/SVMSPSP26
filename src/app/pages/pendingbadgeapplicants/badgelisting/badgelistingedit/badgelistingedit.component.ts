@@ -60,15 +60,17 @@ export class BadgelistingeditComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.windowRef = window;
-    this.queryParam.pageSize = 10
-    this.queryParam.pageNumber = 1
-    this.queryParam.maxPageSize = 10
+    const savedPageSize = sessionStorage.getItem('badgeACCAuditEditsize');
+    this.queryParam.maxPageSize = savedPageSize ? +savedPageSize : 10;
+    this.queryParam.pageSize = savedPageSize ? +savedPageSize : 10;
+    this.queryParam.pageNumber = 1;
+    
     this.config = {
       currentPage: 1,
       itemsPerPage: this.queryParam.pageSize
     };
 
+    this.windowRef = window;
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -79,25 +81,22 @@ export class BadgelistingeditComponent implements OnInit {
       allowSearchFilter: true
     };
 
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10,
-    };
+   
 
     this.isEdit = +this.route.snapshot.pathFromRoot[1].queryParams['isEdit'];
     this.auditId = +this.route.snapshot.pathFromRoot[1].queryParams['auditId'];
     this.isView = +this.route.snapshot.pathFromRoot[1].queryParams['isView'];
     this.badgeauditinfo.auditType ='Targeted Audit';
-    await this.GetCompanyList();
+     await this.GetCompanyList();
 
     this.user = JSON.parse(sessionStorage.getItem("currentUser"));
-
     if (this.auditId != 0) {
+       
       //Get Audit by id
       this.isEdit = 1;
       await this.GetBadgeAuditById(this.auditId)
       //this.GetLaunchBadgeAuditById(this.auditId)
-      this.GetLaunchBadgeAuditByStaffAdmin(this.auditId)
+     this.GetLaunchBadgeAuditByStaffAdmin(this.auditId);
     }
     else {
     
@@ -111,8 +110,14 @@ export class BadgelistingeditComponent implements OnInit {
       this.fromDate = this.dateAdapter.toModel(this.fromModel(this.fromToDates.fromDate))
       this.toDate = this.dateAdapter.toModel(this.fromModel(this.fromToDates.toDate))
     }
-    // this.GetBadgeAuditById(this.auditId)
-
+    
+    // // this.GetBadgeAuditById(this.auditId)
+    //   this.dtOptions = {
+    //   pagingType: 'full_numbers',
+    //   pageLength: 10,
+    //   stateSave: true,
+    //   stateDuration: -1,
+    // };
   }
 
 
@@ -290,6 +295,7 @@ export class BadgelistingeditComponent implements OnInit {
       // this.pending = this.launchbadgeauditlist.entries;
       this.pageHeaders = response.paging
       //this.dtTrigger.next();
+     // this.queryParam.pageNumber = 1
     }, (error: any) => {
       //this.spinner.hide();
       console.log("error list");
@@ -302,8 +308,14 @@ export class BadgelistingeditComponent implements OnInit {
     this.GetLaunchBadgeAuditByStaffAdmin(this.auditId);
   }
   onPageSizeChange(): void {
+
+      sessionStorage.setItem(
+    'badgeACCAuditEditsize',
+    this.queryParam.pageSize.toString() );
+
     this.queryParam.pageSize = +this.queryParam.pageSize
     this.queryParam.maxPageSize = +this.queryParam.pageSize
+    
     this.GetLaunchBadgeAuditByStaffAdmin(this.auditId);
   }
 

@@ -43,11 +43,15 @@ export class RemedialTraininglistComponent implements OnInit {
               this.router.navigate(['admin/changepassword']);
             }
           }    
+
+           this.GetRemedialTrainingList();
         this.dtOptions = {
             pagingType: 'full_numbers',
             pageLength: 10,
+            stateSave: true,
+            stateDuration: -1
         };
-        this.GetRemedialTrainingList();
+       
     }
 
     onClick(id: string, trainingType: string) {
@@ -60,8 +64,8 @@ export class RemedialTraininglistComponent implements OnInit {
         this.remedialTrainingService.GetRemedialTrainingList().subscribe((response: RemedialTraining[]) => {
             this.remedialTraining = response;
             // console.log(response);
-            this.dtTrigger.next();
-            //this.spinner.hide();
+         this.dtTrigger.next();
+          //this.spinner.hide();
         });
     }
     onSortClick(event, columnname) {

@@ -76,9 +76,12 @@ export class InspectionrecordComponent implements OnInit {
 
 
   async ngOnInit() {
-    this.mobileViewData.pageSize = 10;
-    this.mobileViewData.pageNumber = 1;
-    this.mobileViewData.maxPageSize = 10;
+   const savedPageSize = sessionStorage.getItem('InspectionPageSize');
+    const savedPageNumber = sessionStorage.getItem('InspectionPageNumber');
+
+    this.mobileViewData.pageSize = savedPageSize ? +savedPageSize : 10;
+    this.mobileViewData.pageNumber = savedPageNumber ? Number(savedPageNumber): 1;
+    this.mobileViewData.maxPageSize = savedPageSize ? +savedPageSize : 10;
     this.config = {
       currentPage: 1,
       itemsPerPage: this.mobileViewData.pageSize,
@@ -86,19 +89,6 @@ export class InspectionrecordComponent implements OnInit {
     this.windowRef = window;
 
     
-    this.dtOptions = {
-      pagingType: "full_numbers",
-      pageLength: 10,
-      stateSave: true,
-      order: [[0, 'desc']],
-      columnDefs: [
-        { targets: 3, type: 'date', width: '11%' },
-        { targets: 4, width: '9%' },
-        { targets: 7, width: '17%' },
-        { targets: 9, width: '12%' }
-      ],
-      dom: 'lBfrtip',
-    };
 
     sessionStorage.setItem("tab", "");
     this.newDynamic = { fieldName: "", fieldValue: "" };
@@ -166,7 +156,20 @@ export class InspectionrecordComponent implements OnInit {
     }
 
 
-
+this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 100,
+      stateSave: true,
+      stateDuration: -1,
+      order: [[0, 'desc']],
+      columnDefs: [
+        { targets: 3, type: 'date', width: '11%' },
+        { targets: 4, width: '9%' },
+        { targets: 7, width: '17%' },
+        { targets: 9, width: '12%' }
+      ],
+      dom: 'lBfrtip',
+    };
   }
 
   fromModel(value: string | null): NgbDateStruct | null {
@@ -248,6 +251,7 @@ export class InspectionrecordComponent implements OnInit {
         this.inspectionList = response.items;
         this.inspectionListAll = response.items;
         this.pageHeaders = response.paging;
+          this.mobileViewData.pageNumber = 1;
       },
       (error: any) => {
         this.toastr.error("Error while fetching Inspection data", "Error");
@@ -256,15 +260,35 @@ export class InspectionrecordComponent implements OnInit {
   }
   onPageChange(newPage: number): void {
     this.mobileViewData.pageNumber = newPage;
+    sessionStorage.setItem(
+    'InspectionPageNumber',
+    newPage.toString() );
     this.GetInspectionListForMobileView();
   }
   onPageSizeChange(): void {
+   
+    sessionStorage.setItem(
+    'InspectionPageSize',
+    this.mobileViewData.pageSize.toString() );
+    this.mobileViewData.pageNumber = 1;
+     sessionStorage.setItem(
+    'InspectionPageNumber',
+    this.mobileViewData.pageNumber.toString() );
+    
     this.mobileViewData.pageSize = +this.mobileViewData.pageSize;
     this.mobileViewData.maxPageSize = +this.mobileViewData.pageSize;
+  
+
+  
     this.GetInspectionListForMobileView();
   }
   searchtable() {
+    this.mobileViewData.pageNumber = 1;
     sessionStorage.setItem("inspectionSearchText", this.mobileViewData.searchQuery);
+     
+     sessionStorage.setItem(
+    'InspectionPageNumber',
+    this.mobileViewData.pageNumber.toString() );
     this.GetInspectionListForMobileView();
   }
 
@@ -277,6 +301,8 @@ export class InspectionrecordComponent implements OnInit {
   clearSearch() {
     this.mobileViewData.searchQuery = "";
     sessionStorage.removeItem("inspectionSearchText");
+    sessionStorage.removeItem("InspectionPageNumber");
+  
     this.GetInspectionListForMobileView();
   }
   onSortClick(event, columnname) {

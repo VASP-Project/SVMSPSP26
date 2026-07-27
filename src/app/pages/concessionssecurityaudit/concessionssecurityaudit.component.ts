@@ -179,6 +179,8 @@ export class ConcessionssecurityauditComponent implements OnInit {
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
       order: [[4, "desc"]],
       columnDefs: [
         {

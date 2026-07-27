@@ -48,6 +48,8 @@ export class BadgeauditexcelComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
   };
 
     this.auditId = +this.route.snapshot.pathFromRoot[1].queryParams['auditId'];

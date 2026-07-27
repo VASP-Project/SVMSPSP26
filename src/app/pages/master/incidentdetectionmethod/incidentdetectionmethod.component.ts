@@ -24,12 +24,14 @@ export class IncidentdetectionmethodComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.GetDetectionMethodList()
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
     };
     console.log("abc")
-    this.GetDetectionMethodList()
+    
   }
 
   public GetDetectionMethodList()

@@ -35,11 +35,13 @@ export class DisablingListComponent implements OnInit {
             this.router.navigate(['admin/changepassword']);
           }
         }    
+        this.GetDisablingList();
         this.dtOptions = {
           pagingType: "full_numbers",
           pageLength: 10,
+          stateSave:true
         };
-        this.GetDisablingList();
+        
       }
     
       public GetDisablingList() {

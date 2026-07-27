@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <div class="card-body">
-                        <table id="dt1" class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+                        <table *ngIf="displayTable" id="dt1" class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
                         [dtTrigger]="dtTrigger">
                             <thead>
                                 <tr style="background-color: #484D56; color: white;">

@@ -53,11 +53,14 @@ export class LocationlistComponent implements OnInit {
         this.router.navigate(['admin/changepassword']);
       }
     }    
+    this.GetLocationList();
   this.dtOptions = {
     pagingType: 'full_numbers',
-    pageLength: 10
+    pageLength: 10,
+    stateSave: true,
+    stateDuration: -1
+
   };
-  this.GetLocationList();
   }
 
   public GetLocationList() {
@@ -68,10 +71,11 @@ export class LocationlistComponent implements OnInit {
       // this.dtTrigger.next();
       //this.spinner.hide();
       /// this.buildDtOptions(response)
+      this.processData();
       this.displayTable = true;
       this.ref.detectChanges();
       this.dtTrigger.next();
-      this.processData();
+      
     },
     (error:any)=> {
       this.toastr.error('Error while fetching Locations', 'Error');

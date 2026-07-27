@@ -39,10 +39,13 @@ export class ActivebadgesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+     const savedPageSize = sessionStorage.getItem('ActiveBadgeSize');
+     const savedPageNumber = sessionStorage.getItem('ActiveBadgeNumber');
+   
     this.windowRef = window;
-    this.queryParam.pageSize = 50
-    this.queryParam.pageNumber = 1
-    this.queryParam.maxPageSize = 50
+    this.queryParam.pageSize = savedPageSize ? +savedPageSize :50;
+    this.queryParam.pageNumber = savedPageNumber ? +savedPageNumber: 1;
+    this.queryParam.maxPageSize =savedPageSize ? +savedPageSize :50;
     this.config = {
       currentPage: 1,
       itemsPerPage: this.queryParam.pageSize
@@ -58,12 +61,17 @@ export class ActivebadgesComponent implements OnInit {
       this.isEdit = 1;
     }
 
+      setTimeout(()=>{
     if (this.user.rolename == "AuthSigner" || this.user.rolename == "StaffAdmin") {
       this.isAuthsigner = true;
       this.GetActiveBadgesByAuth()
       
 
     }
+
+      },300);
+
+
 
   }
 
@@ -102,10 +110,19 @@ export class ActivebadgesComponent implements OnInit {
     });
   }
   onPageChange(newPage: number): void {
+sessionStorage.setItem(
+    'ActiveBadgeNumber',
+    newPage.toString()
+  );
     this.queryParam.pageNumber = newPage;
     this.GetActiveBadgesByAuth();
   }
   onPageSizeChange(): void {
+    sessionStorage.setItem(
+    'ActiveBadgeSize',
+    this.queryParam.pageSize.toString()
+  );
+
     this.queryParam.pageSize = +this.queryParam.pageSize
     this.queryParam.maxPageSize = +this.queryParam.pageSize
     this.GetActiveBadgesByAuth();

@@ -43,12 +43,15 @@ export class QueryanalyzerComponent implements OnInit {
     if (this.user.rolename == 'Superadmin') {
       this.addQuery = true;
     }
+    this.GetQueryList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
       order: [[0, 'asc']]
     };
-    this.GetQueryList();
+    
 
   }
 

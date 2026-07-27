@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { AuditCompanies, BadgeAuditDetails, BadgeAuditDetailsList, DataOutputModel } from './badgelisting.model';
 import { BadgelistingService } from './badgelistingedit/badgelisting.service';
 //import { BadgelistingService } from './badgelistingedit/badgelisting.service';
+import { MobileViewData } from '@app/pages/novlist/CitationDetails';
 
 @Component({
   selector: 'app-badgelisting',
@@ -40,20 +41,22 @@ export class BadgelistingComponent implements OnInit {
     private badgeAuditService: BadgelistingService ) { }
 
   ngOnInit(): void {
+    const savedPageSize = sessionStorage.getItem('badgeACCAuditsize');
+    const savedPageNumber = sessionStorage.getItem('BadgeListingNumber');
+const savedSearch = sessionStorage.getItem('BadgeAccSearch');
+
+this.queryParam.searchQuery = savedSearch ? savedSearch : '';
     this.windowRef = window;
-    this.queryParam.pageSize = 10
-    this.queryParam.pageNumber = 1
-    this.queryParam.maxPageSize = 10
+    this.queryParam.pageSize = savedPageSize ? +savedPageSize : 10;
+    this.queryParam.pageNumber = savedPageNumber? + savedPageNumber: 1;
+    this.queryParam.maxPageSize = savedPageSize ? +savedPageSize : 10;
     this.config = {
       currentPage: 1,
       itemsPerPage: this.queryParam.pageSize
     };
     
     this.user = JSON.parse(sessionStorage.getItem("currentUser"));
-    this.dtOptions = {
-         pagingType: 'full_numbers',
-         pageLength: 10,
-    };    
+       
 
     if (this.user.rolename == "AuthSigner") {
      
@@ -63,6 +66,13 @@ export class BadgelistingComponent implements OnInit {
       this.GetBadgeAuditList();
       
     }
+     this.dtOptions = {
+         pagingType: 'full_numbers',
+         pageLength: 10,
+         stateSave: true,
+      stateDuration: -1,
+    };
+
     
   }
   onSortClick(event, columnname) {
@@ -119,10 +129,17 @@ export class BadgelistingComponent implements OnInit {
 
   clearSearch() {
     this.queryParam.searchQuery = "";
+    sessionStorage.removeItem("BadgeListingNumber");
+    sessionStorage.removeItem("BadgeAccSearch");
     this.GetBadgeAuditList();
   }
 
   onPageChange(newPage: number): void {
+     sessionStorage.setItem(
+    'BadgeListingNumber',
+    newPage.toString()
+  );
+
     this.queryParam.pageNumber = newPage;
     if (this.user.rolename == "AuthSigner") {
       this.GetBadgeAuditByRole(this.user.id); 
@@ -131,9 +148,23 @@ export class BadgelistingComponent implements OnInit {
        this.GetBadgeAuditList();
     }
   }
+
   onPageSizeChange(): void {
-    this.queryParam.pageSize = +this.queryParam.pageSize
-    this.queryParam.maxPageSize = +this.queryParam.pageSize
+
+   sessionStorage.setItem(
+    'badgeACCAuditsize',
+    this.queryParam.pageSize.toString()
+  );
+
+
+  
+    this.queryParam.pageSize = +this.queryParam.pageSize;
+    this.queryParam.maxPageSize = +this.queryParam.pageSize;
+    this.queryParam.pageNumber = 1;
+      sessionStorage.setItem(
+    'BadgeListingNumber',
+    this.queryParam.pageNumber.toString()
+  );
     if (this.user.rolename == "AuthSigner") {
       this.GetBadgeAuditByRole(this.user.id); 
     }
@@ -143,6 +174,15 @@ export class BadgelistingComponent implements OnInit {
   }
 
   searchtable(){
+    this.queryParam.pageNumber = 1;
+      sessionStorage.setItem(
+    'BadgeListingNumber',
+    this.queryParam.pageNumber.toString()
+  );
+    sessionStorage.setItem(
+    'BadgeAccSearch',
+    this.queryParam.searchQuery || ''
+  );
     if (this.user.rolename == "AuthSigner") {
       this.GetBadgeAuditByRole(this.user.id); 
     }

@@ -24,11 +24,13 @@ export class IncidenttypesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.GetIncidentTypeList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
   };
-    this.GetIncidentTypeList();
   }
 
   public GetIncidentTypeList()

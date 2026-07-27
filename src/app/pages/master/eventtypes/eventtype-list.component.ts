@@ -47,6 +47,8 @@ export class EventTypeslistComponent implements OnInit {
         this.dtOptions = {
             pagingType: 'full_numbers',
             pageLength: 10,
+            stateSave: true,
+      stateDuration: -1,
         };
         this.GetEventTypeList();
     }
@@ -60,7 +62,7 @@ export class EventTypeslistComponent implements OnInit {
         //this.spinner.show();
         this.eventTypesService.GetEventTypeList().subscribe((response: EventTypes[]) => {
             this.eventTypes = response;
-            this.dtTrigger.next();
+        setTimeout(() => {this.dtTrigger.next();}, 300);
             //this.spinner.hide();
         });
     }

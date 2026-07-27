@@ -35,11 +35,13 @@ export class IncendiariesListComponent implements OnInit {
           this.router.navigate(['admin/changepassword']);
         }
       }    
+      this.GetIncendiariesList();
       this.dtOptions = {
         pagingType: "full_numbers",
         pageLength: 10,
+        stateSave: true,
+      stateDuration: -1,
       };
-      this.GetIncendiariesList();
     }
   
     public GetIncendiariesList() {

@@ -49,12 +49,15 @@ export class BadgeReportSettingsListComponent implements OnInit {
         this.router.navigate(['admin/changepassword']);
       }
     }    
+     this.GetBadgeReportSettings();
+      this.GetBadgeReportEmailSettingsList();
       this.dtOptions = {
           pagingType: 'full_numbers',
           pageLength: 10,
+          stateSave: true,
+      stateDuration: -1,
       };
-      this.GetBadgeReportSettings();
-      this.GetBadgeReportEmailSettingsList();
+     
   }
 
 

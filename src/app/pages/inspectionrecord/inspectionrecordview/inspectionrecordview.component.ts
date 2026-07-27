@@ -71,20 +71,7 @@ export class InspectionrecordviewComponent implements OnInit {
   ngOnInit() 
   {
     this.GetCompanyList();
-    this.dtOptions = {
-      pagingType: "full_numbers",
-      pageLength: 10,
-      order: [[1, 'desc']],
-      searching:false,
-      info:false,
-      bInfo:false,
-      bLengthChange:false,
-      paging: false, 
-      columnDefs: [
-        { targets: 1, type :'numberic'  }
-      ]
-      // retrieve: true,
-    };
+   
 
     this.user = JSON.parse(sessionStorage.getItem("currentUser"));
     if(this.appURL.getLoginMethod() != 'Azure' && this.appURL.getLoginMethod() != 'Okta'){
@@ -121,6 +108,22 @@ export class InspectionrecordviewComponent implements OnInit {
         }
     this.getEdtResolutionList();
     this.getEdtAlarmList();
+     this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
+      order: [[1, 'desc']],
+      searching:false,
+      info:false,
+      bInfo:false,
+      bLengthChange:false,
+      paging: false, 
+      columnDefs: [
+        { targets: 1, type :'numberic'  }
+      ]
+      // retrieve: true,
+    };
   }
 
 

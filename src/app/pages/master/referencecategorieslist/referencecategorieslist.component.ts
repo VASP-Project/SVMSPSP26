@@ -53,11 +53,13 @@ export class ReferencecategorieslistComponent implements OnInit {
         this.router.navigate(['admin/changepassword']);
       }
     }    
+    this.GetReferenceCategoriesList();
      this.dtOptions = {
          pagingType: 'full_numbers',
          pageLength: 10,
+         stateSave: true,
+      stateDuration: -1,
      };
-     this.GetReferenceCategoriesList();
     
   }
 /*

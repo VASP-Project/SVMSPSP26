@@ -23,12 +23,15 @@ export class IncidentexplosiveslistComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+     this.GetExplosivesList()
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
     console.log("abc")
-    this.GetExplosivesList()
+   
   }
 
   public GetExplosivesList()

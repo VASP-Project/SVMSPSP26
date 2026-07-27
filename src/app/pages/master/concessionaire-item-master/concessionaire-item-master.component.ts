@@ -131,30 +131,46 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.queryParam.pageSize = 50;
-    this.queryParam.pageNumber = 1;
-    this.queryParam.maxPageSize = 50;
 
+    
+    const savedPageSize = sessionStorage.getItem('ProhibitedItemsizeList');
+    const savedPageNumber = sessionStorage.getItem('ProhibitedItemPageNumber');
+    const savedSearch = sessionStorage.getItem('ProhibitedItemSearch');
+    const savedCompanyId = sessionStorage.getItem("ProhibitedItemCompanyId");
+
+    this.mobileViewData.searchQuery = savedSearch ? savedSearch : '';
+    this.queryParam.pageSize =  savedPageSize ? +savedPageSize : 50;
+    this.queryParam.pageNumber = savedPageNumber ? +savedPageNumber: 1;
+    this.queryParam.maxPageSize = savedPageSize ? +savedPageSize : 50;
+
+    
+   
     this.config = {
       currentPage: 1,
       itemsPerPage: this.queryParam.pageSize,
     };
 
-    this.mobileViewData.pageSize = 50;
-    this.mobileViewData.pageNumber = 1;
-    this.mobileViewData.maxPageSize = 50;
+    this.mobileViewData.pageSize = savedPageSize ? +savedPageSize : 50;
+    this.mobileViewData.pageNumber = savedPageNumber ? +savedPageNumber: 1;
+    this.mobileViewData.maxPageSize =  savedPageSize ? +savedPageSize : 50;
     this.mobileViewData.orderBy = "SubmittedDate";
     this.mobileViewData.orderDir = "desc";
     this.config = {
       currentPage: 1,
       itemsPerPage: this.mobileViewData.pageSize,
     };
+  
 
+    setTimeout(()=>{
+
+    
     this.setInitialSortIcon();
+
     var user = JSON.parse(sessionStorage.getItem("currentUser"));
     this.user = user;
-    this.companyId =
-      +this.route.snapshot.pathFromRoot[1].queryParams["companyId"];
+    //savedCompanyId ? + savedCompanyId : 
+  this.companyId =+this.route.snapshot.pathFromRoot[1].queryParams["companyId"];
+
     this.companyName =
       this.route.snapshot.pathFromRoot[1].queryParams["companyName"];
     if (this.companyId > 0) {
@@ -165,16 +181,20 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
       this.user.rolename == "Concessionaire User"
     ) {
       this.isAuthsigner = true;
+      
       this.GetCompanyList(this.user.id);
       this.checkuser = 1;
     } else if (this.user.rolename == "StaffAdmin") {
       this.isStaffAdmin = true;
       this.checkuser = 0;
-      this.GetCompanyList1();
+     this.GetCompanyList1();
       if (this.isCompanyExist) {
         this.GetCompanyWiseItems(this.companyId);
+        
+
       } else {
         this.iscompanyselected = 1;
+       
         this.GetProhibitedItemList();
       }
     }
@@ -249,6 +269,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
     //     },
     //   },
     // };
+       },300);
   }
 
   @HostListener("window:resize", ["$event"])
@@ -263,6 +284,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
         (response: DataOutputModel) => {
           this.prohibitedList = response.items;
           this.pageHeaders = response.paging;
+        
           // this.prohibitedList.forEach((item) => {
           //   this.companyMasterService
           //     .GetProhibitedItemImages(item.id)
@@ -396,6 +418,9 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
 
   onPageChange(newPage: number): void {
     this.mobileViewData.pageNumber = newPage;
+
+    sessionStorage.setItem('ProhibitedItemPageNumber', newPage.toString());
+
     if (this.isAuthsigner == true) {
       if (this.selectedCompany != null) {
         this.GetItemsForAuthsigner(this.selectedCompany.id);
@@ -411,8 +436,17 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
     }
   }
   onPageSizeChange(): void {
+console.log("Sending PageSize:", this.mobileViewData.pageSize);
+
+    sessionStorage.setItem('ProhibitedItemsizeList', this.mobileViewData.pageSize.toString());
+
     this.mobileViewData.pageSize = +this.mobileViewData.pageSize;
     this.mobileViewData.maxPageSize = +this.mobileViewData.pageSize;
+     this.mobileViewData.pageNumber = 1;
+     sessionStorage.setItem(
+    'ProhibitedItemPageNumber',
+    this.mobileViewData.pageNumber.toString() );
+   
     if (this.isAuthsigner == true) {
       if (this.selectedCompany != null) {
         this.GetItemsForAuthsigner(this.selectedCompany.id);
@@ -428,7 +462,16 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
     }
   }
   searchtable() {
-    this.mobileViewData.pageNumber = 1;
+   this.mobileViewData.pageNumber = 1;
+
+   sessionStorage.setItem(
+    'ProhibitedItemPageNumber',
+    this.mobileViewData.pageNumber.toString() );
+
+     sessionStorage.setItem(
+    'ProhibitedItemSearch',
+    this.mobileViewData.searchQuery || ''
+  );
     if (this.isAuthsigner == true) {
       if (this.selectedCompany != null) {
         this.GetItemsForAuthsigner(this.selectedCompany.id);
@@ -442,6 +485,9 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
         this.GetProhibitedItemList();
       }
     }
+
+   // sessionStorage.removeItem('InspectionPageNumber');
+     
   }
   async exportToExcelWithImages() {
     let exportData;
@@ -552,7 +598,16 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
   }
 
   clearSearch() {
+
     this.mobileViewData.searchQuery = "";
+       this.mobileViewData.pageNumber =1;
+       
+      sessionStorage.setItem(
+    'ProhibitedItemPageNumber',
+    this.mobileViewData.pageNumber.toString() );
+
+    sessionStorage.removeItem('ProhibitedItemSearch');
+
     if (this.isAuthsigner == true) {
       if (this.selectedCompany != null) {
         this.GetItemsForAuthsigner(this.selectedCompany.id);
@@ -1463,6 +1518,17 @@ async GetProhibitedItemListForExport() {
   }
 
   public onCompanySelected(): void {
+
+     if (this.selectedCompany) {
+    sessionStorage.setItem(
+      "ProhibitedItemCompanyId",
+      this.selectedCompany.id.toString()
+    );
+  } else {
+    sessionStorage.removeItem("ProhibitedItemCompanyId");
+  }
+    sessionStorage.removeItem("ProhibitedItemPageNumber");
+
     if (this.selectedCompany === null) {
       this.iscompanyselected = 1;
       if (this.isAuthsigner) {
@@ -1481,7 +1547,7 @@ async GetProhibitedItemListForExport() {
     } else {
       this.iscompanyselected = 0;
       // this.mobileViewData.pageSize = 50;
-      this.mobileViewData.pageNumber = 1;
+     // this.mobileViewData.pageNumber = 1;
       // this.mobileViewData.maxPageSize = 50;
       // this.config = {
       //   currentPage: 1,
@@ -1498,6 +1564,7 @@ async GetProhibitedItemListForExport() {
       .GetProhibitedItemsByCompanyId(companyId, this.mobileViewData,this.checkuser)
       .subscribe(
         (response: DataOutputModel) => {
+          this.mobileViewData.pageNumber=1;
           this.prohibitedList = response.items;
           this.pageHeaders = response.paging;
           this.prohibitedList.forEach((item) => {

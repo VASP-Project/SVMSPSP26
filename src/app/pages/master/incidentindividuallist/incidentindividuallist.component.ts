@@ -23,12 +23,14 @@ export class IncidentindividuallistComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.GetIndividualTypeList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
     console.log("abc")
-    this.GetIndividualTypeList()
   }
 
   public GetIndividualTypeList()

@@ -168,6 +168,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[4, 'desc']],
       columnDefs: [
         { targets: 4, type: 'date' }
@@ -176,6 +178,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions1 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[3, 'desc']],
       columnDefs: [
         { targets: 3, type: 'date' }
@@ -185,6 +189,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions2 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[2, 'desc']],
       columnDefs: [
         { targets: 2, type: 'date' }
@@ -194,6 +200,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions3 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[2, 'desc']],
       columnDefs: [
         { targets: 2, type: 'date' }
@@ -203,6 +211,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions4 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[2, 'desc']],
       columnDefs: [
         { targets: 2, type: 'date' }
@@ -212,6 +222,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions5 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[3, 'desc']],
       columnDefs: [
         { targets: 3, type: 'date' }
@@ -221,6 +233,8 @@ export class AuditLogComponent implements OnInit {
     this.dtOptions6 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[3, 'desc']],
       columnDefs: [
         { targets: 3, type: 'date' }
@@ -230,6 +244,8 @@ export class AuditLogComponent implements OnInit {
      this.dtOptions7 = {
       pagingType: 'full_numbers',
       pageLength: 50,
+      stateSave: true,
+      stateDuration: -1,
       order: [[3, 'desc']],
       columnDefs: [
         { targets: 3, type: 'date' }

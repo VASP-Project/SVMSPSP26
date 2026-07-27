@@ -44,11 +44,13 @@ export class InspectiontypelistComponent implements OnInit {
       }
     }    
 
+    this.GetInspectionTypeList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
-    this.GetInspectionTypeList();
   }
 
 

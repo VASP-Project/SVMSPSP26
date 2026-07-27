@@ -22,11 +22,13 @@ export class InspectiontypemasterComponent implements OnInit {
     private toastr: ToastrService) { }
 
   ngOnInit() {
+    this.GetInspectionTypeMasterList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
-    this.GetInspectionTypeMasterList();
   }
 
     public GetInspectionTypeMasterList() {

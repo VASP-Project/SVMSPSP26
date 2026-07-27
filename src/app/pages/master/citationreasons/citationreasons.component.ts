@@ -40,9 +40,9 @@ export class CitationreasonsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.queryParam.pageSize = 10
+    this.queryParam.pageSize = 25
         this.queryParam.pageNumber = 1
-        this.queryParam.maxPageSize = 10
+        this.queryParam.maxPageSize = 100
         this.config = {
         currentPage: 1,
         itemsPerPage: this.queryParam.pageSize
@@ -56,11 +56,17 @@ export class CitationreasonsComponent implements OnInit {
           this.router.navigate(['admin/changepassword']);
         }
       }    
+      this.GetCitationReasonList();
+
+
     this.dtOptions = {
       pagingType: 'full_numbers',
-      pageLength: 10
+      pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
+      responsive:true,
     };
-    this.GetCitationReasonList();
+    
   }
 
 
@@ -87,11 +93,12 @@ export class CitationreasonsComponent implements OnInit {
     //this.spinner.show();
     this.CitationReasonsService.GetCitationReasonList().subscribe((response: CitationReasons[]) => {
       this.CitationReasonsFromDb = response;
-      
+      this.processData();
       this.displayTable = true;
       this.ref.detectChanges();
       this.dtTrigger.next();
-      this.processData();
+      
+      
 
     });
   }

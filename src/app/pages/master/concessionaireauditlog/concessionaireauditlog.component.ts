@@ -136,6 +136,8 @@ export class ConcessionaireauditlogComponent implements OnInit {
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
       order: [[2, "desc"]],
       columnDefs: [
         {

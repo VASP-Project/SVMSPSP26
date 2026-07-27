@@ -31,11 +31,7 @@ export class SchedulerListComponent implements OnInit {
   constructor(private schedulerService: SchedulerService) { }
 
   ngOnInit(): void {
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 10,
-      order: [[0, 'desc']],
-  };
+    
   this.user = JSON.parse(sessionStorage.getItem("currentUser"));
   if (this.user.rolename == "Superadmin") {
     this.isSuperAdmin = true;
@@ -56,6 +52,15 @@ export class SchedulerListComponent implements OnInit {
     this.isTsaScheduler = true;
   }
     this.GetScheduleDataList();
+
+this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
+      order: [[0, 'desc']],
+  };
+
   }
 
   public GetScheduleDataList() {

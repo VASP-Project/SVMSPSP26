@@ -189,6 +189,8 @@ export class ProhibitedcheckoutlogComponent implements OnInit {
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
       order: [[6, "desc"]],      
       columnDefs: [
         {

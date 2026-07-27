@@ -112,6 +112,8 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 100,
+      stateSave: true,
+      stateDuration: -1,
       order: [],
       columnDefs: [
         { targets: 0, type: 'date' }]
@@ -256,6 +258,8 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
       this.dtOptions = {
         pagingType: 'full_numbers',
         pageLength: 100,
+        stateSave: true,
+      stateDuration: -1,
         order: this.orderdataTable,//[referenceSortOrderId -1 < 0? 0 : referenceSortOrderId -1,'asc'],
         columnDefs: [
           { targets: 0, type: 'date' },
@@ -266,6 +270,8 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
       this.dtOptions = {
         pagingType: 'full_numbers',
         pageLength: 100,
+        stateSave: true,
+      stateDuration: -1,
         order: [0, 'asc'],//[referenceSortOrderId -1 < 0? 0 : referenceSortOrderId -1,'asc'],
         columnDefs: [
           { targets: 0, type: 'date' },
@@ -315,6 +321,8 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
       order: [],
       columnDefs: [
         { targets: 0, type: 'date' },]

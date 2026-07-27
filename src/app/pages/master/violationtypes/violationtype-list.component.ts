@@ -51,6 +51,8 @@ export class ViolationTypeslistComponent implements OnInit {
         this.dtOptions = {
             pagingType: 'full_numbers',
             pageLength: 10,
+            stateSave: true,
+      stateDuration: -1,
         };
         this.GetViolationTypeList();
     }
@@ -111,7 +113,8 @@ if(res.success){
         this.violationTypesService.GetViolationTypeList().subscribe((response: ViolationTypes[]) => {
             this.violationTypes = response;
             this.cd.detectChanges();
-            this.dtTrigger.next();
+            setTimeout(() => {this.dtTrigger.next();}, 300);
+          
             //this.spinner.hide();
         });
     }

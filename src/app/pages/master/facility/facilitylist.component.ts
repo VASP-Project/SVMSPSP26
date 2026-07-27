@@ -46,11 +46,15 @@ export class FacilitylistComponent implements OnInit {
         this.router.navigate(['admin/changepassword']);
       }
     }    
+
+     this.GetFacilityList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      
     };
-    this.GetFacilityList();
+   
   }
 
   onClick(facilityId: string, facilityName: string) {

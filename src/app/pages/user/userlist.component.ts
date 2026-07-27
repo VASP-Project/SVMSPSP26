@@ -38,7 +38,7 @@ export class UserlistComponent implements OnInit {
     this.loggedInUserId = user.id;
     this.dtOptions = {
       pagingType: 'full_numbers',
-      pageLength: 10,
+      pageLength: 10,     
       stateSave: true,
       retrieve: true,
     };

@@ -50,6 +50,8 @@ export class CompanylistComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      
     };
     this.GetCompanyList();
 
@@ -94,7 +96,8 @@ export class CompanylistComponent implements OnInit {
     this.CompanyService.GetCompanyList().subscribe((response: Company[]) => {
       this.companies = response;
       //this.spinner.hide();
-      this.dtTrigger.next();
+      setTimeout(() => {this.dtTrigger.next();}, 300);
+     
     });
   }
   onSortClick(event, columnname) {

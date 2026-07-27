@@ -23,12 +23,15 @@ export class IncidentgunslistComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.GetGunList()
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
     
-    this.GetGunList()
+    
   }
 
   public GetGunList()

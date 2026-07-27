@@ -34,11 +34,13 @@ export class SharpObjectsListComponent implements OnInit {
         this.router.navigate(['admin/changepassword']);
       }
     }    
+    this.GetSharpObjectList();
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 10,
+      stateSave: true,
+      stateDuration: -1,
     };
-    this.GetSharpObjectList();
   }
 
   public GetSharpObjectList() {
