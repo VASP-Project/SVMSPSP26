@@ -143,7 +143,7 @@ export class BadgeverificationComponent implements OnInit {
           // If you want to use accessLevels separately
           this.accessLevels = this.badge.AccessLevel;
           
-    this.badgeAccessLevel = apiBadge.badgeAccess.split("&");
+    this.badgeAccessLevel = (apiBadge.badgeAccess ?? '').split('&').filter(x => x);
         
 
           
@@ -185,8 +185,7 @@ export class BadgeverificationComponent implements OnInit {
 
           // If you want to use accessLevels separately
           this.accessLevels = this.badge.AccessLevel;
-          this.badgeAccessLevel = apiBadge.badgeAccess.split("&");
-          this.inactive = true
+          this.badgeAccessLevel = (apiBadge.badgeAccess ?? '').split('&').filter(x => x);
           this.active = false
           this.showData = true
         }

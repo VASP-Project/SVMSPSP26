@@ -296,16 +296,16 @@
                           </ng-container>
                           
                            <ng-template #badgeAccessTemplate>
-  <ng-container *ngIf="badgeAccessLevel.length > 0; else noAccess">
-    <table class="table table-striped table-hover table-sm mt-2 table-custom-border">
-      <tbody>
-        <tr *ngFor="let access of badgeAccessLevel">
-          <td>{{ access }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </ng-container>
-</ng-template>
+                          <ng-container *ngIf="badgeAccessLevel.length > 0; else noAccess">
+                            <table class="table table-striped table-hover table-sm mt-2 table-custom-border">
+                              <tbody>
+                                <tr *ngFor="let access of badgeAccessLevel">
+                                  <td>{{ access }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </ng-container>
+                        </ng-template>
                           
                           <ng-template #noAccess>
                             <label class="labelFonts"> No Access Levels </label>

@@ -136,8 +136,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
     const savedPageSize = sessionStorage.getItem('ProhibitedItemsizeList');
     const savedPageNumber = sessionStorage.getItem('ProhibitedItemPageNumber');
     const savedSearch = sessionStorage.getItem('ProhibitedItemSearch');
-    const savedCompanyId = sessionStorage.getItem("ProhibitedItemCompanyId");
-
+   
     this.mobileViewData.searchQuery = savedSearch ? savedSearch : '';
     this.queryParam.pageSize =  savedPageSize ? +savedPageSize : 50;
     this.queryParam.pageNumber = savedPageNumber ? +savedPageNumber: 1;
