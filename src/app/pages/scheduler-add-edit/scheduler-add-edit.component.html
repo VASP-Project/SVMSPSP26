@@ -15,8 +15,8 @@
                             <div class="row" *ngIf="isScheduleGenerated">
                                 <div class="col-md-12">
                                     <div class=" form-group" >
-                                        <span class="btn btn-primary" style="background-color: #003594;
-                                    border-color: #003594;
+                                        <span class="btn btn-primary" style="background-color: #484D56;
+                                    border-color: #484D56;
                                     color: white;
                                     margin-left: 15px;
                                     font-weight: bold; " (click)="showParams(1)">
@@ -195,8 +195,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class=" form-group" >
-                                    <span class="btn btn-primary" style="background-color: #003594;
-                            border-color: #003594;
+                                    <span class="btn btn-primary" style="background-color: #484D56;
+                            border-color: #484D56;
                             color: white;
                             margin-left: 15px;
                             font-weight: bold; " (click)="showParams(1)">
@@ -365,19 +365,19 @@
                                     <table class="sjs-table" style="border-right: 2px solid black;">
                                         <thead style=" text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
                                             <!-- 1st Extra Row -->
-                                            <tr style="background-color: #003594;">
+                                            <tr style="background-color: #484D56;">
                                             <th colspan="42" style="font-weight: bold; color: white; padding: 10px; border: 1px solid black;">
                                                 WEEKLY SCHEDULE - All Shifts
                                             </th>
                                         </tr>
                                         <!-- 2nd Extra Row -->
-                                        <tr style="background-color: #335494;">
+                                        <tr style="background-color: #7486a9;">
                                             <th colspan="42" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
                                                 Required Weekly Screening Hour Burden: {{scheduler.weeklyHours}} Hours
                                             </th>
                                         </tr>
                                         <!-- Original Header Row -->
-                                        <tr style="background-color: #335494;">
+                                        <tr style="background-color: #7486a9;">
                                             <th colspan="42" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
                                                 <strong>Random-generated Schedule Totals: {{scheduler.weeklyHours}} Hours</strong>
                                             </th>
@@ -442,7 +442,7 @@
                                                         class="text-center"
                                                         style="font-weight:bold;
                                                             color:white;
-                                                            background:#001d52;
+                                                            background:#484D56;
                                                             border:2px solid black;">
                                                         {{date | date:'EEEE'}}
                                                         <br>
@@ -516,19 +516,19 @@
                                     <table class="sjs-table" style="border-right: 2px solid black;">
                                         <thead style=" text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
                                             <!-- 1st Extra Row -->
-                                            <tr style="background-color: #003594;">
+                                            <tr style="background-color: #484D56;">
                                             <th colspan="21" style="font-weight: bold; color: white; padding: 10px; border: 1px solid black;">
                                                 WEEKLY SCHEDULE - All Shifts
                                             </th>
                                         </tr>
                                         <!-- 2nd Extra Row -->
-                                        <tr style="background-color: #335494;">
+                                        <tr style="background-color: #7486a9;">
                                             <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
                                                 Required Weekly Screening Hour Burden: {{scheduler.weeklyHours}} Hours
                                             </th>
                                         </tr>
                                         <!-- Original Header Row -->
-                                        <tr style="background-color: #335494;">
+                                        <tr style="background-color: #7486a9;">
                                             <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
                                                 <strong>Random-generated Schedule Totals: {{scheduler.weeklyHours}} Hours</strong>
                                             </th>
@@ -541,7 +541,7 @@
                                                         'font-weight': 'bold',
                                                         'text-align': 'center',
                                                         'color': 'white',
-                                                        'background-color': '#001d52',
+                                                        'background-color': '#484D56',
                                                         'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
                                                         'border-left': i % 3 === 0 ? '2px solid black' : '2px solid black',
                                                         'border-bottom': '2px solid black'
@@ -574,7 +574,7 @@
                                 <div class="table-responsive" id="excel-table" style="margin: 10px;">
                                     <table class="sjs-table" style="border-right: 2px solid black;">
                                         <thead
-                                            style="background-color: #003594; text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
+                                            style="background-color: #6c7b96; text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
                                             <tr>
                                                 <th *ngFor="let header of data[0]; let colIndex = index"
                                                     [attr.colspan]="colIndex === 0 ? 21 : 1" style="font-weight: bold;">
@@ -591,7 +591,7 @@
                                                     'font-weight': 'bold',
                                                     'text-align': 'center',
                                                     'color': 'white',
-                                                    'background-color': '#001d52',
+                                                    'background-color': '#484D56',
                                                     'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
                                                     'border-left': i % 3 === 0 ? '2px solid black' : '2x solid black',
                                                     'border-bottom': '2px solid black'
