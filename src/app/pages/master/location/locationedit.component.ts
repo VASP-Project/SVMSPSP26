@@ -123,7 +123,8 @@ export class LocationeditComponent implements OnInit {
       inIncident : this.location.inIncident,
       xCoordinate : formData.value.xCoordinate,
       yCoordinate : formData.value.yCoordinate,
-      companyId:formData.value.companyId
+      companyId:formData.value.companyId,
+      inSchedule : this.location.inSchedule
 
     };
     //this.spinner.show();
@@ -168,6 +169,9 @@ export class LocationeditComponent implements OnInit {
     this.location.inIncident = event.target.checked
   }
 
+  checkBoxChangeforSchedule(event){
+    this.location.inSchedule = event.target.checked
+  }
   addFile(files) {
     if (files.length === 0) {
       return;

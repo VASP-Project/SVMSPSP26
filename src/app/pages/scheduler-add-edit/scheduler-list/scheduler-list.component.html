@@ -7,7 +7,7 @@
                   <h3 class="card-title">AWS Schedule</h3>
                   <button [routerLink]="['/admin/scheduler']" *ngIf="isSuperAdmin || isTsaScheduler"
                   class="btn btn-primary" style="float: right; margin-right: 18px;"
-                  [queryParams]="{ isEdit: 0, isView: 0 }"skipLocationChange> Add Schedule</button>
+                  [queryParams]="{ isEdit: 0, isView: 0, isShow: true  }"[skipLocationChange] = "true"> Add Schedule</button>
               </div>
               <div>
                   <div class="card-body">
@@ -44,13 +44,13 @@
 
                           <td>
                               <a *ngIf="!isTsaApprover && item.isVerified == true" title="View" [routerLink]="['/admin/scheduler']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
-                                      skipLocationChange>View</a>
+                                      [skipLocationChange]="true">View</a>
                               <a *ngIf="!isTsaApprover && item.isVerified != true" title="view" [routerLink]="['/admin/scheduler']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
-                                      skipLocationChange>View</a>
+                                      [skipLocationChange]="true">View</a>
                               <a *ngIf="isTsaApprover && item.isVerified != true" title="Review" [routerLink]="['/admin/scheduler']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
-                                  skipLocationChange>Review</a>
+                                  [skipLocationChange]="true">Review</a>
                               <a *ngIf="isTsaApprover && item.isVerified == true" title="view" [routerLink]="['/admin/scheduler']" [queryParams]="{ scheduleId: item.id, isEdit: 0, isView: 1,submitted:item.isSubmitted,verified:item.isVerified }"
-                                  skipLocationChange>View</a>
+                                  [skipLocationChange]="true">View</a>
                           </td>
                          </tr>
                           </tbody>

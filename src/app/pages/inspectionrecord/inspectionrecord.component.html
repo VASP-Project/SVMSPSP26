@@ -287,12 +287,12 @@
                         || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
                             inspectionId: item.id,
                             isEdit: 1,
-                            isClone: 0}" skipLocationChange>
+                            isClone: 0}" [skipLocationChange] = "true">
                         Edit
                       </a>
                       |
                       <a title="View" [routerLink]="['/admin/inspection/view/']"
-                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" skipLocationChange>View</a>
+                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" [skipLocationChange] = "true" >View</a>
                       |
                       <a title="Clone" [routerLink]="['/admin/inspection/details/']"
                         *ngIf="user.rolename != 'TSA User' && user.rolename != 'AuthSigner' && user.rolename != 'Superadmin'"
@@ -337,7 +337,7 @@
             <div class="list-group" class="small-font">
               <a *ngFor="let item of inspectionList; index as i; trackBy: identify"
                 [routerLink]="['/admin/inspection/view/']" [queryParams]="{ inspectionId: item.id, isEdit: 0 }"
-                skipLocationChange class="list-group-item list-group-item-action">
+                [skipLocationChange] = "true" class="list-group-item list-group-item-action">
                 <div class="row">
                   <div class="col-md-4">
                     <span style="font-weight: bold;">INSP. Examples:</span>
@@ -390,12 +390,12 @@
                                                     || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
                                                         inspectionId: item.id,
                                                         isEdit: 1,
-                                                        isClone: 0}" skipLocationChange>
+                                                        isClone: 0}" [skipLocationChange] = "true">
                         Edit
                       </a>
                       |
                       <a title="View" [routerLink]="['/admin/inspection/view/']"
-                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" skipLocationChange>View</a>
+                        [queryParams]="{ inspectionId: item.id, isEdit: 0 }" [skipLocationChange] = "true" >View</a>
                       |
                       <a title="Clone" [routerLink]="['/admin/inspection/details/']"
                         *ngIf="user.rolename != 'TSA User' && user.rolename != 'AuthSigner' && user.rolename != 'Superadmin'"

@@ -12,6 +12,7 @@ export class Locations
     locationPhotos : LocationPhotos[] = []; 
      companyId: number;
     companyName:string;
+    inSchedule : boolean;
 }
 
 export class LocationsList

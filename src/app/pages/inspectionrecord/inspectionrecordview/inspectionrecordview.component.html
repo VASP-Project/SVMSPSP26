@@ -496,7 +496,7 @@
                   </div>
                 </div>
                 <div class="col-md-1"></div>
-                <div class="col-md-5 pr-md-1">
+                <div class="col-md-3 pr-md-1">
                   <div style="border-bottom: 1px solid black">
                     <label>
                       {{ inspectioninfo.inspFacility }}</label>
@@ -504,7 +504,17 @@
                   <div>
                     <strong> Facility </strong>
                   </div>
-                </div>              
+                </div> 
+                <div class="col-md-2 pr-md-1">
+                  <div style="border-bottom: 1px solid black">
+                    <label style="cursor: pointer; color:blue;"
+                        (click)="goToSchdelarPage(inspectioninfo.schedulerInputId)">
+                      {{ inspectioninfo.schedulerInputId }}</label>
+                  </div>
+                  <div>
+                    <strong> AWS Schedule # </strong>
+                  </div>
+                </div>             
               </div>
   
               <div class="row">
@@ -624,6 +634,15 @@
                   </div>
                   <div>
                     <strong>Airport Official 3</strong>
+                  </div>
+                </div>
+                <div class="col-md-3 pr-md-1">
+                  <div style="border-bottom: 1px solid black">
+                    <label>
+                      {{ inspectioninfo.isLeo }}</label>                  
+                  </div>
+                  <div>
+                    <strong> Is LEO Present? (Yes/No) </strong>                  
                   </div>
                 </div>
               </div>

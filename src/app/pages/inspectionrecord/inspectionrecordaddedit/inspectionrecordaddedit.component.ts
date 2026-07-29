@@ -216,11 +216,20 @@ export class InspectionrecordaddeditComponent
     { label: "Yes", value: "1" },
     { label: "No", value: "0" },
   ];
+  leoOptions = [
+    { label: "Yes", value: true },
+    { label: "No", value: false },
+  ];
 
   edtResolutionList: InspectionEdtResolution[] = [];
   edtAlarmList: InspectionEdtAlarm[] = [];
   isEdtResolution:boolean = true;
 
+  selectedDoorName: string = "";
+  facilityId: number;
+  locationId: number;
+  fromScheduler: boolean = false;
+  isschedularId: boolean = false;
   // time = {hour: 13, minute: 30};
   time: NgbTimeStruct = { hour: 13, minute: 30, second: 0 };
   readonly DELIMITER = "/";
@@ -238,7 +247,7 @@ export class InspectionrecordaddeditComponent
     private locationService: LocationService,
     private NovService: NovService,
     private ngbCalendar: NgbCalendar,
-    private dateAdapter: NgbDateAdapter<string>
+    private dateAdapter: NgbDateAdapter<string>,
   ) {
     super();
   }
@@ -347,12 +356,51 @@ export class InspectionrecordaddeditComponent
     };
 
     this.showFields(this.inspTypeId, this.inspTypeName);
+    this.route.queryParams.subscribe((params) => {
+      const scheduleDate = params["scheduleDate"];
+      const startTime = params["startTime"];
+      const door = params["door"];
+      this.facilityId = +params["facilityId"];
+      this.locationId = +params["locationId"];
+      this.fromScheduler = params["fromScheduler"] === 'true';
+      this.inspectioninfo.schedulerInputId = +params["schedulerId"];
+      this.inspectioninfo.schedulerSlotId = params["slotId"];
+
+      this.inspectioninfo.inspectionFacilityId = this.facilityId;
+
+      this.GetLocationListByFacility(this.facilityId);
+      // Date
+
+      if (startTime) {
+        this.inspectioninfo.inspectionTime = this.convertTo24Hour(startTime);
+      } else {
+        this.inspectioninfo.inspectionTime = this.datePipe.transform(
+          new Date(),
+          "HH:mm",
+        );
+      }
+      if (scheduleDate) {
+        this.inspectioninfo.inspectionDate =
+          this.convertMMDDYYYYToAdapterFormat(scheduleDate);
+
+        //this.inspectioninfo.inspectionDate = this.dateAdapter.toModel(ngbDate);
+      } else {
+        this.inspectioninfo.inspectionDate = this.datePipe.transform(
+          new Date(),
+          "MM-dd-yyyy",
+        );
+      }
+      // Save door temporarily
+      this.selectedDoorName = door;
+    });
     // this.inspectioninfo.inspectionNOV = "0"
-    this.inspectioninfo.inspectionTime = this.datePipe.transform(
-      new Date(),
-      "HH:mm"
-    );
   }
+
+  private convertMMDDYYYYToAdapterFormat(date: string): string {
+    const parts = date.split("/");
+    return `${parts[1]}-${parts[0]}-${parts[2]}`;
+  }
+
   checkBadgeFields() {
     this.canFindBadgeInfo = !(
       this.badgeholderModel.securityBadgeNo &&
@@ -479,7 +527,10 @@ export class InspectionrecordaddeditComponent
       Name3: this.inspectioninfo.name3,
       IsBadgeAutoFilled: this.inspectioninfo.isBadgeAutoFilled,
       EdtResolution: this.inspectioninfo.edtResolution,
-      EdtAlarm: this.inspectioninfo.edtAlarm
+      EdtAlarm: this.inspectioninfo.edtAlarm,
+      SchedulerInputId: this.inspectioninfo.schedulerInputId,
+      SchedulerSlotId: this.inspectioninfo.schedulerSlotId,
+      IsLeo: this.inspectioninfo.isLeo,
     };
     return inspectionDetails;
   }
@@ -606,6 +657,12 @@ onlyNumberKey(event: KeyboardEvent) {
       if (inspectionDetails.IndividualsInspected == null) {
         inspectionDetails.IndividualsInspected = 0;
       }
+      if (
+        inspectionDetails.IsLeo == null ||
+        inspectionDetails.IsLeo == undefined
+      ) {
+        inspectionDetails.IsLeo = "0";
+      }
       this.inspservice
         .AddInpsectionDetail(
           inspectionDetails,
@@ -655,6 +712,7 @@ onlyNumberKey(event: KeyboardEvent) {
                     inspectionId: response,
                     isEdit: 1,
                     isClone: 0,
+                    fromScheduler: this.fromScheduler,
                   },
                 });
               });
@@ -847,7 +905,23 @@ onlyNumberKey(event: KeyboardEvent) {
   }
 
   public GetInspectionDetails() {
-    this.router.navigate(["admin/inspection"]);
+    if((this.inspectioninfo.schedulerInputId > 0 && this.inspectioninfo.schedulerSlotId !== "") && this.fromScheduler == true){
+      this.router.navigate(["admin/scheduler"], {
+        queryParams: {
+          isEdit: 1,          
+          scheduleId: this.inspectioninfo.schedulerInputId,
+          slotId: this.inspectioninfo.schedulerSlotId,
+          isView:"1",
+          isShow: false,
+          submitted: true,
+          verified: true,
+          isNewSchedule:true
+
+        },skipLocationChange: true
+      });
+    }else{
+      this.router.navigate(["admin/inspection"]);
+    }
   }
 
   //To retrieve Company names on page loading
@@ -959,6 +1033,17 @@ onlyNumberKey(event: KeyboardEvent) {
     this.locationService.GetLocationListByFacility(facilityId).subscribe(
       (response: Locations[]) => {
         this.allLocationList = response;
+        const selectedDoor = this.allLocationList.find(
+          (x) => x.id == this.locationId,
+        );
+        const data =
+          this.inspectioninfo.inspectionFinding == "1"
+            ? this.findingDoorList
+            : this.selectedDoorList;
+        if (selectedDoor) {
+          this.inspectioninfo.inspectionFacilityId = selectedDoor.facilityId;
+          this.selectedDoorList = [selectedDoor];
+        }
       },
       (error: any) => {
         console.log("error list");
@@ -1027,6 +1112,9 @@ onlyNumberKey(event: KeyboardEvent) {
           this.showFields(data.inspectionType, data.inspType);
           // this.isFacility = true;
           this.inspectioninfo = data as InspetionRecordDetail;
+          if (this.inspectioninfo.schedulerInputId > 0) {
+            this.isschedularId = true;
+          }
           this.inspectioninfo.edtAlarm = data.edtAlarm ? +data.edtAlarm : null;
           this.inspectioninfo.edtResolution = data.edtResolution ? +data.edtResolution : null;
           if (this.inspectioninfo.badge1 != "") {
@@ -1065,6 +1153,10 @@ onlyNumberKey(event: KeyboardEvent) {
 
           this.inspectioninfo.inspectionNOV =
             data.inspectionNOV.toString().toLowerCase() == "true" ? "1" : "0";
+          this.inspectioninfo.isLeo =
+            data.isLeo.toString().toLowerCase() == "true"
+              ? "1"
+              : "0";
           // this.citationId = data.citationId;
           this.inspTypeId = data.inspectionType;
           this.inspTypeName = data.inspType;
@@ -1704,9 +1796,11 @@ onlyNumberKey(event: KeyboardEvent) {
   public clearFields() {
     this.inspectioninfo.inspectionFacilityId = null;
     // this.inspectioninfo.inspectionDate = this.datePipe.transform(new Date(),'MM/dd/yyyy');
-    this.inspectioninfo.inspectionDate = this.dateAdapter.toModel(
-      this.ngbCalendar.getToday()
-    );
+    if (!this.fromScheduler) {
+      this.inspectioninfo.inspectionDate = this.dateAdapter.toModel(
+        this.ngbCalendar.getToday(),
+      );
+    }
     // this.inspectioninfo.inspectionTime = new Date().toISOString();
     this.inspectioninfo.hours;
     this.inspectioninfo.minutes;
@@ -3193,5 +3287,45 @@ onlyNumberKey(event: KeyboardEvent) {
       }
       return false;
     }
+  }
+
+  convertToNgbDate(date: string) {
+    const d = new Date(date);
+
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1,
+      day: d.getDate(),
+    };
+  }
+
+  convertTo24Hour(time: string): string {
+    const [t, modifier] = time.split(" ");
+    let [hours, minutes] = t.split(":");
+
+    let h = parseInt(hours, 10);
+
+    if (modifier === "PM" && h < 12) {
+      h += 12;
+    }
+
+    if (modifier === "AM" && h === 12) {
+      h = 0;
+    }
+
+    return `${h.toString().padStart(2, "0")}:${minutes}`;
+  }
+  goToSchdelarPage(id: number) {
+    this.router.navigate(["/admin/scheduler"], {
+      queryParams: {
+        isEdit: 1,
+        scheduleId: id,
+        isView:"1",
+        isShow: false,
+        submitted: true,
+        verified: true
+      },
+      skipLocationChange: true,
+    });
   }
 }

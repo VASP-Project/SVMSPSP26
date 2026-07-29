@@ -395,6 +395,7 @@ export class InspectionrecordviewComponent implements OnInit {
                 this.inspectioninfo.inspectionDate= this.datePipe.transform(this.inspectioninfo.inspectionDate,'MM/dd/yyyy');
                 this.inspectioninfo.securityBadgeHolder=this.inspectioninfo.securityBadgeHolder.toString().toLowerCase()=='true' ? 'Yes' : 'No';  
                 this.inspectioninfo.inspectionFinding=this.inspectioninfo.inspectionFinding.toString().toLowerCase()=='false' ? 'No' : 'Yes'; 
+                this.inspectioninfo.isLeo=this.inspectioninfo.isLeo.toString().toLowerCase()=='false' ? 'No' : 'Yes';
                 this.inspectioninfo.inspectionNOV=this.inspectioninfo.inspectionNOV.toString().toLowerCase()=='true' ? 'Yes' : 'No';
                 this.citationId=data.citationId;        
                 this.getSelectedDoors(inspectionId)
@@ -428,4 +429,18 @@ export class InspectionrecordviewComponent implements OnInit {
                 //this.spinner.hide();                
             });
   } 
+
+  goToSchdelarPage(id: number) {
+    this.router.navigate(["/admin/scheduler"], {
+      queryParams: {
+        isEdit: 1,
+        scheduleId: id,
+        isView:"1",
+        isShow: false,
+        submitted: true,
+        verified: true
+      },
+      skipLocationChange: true,
+    });
+  }
 }
