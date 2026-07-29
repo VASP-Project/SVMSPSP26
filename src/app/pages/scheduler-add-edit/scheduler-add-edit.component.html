@@ -1,539 +1,685 @@
 <div class="content">
-  <div class="row">
-      <div class="col-md-12">
-          <div class="card">
-              <div class="col-md-12">
-                  <h3 class="card-title">AWS Schedule</h3>
-                  <button type="button" (click)="hideaddform()" style="float: right;margin-right: 5px; "
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="col-md-12">
+                    <h3 class="card-title">AWS Schedule</h3>
+                    <button type="button" (click)="hideaddform()" style="float: right;margin-right: 5px; "
                         class=" btn btn-primary">Back</button>
 
-              </div>
-              <!-- add -->
-              <div *ngIf="(isSuperAdmin || isTsaScheduler) && this.isView=='0'">
-                  <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
-                      <ng-container>
-                        <div class="row" *ngIf="isScheduleGenerated">
-                          <div class="col-md-12">
-                              <div class=" form-group" >
-                                  <span class="btn btn-primary" style="background-color: #484D56;
-                            border-color: #484D56;
-                            color: white;
-                            margin-left: 15px;
-                            font-weight: bold; " (click)="showParams(1)">
-                                      <i class="bi bi-caret-down-fill" *ngIf="this.isShow"></i>
-                                      <i class="bi bi-caret-right-fill" *ngIf="!this.isShow"></i>
-                                      <span *ngIf="this.isShow">&nbsp; Hide Input Parameters</span>
-                                      <span *ngIf="!this.isShow">&nbsp; Show Input Parameters</span>
-                                  </span>
-                              </div>
-                          </div>
-                      </div>
-                          <div *ngIf="isShow" style="padding-left: 10px;padding-right: 10px;">
-                              <div class="row">
-                                  <div class="col-md-6 ">
-                                      <div class="form-group">
-                                          <strong><label for="apsNumber">Secured Area ID Media
+                </div>
+                <!-- add -->
+                <div *ngIf="(isSuperAdmin || isTsaScheduler) && this.isView=='0'">
+                    <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+                        <ng-container>
+                            <div class="row" *ngIf="isScheduleGenerated">
+                                <div class="col-md-12">
+                                    <div class=" form-group" >
+                                        <span class="btn btn-primary" style="background-color: #003594;
+                                    border-color: #003594;
+                                    color: white;
+                                    margin-left: 15px;
+                                    font-weight: bold; " (click)="showParams(1)">
+                                            <i class="bi bi-caret-down-fill" *ngIf="this.isShow"></i>
+                                            <i class="bi bi-caret-right-fill" *ngIf="!this.isShow"></i>
+                                            <span *ngIf="this.isShow">&nbsp; Hide Input Parameters</span>
+                                            <span *ngIf="!this.isShow">&nbsp; Show Input Parameters</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="isShow" style="padding-left: 10px;padding-right: 10px;">
+                                <div class="row">
+                                    <div class="col-md-6 ">
+                                        <div class="form-group">
+                                            <strong><label for="apsNumber">Secured Area ID Media
                                                   Holders</label></strong><label for="apsNumber"></label>
-                                          <input type="text" placeholder="Secured Area ID Media Holder"
+                                            <input type="text" placeholder="Secured Area ID Media Holder"
                                               class="form-control" id="apsNumber" name="apsNumber"
                                               [(ngModel)]="scheduler.apsNumber"
                                               (ngModelChange)="updateWeeklyHours()"
                                               #apsNumber="ngModel" required>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-                                          <strong><label for="points">Number of Direct Access Points</label></strong>
-                                          <input type="number" placeholder="Number of Direct Access Point"
-                                              class="form-control" id="points" name="points"
-                                              [(ngModel)]="scheduler.points"
-                                              (ngModelChange)="updateWeeklyHours()"
-                                             required #points="ngModel">
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="row">
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-                                          <strong><label>Airport Category</label></strong>
-                                          <ng-select appendTo="body" id="category" #select [items]="categoryOptions"
-                                              bindLabel="label" placeholder="Select Option" bindValue="value"
-                                              [(ngModel)]="scheduler.category"
-                                               appearance="outline"
-                                               (ngModelChange)="updateWeeklyHours()"
-                                              name="category" required>
-                                          </ng-select>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-                                          <strong><label for="weeklyHours">Weekly Screening Hours
-                                                  Requirement</label></strong>
-                                          <input type="text" class="form-control" id="weeklyHours" name="weeklyHours"
-                                              placeholder="Weekly Screening Hour Requirement"
-                                              [(ngModel)]="scheduler.weeklyHours" required
-                                              #weeklyHours="ngModel" readonly>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-6 pr-md-1 pl-md-1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <strong><label for="points">Number of Direct Access Points</label></strong>
+                                            <input type="number" placeholder="Number of Direct Access Point"
+                                                class="form-control" id="points" name="points"
+                                                [(ngModel)]="scheduler.points"
+                                                (ngModelChange)="updateWeeklyHours()"
+                                                required #points="ngModel">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <strong><label>Airport Category</label></strong>
+                                            <ng-select appendTo="body" id="category" #select [items]="categoryOptions"
+                                                bindLabel="label" placeholder="Select Option" bindValue="value"
+                                                [(ngModel)]="scheduler.category"
+                                                appearance="outline"
+                                                (ngModelChange)="updateWeeklyHours()"
+                                                name="category" required>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <strong><label for="weeklyHours">Weekly Screening Hours
+                                                    Requirement</label></strong>
+                                            <input type="text" class="form-control" id="weeklyHours" name="weeklyHours"
+                                                placeholder="Weekly Screening Hour Requirement"
+                                                [(ngModel)]="scheduler.weeklyHours" required
+                                                #weeklyHours="ngModel" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 pr-md-1 pl-md-1">
+                                        <div class="form-group">
+                                            <strong> Schedule Start Date </strong>
+                                            <div class="input-group">
+                                                <input class="form-control" type="text"
+                                                    (click)="newScheduleStartDate.toggle()" ngbDatepicker
+                                                    #newScheduleStartDate="ngbDatepicker"
+                                                    [(ngModel)]="scheduler.newScheduleStartDate"
+                                                    name="newScheduleStartDate" placeholder="mm/dd/yyyy" required />
+                                                <button class="btn btn-outline-secondary bi bi-calendar4"
+                                                    (click)="newScheduleStartDate.toggle()" type="button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label> Airport Start Time </label></strong>
+                                        <ng-select appendTo="body" id="shiftStartTime" #select
+                                            [items]="shiftStartTime" bindLabel="label" placeholder="Select Option"
+                                            bindValue="value" [(ngModel)]="scheduler.shiftStartTime"
+                                            appearance="outline" name="shiftStartTime" required>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label>Airport End Time </label></strong>
+                                        <ng-select appendTo="body" id="shiftCloseTime" #select
+                                            [items]="shiftEndTime" bindLabel="label" placeholder="Select Option"
+                                            bindValue="value" [(ngModel)]="scheduler.shiftCloseTime"
+                                            appearance="outline" name="shiftCloseTime" required>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label>Schedule More Than One Shift? </label></strong>
+                                        <ng-select appendTo="body" id="isMoreThanOneShift" #select
+                                            [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
+                                            bindValue="value" [(ngModel)]="scheduler.isMoreThanOneShift"
+                                            appearance="outline" name="shiftCisMoreThanOneShiftloseTime"
+                                            (change)="noOfShifts()"
+                                            >
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <strong> Schedule Start Date </strong>
-                                        <div class="input-group">
-                                            <input class="form-control" type="text"
-                                                (click)="newScheduleStartDate.toggle()" ngbDatepicker
-                                                #newScheduleStartDate="ngbDatepicker"
-                                                [(ngModel)]="scheduler.newScheduleStartDate"
-                                                name="newScheduleStartDate" placeholder="mm/dd/yyyy" required />
-                                            <button class="btn btn-outline-secondary bi bi-calendar4"
-                                                (click)="newScheduleStartDate.toggle()" type="button"></button>
+                                        <strong><label>Number of Shifts</label></strong>
+                                        <ng-select appendTo="body" id="numberOfShifts" #select
+                                                    [items]="numberOfShifts" bindLabel="label" placeholder="Select Option"
+                                                    bindValue="value" [(ngModel)]="scheduler.numberOfShifts"
+                                                    appearance="outline" name="numberOfShifts"
+                                                    [disabled]="!isMoreThanOneShift"
+                                                    (change)="onNumberOfShiftsChange($event)">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class=" form-group">
+                                        <strong><label>Run All Shifts</label></strong>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="scheduler.isRunAll" name="isRunAll"
+                                                    id="isRunAll" />
+                                                <span class="form-check-sign">
+                                                    <span class="check"> </span>
+                                                </span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                              <div class=" col-md-6">
-                                  <div class=" form-group">
-                                      <strong><label> Airport Start Time </label></strong>
-                                      <ng-select appendTo="body" id="shiftStartTime" #select
-                                          [items]="shiftStartTime" bindLabel="label" placeholder="Select Option"
-                                          bindValue="value" [(ngModel)]="scheduler.shiftStartTime"
-                                          appearance="outline" name="shiftStartTime" required>
-                                      </ng-select>
-                                  </div>
-                              </div>
-                              <div class=" col-md-6">
-                                  <div class=" form-group">
-                                      <strong><label>Airport End Time </label></strong>
-                                      <ng-select appendTo="body" id="shiftCloseTime" #select
-                                          [items]="shiftEndTime" bindLabel="label" placeholder="Select Option"
-                                          bindValue="value" [(ngModel)]="scheduler.shiftCloseTime"
-                                          appearance="outline" name="shiftCloseTime" required>
-                                      </ng-select>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <div class="row">
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label>Schedule More Than One Shift? </label></strong>
-                                    <ng-select appendTo="body" id="isMoreThanOneShift" #select
-                                        [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
-                                        bindValue="value" [(ngModel)]="scheduler.isMoreThanOneShift"
-                                        appearance="outline" name="shiftCisMoreThanOneShiftloseTime"
-                                        (change)="noOfShifts()"
-                                        >
-                                    </ng-select>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label>This Shift</label></strong>
+                                        <ng-select appendTo="body" id="thisShift" #select [items]="filteredShifts"
+                                                bindLabel="label" placeholder="Select Option" bindValue="value"
+                                                [(ngModel)]="scheduler.thisShift" appearance="outline"
+                                                name="thisShift">
+                                        </ng-select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                  <strong><label>Number of Shifts</label></strong>
-                                  <ng-select appendTo="body" id="numberOfShifts" #select
-                                             [items]="numberOfShifts" bindLabel="label" placeholder="Select Option"
-                                             bindValue="value" [(ngModel)]="scheduler.numberOfShifts"
-                                             appearance="outline" name="numberOfShifts"
-                                             [disabled]="!isMoreThanOneShift"
-                                             (change)="onNumberOfShiftsChange($event)">
-                                  </ng-select>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class=" form-group">
-                                    <strong><label>Run All Shifts</label></strong>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox"
-                                                [(ngModel)]="scheduler.isRunAll" name="isRunAll"
-                                                id="isRunAll" />
-                                            <span class="form-check-sign">
-                                                <span class="check"> </span>
-                                            </span>
-                                        </label>
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label> Door Specific Start/End Time</label></strong>
+                                        <ng-select appendTo="body" id="isSpecificDoor" #select
+                                            [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
+                                            bindValue="value" [(ngModel)]="scheduler.isSpecificDoor"
+                                            appearance="outline" name="isSpecificDoor">
+                                        </ng-select>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                                <strong><label>This Shift</label></strong>
-                                <ng-select appendTo="body" id="thisShift" #select [items]="filteredShifts"
-                                           bindLabel="label" placeholder="Select Option" bindValue="value"
-                                           [(ngModel)]="scheduler.thisShift" appearance="outline"
-                                           name="thisShift">
-                                </ng-select>
-                            </div>
-                        </div>
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label> Door Specific Start/End Time</label></strong>
-                                    <ng-select appendTo="body" id="isSpecificDoor" #select
-                                        [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
-                                        bindValue="value" [(ngModel)]="scheduler.isSpecificDoor"
-                                        appearance="outline" name="isSpecificDoor">
-                                    </ng-select>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-                              <div class="row" style="margin-top: 5px;margin-bottom: 5px;">
-                                  <div class="d-flex justify-content-center"><button type="submit"
+                            <div class="row" style="margin-top: 5px;margin-bottom: 5px;">
+                                <div class="d-flex justify-content-center"><button type="submit"
                                           class="btn btn-success" [disabled]="!formData.form.valid">Generate
                                           Schedule</button></div>
-                              </div>
-                          </div>
-                      </ng-container>
-                  </form>
-              </div>
-              <!-- view -->
-              <div *ngIf="this.isView=='1'">
-                <ng-container>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class=" form-group" >
-                                <span class="btn btn-primary" style="background-color: #484D56;
-                          border-color: #484D56;
-                          color: white;
-                          margin-left: 15px;
-                          font-weight: bold; " (click)="showParams(1)">
-                                    <i class="bi bi-caret-down-fill" *ngIf="this.isShow"></i>
-                                    <i class="bi bi-caret-right-fill" *ngIf="!this.isShow"></i>
-                                    <span *ngIf="this.isShow">Hide Input Parameters</span>
-                                    <span *ngIf="!this.isShow">Show Input Parameters</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="isShow" style="padding-left: 10px;padding-right: 10px;">
-                        <div class="row">
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <strong><label for="apsNumber">Secured Area ID Media
-                                            Holders</label></strong><label for="apsNumber"></label>
-                                    <input type="text" placeholder="Secured Area ID Media Holder"
-                                        class="form-control" id="apsNumber" name="apsNumber"
-                                        [(ngModel)]="scheduler.apsNumber" #apsNumber="ngModel" required
-                                        readonly>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <strong><label for="points">Number of Direct Access Points</label></strong>
-                                    <input type="text" placeholder="Number of Direct Access Point"
-                                        class="form-control" id="points" name="points"
-                                        [(ngModel)]="scheduler.points" required #points="ngModel" readonly>
+                        </ng-container>
+                    </form>
+                </div>
+                <!-- view -->
+                <div *ngIf="this.isView=='1'">
+                    <ng-container>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class=" form-group" >
+                                    <span class="btn btn-primary" style="background-color: #003594;
+                            border-color: #003594;
+                            color: white;
+                            margin-left: 15px;
+                            font-weight: bold; " (click)="showParams(1)">
+                                        <i class="bi bi-caret-down-fill" *ngIf="this.isShow"></i>
+                                        <i class="bi bi-caret-right-fill" *ngIf="!this.isShow"></i>
+                                        <span *ngIf="this.isShow">Hide Input Parameters</span>
+                                        <span *ngIf="!this.isShow">Show Input Parameters</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <strong><label>Airport Category</label></strong>
-                                    <ng-select appendTo="body" id="category" #select [items]="categoryOptions"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.category" appearance="outline" name="category"
-                                        (ngModelChange)="updateWeeklyHours()" required [disabled]="true">
-                                    </ng-select>
+                        <div *ngIf="isShow" style="padding-left: 10px;padding-right: 10px;">
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <div class="form-group">
+                                        <strong><label for="apsNumber">Secured Area ID Media
+                                                Holders</label></strong><label for="apsNumber"></label>
+                                        <input type="text" placeholder="Secured Area ID Media Holder"
+                                            class="form-control" id="apsNumber" name="apsNumber"
+                                            [(ngModel)]="scheduler.apsNumber" #apsNumber="ngModel" required
+                                            readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label for="points">Number of Direct Access Points</label></strong>
+                                        <input type="text" placeholder="Number of Direct Access Point"
+                                            class="form-control" id="points" name="points"
+                                            [(ngModel)]="scheduler.points" required #points="ngModel" readonly>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <strong><label for="weeklyHours">Weekly Screening Hours
-                                            Requirement</label></strong>
-                                    <input type="text" class="form-control" id="weeklyHours" name="weeklyHours"
-                                        placeholder="Weekly Screening Hour Requirement"
-                                        [(ngModel)]="scheduler.weeklyHours" required #weeklyHours="ngModel"
-                                        readonly>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label>Airport Category</label></strong>
+                                        <ng-select appendTo="body" id="category" #select [items]="categoryOptions"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.category" appearance="outline" name="category"
+                                            (ngModelChange)="updateWeeklyHours()" required [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label for="weeklyHours">Weekly Screening Hours
+                                                Requirement</label></strong>
+                                        <input type="text" class="form-control" id="weeklyHours" name="weeklyHours"
+                                            placeholder="Weekly Screening Hour Requirement"
+                                            [(ngModel)]="scheduler.weeklyHours" required #weeklyHours="ngModel"
+                                            readonly>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1 pl-md-1">
-                                <div class="form-group">
-                                    <strong> Schedule Start Date </strong>
-                                    <div class="input-group">
-                                        <input class="form-control" type="text" (click)="scheduleStartDate.toggle()"
-                                            ngbDatepicker #scheduleStartDate="ngbDatepicker"
-                                            [(ngModel)]="scheduler.scheduleStartDate" name="scheduleStartDate"
-                                            placeholder="mm/dd/yyyy" required [disabled]="true" />
-                                        <button class="btn btn-outline-secondary bi bi-calendar4"
-                                            (click)="scheduleStartDate.toggle()" type="button"
-                                            [disabled]="true"></button>
+                            <div class="row">
+                                <div class="col-md-6 pr-md-1 pl-md-1">
+                                    <div class="form-group">
+                                        <strong> Schedule Start Date </strong>
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" (click)="scheduleStartDate.toggle()"
+                                                ngbDatepicker #scheduleStartDate="ngbDatepicker"
+                                                [(ngModel)]="scheduler.scheduleStartDate" name="scheduleStartDate"
+                                                placeholder="mm/dd/yyyy" required [disabled]="true" />
+                                            <button class="btn btn-outline-secondary bi bi-calendar4"
+                                                (click)="scheduleStartDate.toggle()" type="button"
+                                                [disabled]="true"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label> Airport Start Time </label></strong>
+                                        <ng-select appendTo="body" id="shiftStartTime" #select [items]="shiftStartTime"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.shiftStartTime" appearance="outline"
+                                            name="shiftStartTime" required [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label>Airport End Time </label></strong>
+                                        <ng-select appendTo="body" id="shiftCloseTime" #select [items]="shiftEndTime"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.shiftCloseTime" appearance="outline"
+                                            name="shiftCloseTime" required [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label>Schedule More Than One Shift? </label></strong>
+                                        <ng-select appendTo="body" id="isMoreThanOneShift" #select
+                                            [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
+                                            bindValue="value" [(ngModel)]="scheduler.isMoreThanOneShift"
+                                            appearance="outline" name="shiftCisMoreThanOneShiftloseTime"
+                                            (change)="noOfShifts()" [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label> Number of Shifts</label></strong>
+                                        <ng-select appendTo="body" id="numberOfShifts" #select [items]="numberOfShifts"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.numberOfShifts" appearance="outline"
+                                            name="numberOfShifts" [disabled]="!isMoreThanOneShift" [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class=" form-group">
+                                        <strong><label>Run All Shifts</label></strong>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" [disabled]="true"
+                                                    [(ngModel)]="scheduler.isRunAll" name="isRunAll"
+                                                    id="isRunAll" />
+                                                <span class="form-check-sign">
+                                                    <span class="check"> </span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label>This Shift</label></strong>
+                                        <ng-select appendTo="body" id="thisShift" #select [items]="thisShift"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.thisShift" appearance="outline"
+                                            name="thisShift" [disabled]="true">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class=" form-group">
+                                        <strong><label> Door Specific Start/End Time</label></strong>
+                                        <ng-select appendTo="body" id="isSpecificDoor" #select [items]="isMoreThanOne"
+                                            bindLabel="label" placeholder="Select Option" bindValue="value"
+                                            [(ngModel)]="scheduler.isSpecificDoor" appearance="outline"
+                                            name="isSpecificDoor" [disabled]="true">
+                                        </ng-select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label> Airport Start Time </label></strong>
-                                    <ng-select appendTo="body" id="shiftStartTime" #select [items]="shiftStartTime"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.shiftStartTime" appearance="outline"
-                                        name="shiftStartTime" required [disabled]="true">
-                                    </ng-select>
-                                </div>
-                            </div>
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label>Airport End Time </label></strong>
-                                    <ng-select appendTo="body" id="shiftCloseTime" #select [items]="shiftEndTime"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.shiftCloseTime" appearance="outline"
-                                        name="shiftCloseTime" required [disabled]="true">
-                                    </ng-select>
+
+                    </ng-container>
+                </div>
+
+                <div>
+                    <div id="print-section">
+                        <!-- schedule table -->
+                        <div *ngIf="isNewSchedule">
+                            <div *ngIf="headertext" class="table-responsive" style="margin: 10px;">
+                                <div class="table-responsive" id="excel-table" style="margin: 10px;">
+                                    <table class="sjs-table" style="border-right: 2px solid black;">
+                                        <thead style=" text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
+                                            <!-- 1st Extra Row -->
+                                            <tr style="background-color: #003594;">
+                                            <th colspan="42" style="font-weight: bold; color: white; padding: 10px; border: 1px solid black;">
+                                                WEEKLY SCHEDULE - All Shifts
+                                            </th>
+                                        </tr>
+                                        <!-- 2nd Extra Row -->
+                                        <tr style="background-color: #335494;">
+                                            <th colspan="42" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
+                                                Required Weekly Screening Hour Burden: {{scheduler.weeklyHours}} Hours
+                                            </th>
+                                        </tr>
+                                        <!-- Original Header Row -->
+                                        <tr style="background-color: #335494;">
+                                            <th colspan="42" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
+                                                <strong>Random-generated Schedule Totals: {{scheduler.weeklyHours}} Hours</strong>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    <!-- <tbody>
+                                        <tr>
+                                            <ng-container *ngFor="let date of data[1]; let i = index">
+                                                <td class="cell" [ngStyle]="{
+                                                    'font-weight': 'bold',
+                                                    'text-align': 'center',
+                                                    'color': 'white',
+                                                    'background-color': '#001d52',
+                                                    'border-right': i % 10 === 9 ? '2px solid black' : '2px solid black',
+                                                    'border-left': i % 10 === 0 ? '2px solid black' : '2px solid black',
+                                                    'border-bottom': '2px solid black'
+                                                }" [attr.colspan]="10">
+                                                    {{ date | date: 'EEEE' }}
+                                                    <br>
+                                                    {{ date }}
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                        <tr *ngFor="let row of data.slice(2); let rowIndex = index">
+                                            <ng-container *ngFor="let val of row; let colIndex = index">
+                                                <td class="cell" [ngStyle]="{
+                                                    'background-color' : (colIndex % 10 < 5 ? '#c8c8c8' : 'white'),
+                                                    'border-right': colIndex % 10 === 9 ? '2px solid black' : '1px solid black',
+                                                    'border-left': colIndex % 10 === 0 ? '2px solid black' : '1px solid black',
+                                                    'border-bottom': rowIndex === data.length - 2 ? '2px solid black' : '1px solid black'
+                                                }">
+                                                    {{ val }}
+
+                                                <ng-container *ngIf="colIndex % 10 == 9 && getSlot(row, colIndex) as slot">
+
+                                                    <button
+                                                        *ngIf="!slot.inspectionId"
+                                                        class="btn btn-warning btn-sm"
+                                                        (click)="goToEdit(slot)">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+
+                                                    <button
+                                                        *ngIf="slot.inspectionId"
+                                                        class="btn btn-success btn-sm"
+                                                        (click)="viewInspection(slot.inspectionId)">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+
+                                                    </ng-container>
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </tbody> -->
+
+                                        <tbody>
+
+                                            <!-- Dates -->
+                                            <tr>
+                                                <ng-container *ngFor="let date of dates">
+                                                    <td colspan="3"
+                                                        class="text-center"
+                                                        style="font-weight:bold;
+                                                            color:white;
+                                                            background:#001d52;
+                                                            border:2px solid black;">
+                                                        {{date | date:'EEEE'}}
+                                                        <br>
+                                                        {{date}}
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+
+                                            <!-- Schedule -->
+                                            <tr *ngFor="let row of scheduleRows">
+
+                                                <ng-container *ngFor="let slot of row; let dayIndex = index">
+                                                    
+                                                    <ng-container *ngIf="slot; else empty">
+
+                                                        <td [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'" > 
+                                                            {{slot.startTime}} </td>
+
+                                                        <td [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'" > 
+                                                            {{slot.endTime}} </td>
+
+                                                        <td class="door-cell" [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'" >
+
+                                                            <div class="door-name">
+                                                                {{slot.door}}
+                                                            </div>
+
+                                                            
+                                                            <button
+                                                                *ngIf="!slot.inspectionId && (isSuperAdmin || isStaffAdmin || isIssuer) && isAlreadyVerified"
+                                                                class="btn btn-success btn-sm action-btn" [title]="'Create Inspection  '"
+                                                                (click)="goToEdit(slot)">
+                                                                <i class="bi bi-plus-circle"></i>
+                                                            </button>
+                                                            <button
+                                                                *ngIf="slot.inspectionId && slot.inspectionStatus !== 'Closed' && (isSuperAdmin || isStaffAdmin || isIssuer) && isAlreadyVerified"
+                                                                class="btn btn-warning btn-sm"
+                                                                (click)="goToEdit(slot)" [title]="'Edit Inspection ID: ' + slot.inspectionId">
+                                                                <i class="bi bi-pencil-square"></i>
+                                                            </button>
+                                                            <button
+                                                                *ngIf="slot.inspectionStatus === 'Closed' && (isSuperAdmin || isStaffAdmin || isIssuer)"
+                                                                class="btn btn-primary btn-sm ms-1 action-btn" [title]="'Inspection ID: ' + slot.inspectionId"
+                                                                (click)="viewInspection(slot.inspectionId)">
+                                                                <i class="bi bi-eye"></i>
+                                                            </button>
+                                                        </td>
+
+                                                    </ng-container>
+
+                                                    <ng-template #empty>
+
+                                                        <td [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'"></td>
+                                                        <td [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'"></td>
+                                                        <td [style.background-color]="dayIndex % 2 == 0 ? '#c8c8c8' : 'white'"></td>
+
+                                                    </ng-template>
+
+                                                </ng-container>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label>Schedule More Than One Shift? </label></strong>
-                                    <ng-select appendTo="body" id="isMoreThanOneShift" #select
-                                        [items]="isMoreThanOne" bindLabel="label" placeholder="Select Option"
-                                        bindValue="value" [(ngModel)]="scheduler.isMoreThanOneShift"
-                                        appearance="outline" name="shiftCisMoreThanOneShiftloseTime"
-                                        (change)="noOfShifts()" [disabled]="true">
-                                    </ng-select>
+                        
+                        <div *ngIf="!isNewSchedule">
+                            <div *ngIf="headertext" class="table-responsive" style="margin: 10px;">
+                                <div class="table-responsive" id="excel-table" style="margin: 10px;">
+                                    <table class="sjs-table" style="border-right: 2px solid black;">
+                                        <thead style=" text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
+                                            <!-- 1st Extra Row -->
+                                            <tr style="background-color: #003594;">
+                                            <th colspan="21" style="font-weight: bold; color: white; padding: 10px; border: 1px solid black;">
+                                                WEEKLY SCHEDULE - All Shifts
+                                            </th>
+                                        </tr>
+                                        <!-- 2nd Extra Row -->
+                                        <tr style="background-color: #335494;">
+                                            <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
+                                                Required Weekly Screening Hour Burden: {{scheduler.weeklyHours}} Hours
+                                            </th>
+                                        </tr>
+                                        <!-- Original Header Row -->
+                                        <tr style="background-color: #335494;">
+                                            <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
+                                                <strong>Random-generated Schedule Totals: {{scheduler.weeklyHours}} Hours</strong>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <ng-container *ngFor="let date of data[1]; let i = index">
+                                                    <td class="cell" [ngStyle]="{
+                                                        'font-weight': 'bold',
+                                                        'text-align': 'center',
+                                                        'color': 'white',
+                                                        'background-color': '#001d52',
+                                                        'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
+                                                        'border-left': i % 3 === 0 ? '2px solid black' : '2px solid black',
+                                                        'border-bottom': '2px solid black'
+                                                    }" [attr.colspan]="3">
+                                                        {{ date | date: 'EEEE' }}
+                                                        <br>
+                                                        {{ date }}
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                            <tr *ngFor="let row of data.slice(2); let rowIndex = index">
+                                                <ng-container *ngFor="let val of row; let colIndex = index">
+                                                    <td class="cell" [ngStyle]="{
+                                                        'background-color' : (colIndex % 6 < 3 ? '#c8c8c8' : 'white'),
+                                                        'border-right': colIndex % 3 === 2 ? '2px solid black' : '1px solid black',
+                                                        'border-left': colIndex % 3 === 0 ? '2px solid black' : '1px solid black',
+                                                        'border-bottom': rowIndex === data.length - 2 ? '2px solid black' : '1px solid black'
+                                                    }">
+                                                        {{ val }}
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
                             </div>
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label> Number of Shifts</label></strong>
-                                    <ng-select appendTo="body" id="numberOfShifts" #select [items]="numberOfShifts"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.numberOfShifts" appearance="outline"
-                                        name="numberOfShifts" [disabled]="!isMoreThanOneShift" [disabled]="true">
-                                    </ng-select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class=" form-group">
-                                    <strong><label>Run All Shifts</label></strong>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" [disabled]="true"
-                                                [(ngModel)]="scheduler.isRunAll" name="isRunAll"
-                                                id="isRunAll" />
-                                            <span class="form-check-sign">
-                                                <span class="check"> </span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label>This Shift</label></strong>
-                                    <ng-select appendTo="body" id="thisShift" #select [items]="thisShift"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.thisShift" appearance="outline"
-                                        name="thisShift" [disabled]="true">
-                                    </ng-select>
-                                </div>
-                            </div>
-                            <div class=" col-md-6">
-                                <div class=" form-group">
-                                    <strong><label> Door Specific Start/End Time</label></strong>
-                                    <ng-select appendTo="body" id="isSpecificDoor" #select [items]="isMoreThanOne"
-                                        bindLabel="label" placeholder="Select Option" bindValue="value"
-                                        [(ngModel)]="scheduler.isSpecificDoor" appearance="outline"
-                                        name="isSpecificDoor" [disabled]="true">
-                                    </ng-select>
+                        
+                            <div *ngIf="!headertext">
+                                <div class="table-responsive" id="excel-table" style="margin: 10px;">
+                                    <table class="sjs-table" style="border-right: 2px solid black;">
+                                        <thead
+                                            style="background-color: #003594; text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
+                                            <tr>
+                                                <th *ngFor="let header of data[0]; let colIndex = index"
+                                                    [attr.colspan]="colIndex === 0 ? 21 : 1" style="font-weight: bold;">
+                                                    <strong>{{ header }}</strong>
+                                                </th>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody>
+
+                                            <tr *ngIf="!headertext">
+                                                <ng-container *ngFor="let date of data[1]; let i = index">
+                                                    <td class="cell" [ngStyle]="{
+                                                    'font-weight': 'bold',
+                                                    'text-align': 'center',
+                                                    'color': 'white',
+                                                    'background-color': '#001d52',
+                                                    'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
+                                                    'border-left': i % 3 === 0 ? '2px solid black' : '2x solid black',
+                                                    'border-bottom': '2px solid black'
+                                                }" [attr.colspan]="3">
+                                                        {{ date | date: 'EEEE' }}
+
+                                                        <br>
+                                                        {{ date }}
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+
+                                            <tr  *ngFor="let row of data.slice(2); let rowIndex = index">
+                                                <ng-container *ngFor="let val of row; let colIndex = index">
+                                                    <td class="cell" [ngStyle]="{
+
+                                                    'background-color' : (colIndex % 6 < 3 ? '#c8c8c8' : 'white'),
+                                                    'border-right': colIndex % 3 === 2 ? '2px solid black' : '1px solid black',
+                                                    'border-left': colIndex % 3 === 0 ? '2px solid black' : '1px solid black',
+                                                    'border-bottom': rowIndex === data.length - 2 ? '2px solid black' : '1px solid black'
+                                                }">
+                                                        {{ val }}
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                </ng-container>
+
+
+                    <div class="row" style="margin-left: 10px">
+                        <!-- <div class="col-md-6" style="padding-left: 10px"
+                            *ngIf="this.isView=='1' && isTsaApprover && isAlreadyVerified">
+                            <strong><label for="verifiedText">Enter Notes</label></strong><label
+                                for="verifiedText"></label>
+                            <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
+                                name="verifiedText" [(ngModel)]="inputParameters.verifiedText"
+                                [disabled]="isAlreadySubmitted" #verifiedText="ngModel" required>
+                        </div> -->
+                        <div class="col-md-6" style="margin-left: 10px"
+                            *ngIf="this.isView=='1' && isTsaApprover && !isAlreadyVerified">
+                            <strong><label for="verifiedText">Enter Notes</label></strong><label
+                                for="verifiedText"></label>
+                            <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
+                                name="verifiedText" [(ngModel)]="scheduler.verifiedText" #verifiedText="ngModel"
+                                required>
+                        </div>
+                        <div class="col-md-6" style="margin-left: 10px;margin-bottom: 10px;"
+                            *ngIf="this.isView=='1' && isAlreadyVerified && (isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaUser || isSecurity || isIssuer)">
+                            <strong><label for="verifiedText">Notes</label></strong><label for="verifiedText"></label>
+                            <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
+                                name="verifiedText" [(ngModel)]="scheduler.verifiedText"
+                                [disabled]="isAlreadySubmitted" #verifiedText="ngModel" required>
+                        </div>
+                        <div class="col-md-1" *ngIf="isTsaApprover && isAlreadySubmitted && !isAlreadyVerified">
+                            <div style="align-content: center;margin-top: 20px;"><button type="button"
+                                    class="btn btn-success" [disabled]="!scheduler.verifiedText"
+                                    (click)="verifiedByTSA()">Approve</button></div>
+                        </div>
+                        <div class="col-md-2"
+                            *ngIf="this.isView=='1' && isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
+                            <div>
+                                <strong><label>Approved By</label></strong><br>
+                                <label for="approvedBy">{{this.scheduler.approvedBy}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1" *ngIf="isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
+                            <div style="align-content: center;margin-top: 20px;"><button type="button"
+                                    class="btn btn-primary"  
+                                    (click)="exportAsPDF('print-section');">Print</button></div>
+                        </div>
+                        <div class="col-md-2" *ngIf="isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
+                            <div style="align-content: center;margin-top: 20px;"><button type="button"
+                                    class="btn btn-primary"
+                                    (click)="exportexcel();">Export to Excel</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="(isSuperAdmin || isTsaScheduler || isStaffAdmin) && isScheduleGenerated && !isAlreadySubmitted"
+                class="d-flex justify-content-center" style="margin-bottom: 5px;">
+                <button type="button" class="btn btn-primary"
+                    (click)="SubmittedBySuperAdmin()">Submit</button>
+                </div>
             </div>
-
-            <div >
-              <div id="print-section">
-   <!-- schedule table -->
-   <div *ngIf="headertext" class="table-responsive" style="margin: 10px;">
-    <div class="table-responsive" id="excel-table" style="margin: 10px;">
-      <table class="sjs-table" style="border-right: 2px solid black;">
-        <thead style=" text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
-            <!-- 1st Extra Row -->
-            <tr style="background-color: #484D56; color: white;">
-              <th colspan="21" style="font-weight: bold; color: white; padding: 10px; border: 1px solid black;">
-                  WEEKLY SCHEDULE - All Shifts
-              </th>
-          </tr>
-          <!-- 2nd Extra Row -->
-          <tr style="background-color: #7486a9;">
-              <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
-                  Required Weekly Screening Hour Burden: {{scheduler.weeklyHours}} Hours
-              </th>
-          </tr>
-          <!-- Original Header Row -->
-          <tr style="background-color: #7486a9;">
-              <th colspan="21" style="font-weight: bold; color: white; padding: 10px; text-align: left; border: 1px solid black;">
-                  <strong>Random-generated Schedule Totals: {{scheduler.weeklyHours}} Hours</strong>
-              </th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <ng-container *ngFor="let date of data[1]; let i = index">
-                    <td class="cell" [ngStyle]="{
-                        'font-weight': 'bold',
-                        'text-align': 'center',
-                        'color': 'white',
-                        'background-color': '#484D56',
-                        'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
-                        'border-left': i % 3 === 0 ? '2px solid black' : '2px solid black',
-                        'border-bottom': '2px solid black'
-                    }" [attr.colspan]="3">
-                        {{ date | date: 'EEEE' }}
-                        <br>
-                        {{ date }}
-                    </td>
-                </ng-container>
-            </tr>
-            <tr *ngFor="let row of data.slice(2); let rowIndex = index">
-                <ng-container *ngFor="let val of row; let colIndex = index">
-                    <td class="cell" [ngStyle]="{
-                        'background-color' : (colIndex % 6 < 3 ? '#c8c8c8' : 'white'),
-                        'border-right': colIndex % 3 === 2 ? '2px solid black' : '1px solid black',
-                        'border-left': colIndex % 3 === 0 ? '2px solid black' : '1px solid black',
-                        'border-bottom': rowIndex === data.length - 2 ? '2px solid black' : '1px solid black'
-                    }">
-                        {{ val }}
-                    </td>
-                </ng-container>
-            </tr>
-        </tbody>
-    </table>
-    </div>
-
-</div>
-        <div *ngIf="!headertext">
-          <div class="table-responsive" id="excel-table" style="margin: 10px;">
-              <table class="sjs-table" style="border-right: 2px solid black;">
-                  <thead
-                      style="background-color: #6c7b96; text-align: center; border-left: 2px solid black; border-right: 2px solid black;">
-                      <tr>
-                          <th *ngFor="let header of data[0]; let colIndex = index"
-                              [attr.colspan]="colIndex === 0 ? 21 : 1" style="font-weight: bold;">
-                              <strong>{{ header }}</strong>
-                          </th>
-                      </tr>
-
-                  </thead>
-                  <tbody>
-
-                      <tr *ngIf="!headertext">
-                          <ng-container *ngFor="let date of data[1]; let i = index">
-                              <td class="cell" [ngStyle]="{
-                            'font-weight': 'bold',
-                            'text-align': 'center',
-                            'color': 'white',
-                            'background-color': '#001d52',
-                            'border-right': i % 3 === 2 ? '2px solid black' : '2px solid black',
-                            'border-left': i % 3 === 0 ? '2px solid black' : '2x solid black',
-                            'border-bottom': '2px solid black'
-                          }" [attr.colspan]="3">
-                                  {{ date | date: 'EEEE' }}
-
-                                  <br>
-                                  {{ date }}
-                              </td>
-                          </ng-container>
-                      </tr>
-
-                      <tr  *ngFor="let row of data.slice(2); let rowIndex = index">
-                          <ng-container *ngFor="let val of row; let colIndex = index">
-                              <td class="cell" [ngStyle]="{
-
-                            'background-color' : (colIndex % 6 < 3 ? '#c8c8c8' : 'white'),
-                            'border-right': colIndex % 3 === 2 ? '2px solid black' : '1px solid black',
-                            'border-left': colIndex % 3 === 0 ? '2px solid black' : '1px solid black',
-                            'border-bottom': rowIndex === data.length - 2 ? '2px solid black' : '1px solid black'
-                          }">
-                                  {{ val }}
-                              </td>
-                          </ng-container>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
         </div>
-              </div>
-
-
-
-              <div class="row" style="margin-left: 10px">
-                  <!-- <div class="col-md-6" style="padding-left: 10px"
-                      *ngIf="this.isView=='1' && isTsaApprover && isAlreadyVerified">
-                      <strong><label for="verifiedText">Enter Notes</label></strong><label
-                          for="verifiedText"></label>
-                      <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
-                          name="verifiedText" [(ngModel)]="inputParameters.verifiedText"
-                          [disabled]="isAlreadySubmitted" #verifiedText="ngModel" required>
-                  </div> -->
-                  <div class="col-md-6" style="margin-left: 10px"
-                      *ngIf="this.isView=='1' && isTsaApprover && !isAlreadyVerified">
-                      <strong><label for="verifiedText">Enter Notes</label></strong><label
-                          for="verifiedText"></label>
-                      <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
-                          name="verifiedText" [(ngModel)]="scheduler.verifiedText" #verifiedText="ngModel"
-                          required>
-                  </div>
-                  <div class="col-md-6" style="margin-left: 10px;margin-bottom: 10px;"
-                      *ngIf="this.isView=='1' && isAlreadyVerified && (isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaUser || isSecurity || isIssuer)">
-                      <strong><label for="verifiedText">Notes</label></strong><label for="verifiedText"></label>
-                      <input type="text" placeholder="Enter Notes" class="form-control" id="verifiedText"
-                          name="verifiedText" [(ngModel)]="scheduler.verifiedText"
-                          [disabled]="isAlreadySubmitted" #verifiedText="ngModel" required>
-                  </div>
-                  <div class="col-md-1" *ngIf="isTsaApprover && isAlreadySubmitted && !isAlreadyVerified">
-                      <div style="align-content: center;margin-top: 20px;"><button type="button"
-                              class="btn btn-success" [disabled]="!scheduler.verifiedText"
-                              (click)="verifiedByTSA()">Approve</button></div>
-                  </div>
-                  <div class="col-md-2"
-                      *ngIf="this.isView=='1' && isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
-                      <div>
-                          <strong><label>Approved By</label></strong><br>
-                          <label for="approvedBy">{{this.scheduler.approvedBy}}</label>
-                      </div>
-                  </div>
-                  <div class="col-md-1" *ngIf="isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
-                    <div style="align-content: center;margin-top: 20px;"><button type="button"
-                            class="btn btn-primary"  printSectionId="print-section"  [printStyle]="{button: { display: 'none' }}"
-                            [useExistingCss]="true"
-                            (click)="exportAsPDF('print-section');">Print</button></div>
-                </div>
-                <div class="col-md-2" *ngIf="isAlreadyVerified && (isTsaUser || isSuperAdmin || isStaffAdmin || isTsaScheduler || isTsaApprover || isSecurity || isIssuer)">
-                    <div style="align-content: center;margin-top: 20px;"><button type="button"
-                            class="btn btn-primary"
-                            (click)="exportexcel();">Export to Excel</button></div>
-                </div>
-              </div>
-
-          </div>
-          <div *ngIf="(isSuperAdmin || isTsaScheduler || isStaffAdmin) && isScheduleGenerated && !isAlreadySubmitted"
-          class="d-flex justify-content-center" style="margin-bottom: 5px;">
-          <button type="button" class="btn btn-primary"
-              (click)="SubmittedBySuperAdmin()">Submit</button>
-      </div>
-          </div>
-      </div>
-
-  </div>
+    </div>
 </div>

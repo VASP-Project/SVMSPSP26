@@ -2722,7 +2722,10 @@ this.addRequiredListItem();
     this.badgeholder.emailAddress = "";
     this.badgeholder.birthDate = "";
     this.badgeholder.streetAddress = "";
-    this.citation.phone = ""
+    this.citation.phone = "";
+    this.badgeholder.personUniqueId = "";
+    this.badgeholder.mobileNumber = "";
+    this.badgeholder.zipCode = "";
 
   }
 

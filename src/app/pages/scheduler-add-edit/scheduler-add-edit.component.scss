@@ -33,3 +33,23 @@ input::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
 }
+.door-cell{
+    text-align:center;
+    vertical-align:top;
+    padding:6px;
+}
+
+.door-name{
+           /* same space for every door */
+    overflow:hidden;
+    word-break:break-word;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:6px;
+}
+
+.action-btn{
+    width:50px;           /* every button same width */
+    border-radius:18px;
+}

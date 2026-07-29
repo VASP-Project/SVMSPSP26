@@ -97,6 +97,9 @@ export class InspetionRecordDetail {
   edtAlarm: number | null = null;
   alarmValue: string = "";
   resolutionName: string = "";
+  schedulerInputId?: number;
+  schedulerSlotId?: string;
+  isLeo: string;
 }
 
 export class InspectionAttachments {
