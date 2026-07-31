@@ -385,10 +385,7 @@ export class InspectionrecordaddeditComponent
 
         //this.inspectioninfo.inspectionDate = this.dateAdapter.toModel(ngbDate);
       } else {
-        this.inspectioninfo.inspectionDate = this.datePipe.transform(
-          new Date(),
-          "MM-dd-yyyy",
-        );
+        this.inspectioninfo.inspectionDate = this.dateAdapter.toModel(this.ngbCalendar.getToday())
       }
       // Save door temporarily
       this.selectedDoorName = door;
