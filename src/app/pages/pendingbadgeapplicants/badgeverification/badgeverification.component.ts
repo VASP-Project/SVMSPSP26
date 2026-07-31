@@ -186,6 +186,7 @@ export class BadgeverificationComponent implements OnInit {
           // If you want to use accessLevels separately
           this.accessLevels = this.badge.AccessLevel;
           this.badgeAccessLevel = (apiBadge.badgeAccess ?? '').split('&').filter(x => x);
+          this.inactive = true
           this.active = false
           this.showData = true
         }
