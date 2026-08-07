@@ -6,7 +6,7 @@ import { BrowserCacheLocation, LogLevel, PublicClientApplication } from '@azure/
 export function AzureAuthFactory(configService: AppConfigService): any {
     const msalConfig: any = {
         auth: {
-            clientId: '4eb5a4c0-73b8-40d5-978c-c2019b28b147', // Replace with your App Registration ID from Azure Portal
+            clientId: '4e6f8061-07c4-411f-a910-95293446de99', // Replace with your App Registration ID from Azure Portal
             authority: 'https://login.microsoftonline.com/25dfd246-e2dd-437a-83ad-4463946e422e', // Replace with your tenant ID from Azure Portal
             validateAuthority: true,
             redirectUri: 'https://prod.icssoft.com/pspgui/auth/callback', // Match the redirect URI set in your app registration
