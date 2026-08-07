@@ -7,7 +7,7 @@ export function AzureAuthFactory(configService: AppConfigService): any {
     const msalConfig: any = {
         auth: {
             clientId: '4e6f8061-07c4-411f-a910-95293446de99', // Replace with your App Registration ID from Azure Portal
-            authority: 'https://login.microsoftonline.com/25dfd246-e2dd-437a-83ad-4463946e422e', // Replace with your tenant ID from Azure Portal
+            authority: 'https://login.microsoftonline.com/ce909baf-47c3-4285-b119-b304fb2ce3c7', // Replace with your tenant ID from Azure Portal
             validateAuthority: true,
             redirectUri: 'https://prod.icssoft.com/pspgui/auth/callback', // Match the redirect URI set in your app registration
             postLogoutRedirectUri: 'https://prod.icssoft.com/pspgui', // Your Angular app's logout redirect
