@@ -2755,11 +2755,11 @@ removeImage(image) {
                 this.badgeholderModel.lastName = this.badgeholder.lastName;
                 // this.badgeholderModel.badgeholderDOB = this.datePipe.transform(this.badgeholder.dob, 'MM/dd/yyyy');
 
-                if(this.badgeholder.birthDate){
+              if(this.badgeholder.birthDate){
               this.badgeholderModel.badgeholderDOB = this.formatDateToMMDDYYYY(this.badgeholder.birthDate)
               this.badgeholderModel.badgeholderDOB = this.dateAdapter.toModel(this.fromModel(this.badgeholderModel.badgeholderDOB));
               }else{
-                  this.badgeholder.birthDate = null;
+                  this.badgeholderModel.badgeholderDOB = null;
               }
                 // this.badgeholderModel.badgeholderDOB =
                 //   this.formatDateToMMDDYYYY(this.badgeholder.birthDate);

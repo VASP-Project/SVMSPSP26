@@ -872,7 +872,7 @@
                   <div class="input-group">
                     <input class="form-control" type="text" (click)="badgeholderDOB.toggle()" ngbDatepicker
                       #badgeholderDOB="ngbDatepicker" [(ngModel)]="badgeholderModel.badgeholderDOB"
-                      name="badgeholderDOB" placeholder="mm/dd/yyyy"  [disabled]="readonlyBadge" />
+                      name="badgeholderDOB" placeholder="mm/dd/yyyy"   />
                     <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeholderDOB.toggle()"
                       type="button"></button>
                   </div>
@@ -1773,7 +1773,7 @@
                      <div >
                        <div class="actionBtn captureBtn" (click)="triggerSnapshot();" title="Take Picture"><i class="bi bi-camera-fill"></i></div>
                      </div>
-                     <div class="col-md-3">
+                     <div>
                        <div class="actionBtn switchBtn" (click)="showNextWebcam(true);" title="Switch Camera"><i class="bi bi-arrow-repeat"></i></div>
                      </div>
                    </div>
