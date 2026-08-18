@@ -42,6 +42,28 @@ export class IncendiariesListComponent implements OnInit {
         stateSave: true,
       stateDuration: -1,
       };
+
+      const editedRowId = sessionStorage.getItem("editedincendiaryRowId");
+
+      if (editedRowId) {
+        setTimeout(() => {
+          const row = document.getElementById("row-" + editedRowId);
+
+          if (row) {
+            row.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+
+            row.classList.add("highlight-row");
+
+            setTimeout(() => {
+              row.classList.remove("highlight-row");
+            }, 3000);
+          }
+        }, 500);
+        sessionStorage.removeItem("editedincendiaryRowId");
+      }
     }
   
     public GetIncendiariesList() {
@@ -89,5 +111,9 @@ export class IncendiariesListComponent implements OnInit {
             this.GetIncendiariesList();
           });
       }
+    }
+
+    onEditClick(id: number): void {
+      sessionStorage.setItem('editedincendiaryRowId', id.toString());
     }
   }

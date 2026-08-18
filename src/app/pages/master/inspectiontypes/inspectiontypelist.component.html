@@ -7,7 +7,7 @@
                   <h3 class="card-title">Inspection Types</h3>
                   <button type="button" class="btn btn-primary" style="float: right; margin-right: 18px;" 
                   [routerLink]="['/admin/inspectiontypeedit']"
-                      [queryParams]="{ isEdit: 0, isView: 0 }" skipLocationChange>
+                      [queryParams]="{ isEdit: 0, isView: 0 }" [skipLocationChange]="true">
                       Add Inspection Type
                   </button>
               </div>
@@ -22,13 +22,13 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr *ngFor="let inspectionType of inspectiontypes" (click)="viewInspectionType(inspectionType.id)"
+                          <tr *ngFor="let inspectionType of inspectiontypes;let i = index" (click)="viewInspectionType(inspectionType.id)" [attr.id]="'row-' + i"
                               class="pointerCursor">
                               <td>{{inspectionType.inspectionType}}</td>
                               <td>{{inspectionType.displayName}}</td>
                               <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                   <div>
-                                      <button class="btn btn-warning btn-sm" (click)="editInspectionType(inspectionType.id,inspectionType.inspectionType)"
+                                      <button class="btn btn-warning btn-sm" (click)="editInspectionType(inspectionType.id,inspectionType.inspectionType,i)"
                                           >
                                           <span><i class="bi bi-pencil"></i>
                                           </span></button>

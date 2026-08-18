@@ -7,7 +7,7 @@
                     <h3 class="card-title">Inspection Category</h3>
                     <button type="button" class="btn btn-primary" style="float: right; margin-right: 18px;" 
                     [routerLink]="['/admin/inspectionmasteredit']"
-                        [queryParams]="{ isEdit: 0, isView: 0 }" skipLocationChange>
+                        [queryParams]="{ isEdit: 0, isView: 0 }" [skipLocationChange]="true">
                         Add Inspection Category
                     </button>
                 </div>
@@ -22,13 +22,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let inspectionType of inspectiontypemaster" (click)="viewInspectionType(inspectionType.id)"
-                                class="pointerCursor">
+                            <tr *ngFor="let inspectionType of inspectiontypemaster;let i = index" (click)="viewInspectionType(inspectionType.id)"
+                                class="pointerCursor" [attr.id]="'row-' + i">
                                 <td>{{inspectionType.typeName}}</td>
                                 <td>{{inspectionType.requiredHours}}</td>
                                 <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                     <div>
-                                        <button [routerLink]="['/admin/inspectionmasteredit']" class="btn btn-warning btn-sm"
+                                        <button [routerLink]="['/admin/inspectionmasteredit']" (click)="InspectionCategoryEditRow(i)"  class="btn btn-warning btn-sm"
                                             [queryParams]="{ inspectionTypeId: inspectionType.id, isEdit: 1, isView: 0 }">
                                             <span><i class="bi bi-pencil"></i>
                                             </span></button>

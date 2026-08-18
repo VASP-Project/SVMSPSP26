@@ -79,8 +79,40 @@ this.dtOptions = {
 
       this.dtTrigger.next();
       // this.spinner.hide();
+      this.highlightAWSRow();
     });
   }
 
+  highlightAWSRow(){
+    const editedRowId = sessionStorage.getItem('clickedAWSRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+
+                const row = document.getElementById('row-' + editedRowId);
+
+                if (row) {
+
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                   
+                    row.classList.add('highlight-row');
+
+                    setTimeout(() => {
+                        row.classList.remove('highlight-row');
+                    }, 3000);
+                }
+             
+            }, 500);
+           sessionStorage.removeItem('clickedAWSRowId');
+        }
+
+  }
+
+  onEditClick(id: number): void {
+  sessionStorage.setItem('clickedAWSRowId', id.toString());
+}
 
 }

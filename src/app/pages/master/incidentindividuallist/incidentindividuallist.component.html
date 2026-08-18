@@ -21,12 +21,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of individualList" class="pointerCursor"
+                                <tr *ngFor="let item of individualList;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     (click)="viewIndividual(item.id)">
                                     <td>{{item.individualTypeName}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/individualaddedit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/individualaddedit']" (click)="onEditClick(i)" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ individualeId: item.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>

@@ -22,12 +22,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of incendiaries" class="pointerCursor"
+                                <tr *ngFor="let item of incendiaries;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     (click)="viewIncendiaries(item.id)">
                                     <td>{{item.incendiarieName}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/incendiariedEdit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/incendiariedEdit']" (click)="onEditClick(i)" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ incendId: item.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>

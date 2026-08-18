@@ -67,6 +67,27 @@ export class CitationreasonsComponent implements OnInit {
       responsive:true,
     };
     
+    const editedRowId = sessionStorage.getItem("editedCitationReasonRowId");
+
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          row.classList.add("highlight-row");
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+          }, 3000);
+        }
+      }, 500);
+      sessionStorage.removeItem("editedCitationReasonRowId");
+    }
   }
 
 
@@ -193,7 +214,7 @@ export class CitationreasonsComponent implements OnInit {
   }
 
 
-   CheckBoxChange(event, id) {
+    CheckBoxChange(event, id) {
         //this.User.isTSA = event.target.checked;   
       
         this.CitationReasonsService.changeActiveFlag(event.target.checked, id,this.user.email).subscribe();
@@ -204,6 +225,9 @@ export class CitationreasonsComponent implements OnInit {
         }
     }
 
+    saveCitationEdited(id: number): void {
+      sessionStorage.setItem('editedCitationReasonRowId', id.toString());
+    }
 
     
   

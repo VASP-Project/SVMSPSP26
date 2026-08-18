@@ -1,6 +1,8 @@
 <form #formData="ngForm" (ngSubmit)="onSave(formData)">
   <input type="hidden" name="id" [(ngModel)]="formDataModel.id" />
-
+  <div class="col-md-12">
+    <h3 class="card-title">Concessions Security Settings</h3>
+  </div>
   <div class="row">
     <div class="col-sm-12 col-md-5">
       <div class="form-group">
@@ -37,7 +39,7 @@
           type="number"
           class="form-control"
           name="noOfAuditsPerDay"
-          [(ngModel)]="formDataModel.auditCount"
+          [(ngModel)]="formDataModel.auditCount"  (ngModelChange)="getChangeConcessionVariable($event)"
           required
         />
       </div>
@@ -59,6 +61,38 @@
                 />
       </div>
     </div>
+  </div>
+  <div style="margin-top: 20px;"></div>
+  <div class="row">
+    <div class="col-md-3" *ngFor="let audit of auditTimes; let i = index">
+      <div class="form-group">
+        <label>
+          {{audit.auditNo}}{{getOrdinal(audit.auditNo)}} Audit overdue time
+        </label>
+
+        <input
+          type="time"
+          class="form-control"
+          [(ngModel)]="audit.overdueTime"
+          [name]="'auditTime' + audit.auditNo">
+        <div class="form-check mt-2">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [(ngModel)]="audit.isNextDay"
+            [name]="'isNextDay' + audit.auditNo"
+            [id]="'isNextDay' + audit.auditNo"
+          />
+
+          <label class="form-check-label" [for]="'isNextDay' + audit.auditNo">
+            Next Day
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <div class="row" style="justify-content: center;">
     <div class="col-sm-12 col-md-2">
       <div class="form-group" style="margin-top: 25px;">
         <button

@@ -14,6 +14,7 @@ import {
   NgbDateAdapter,
   NgbDateStruct,
   NgbModal,
+  NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from "ngx-toastr";
@@ -86,28 +87,28 @@ export class ConcessionssecurityauditComponent implements OnInit {
   selectedcompanylocation: string = "";
   auditedBy: string;
   isMobileView = window.innerWidth <= 768;
-  itemTemplate = [
-    {
-      photo:
-        "https://5.imimg.com/data5/SELLER/Default/2023/4/297329234/UX/PZ/JY/28869292/craft-paper-cutting-scissor-1000x1000.jpg",
-      description: "Scissors: Handheld cutting tool...",
-      qtyApproved: 9,
-      qtyUsed: 4,
-      dateApproved: "01/24/2025",
-      // status: 'Submitted',
-      confirmed: false,
-    },
-    {
-      photo:
-        "https://5.imimg.com/data5/SELLER/Default/2024/3/400571400/MF/CY/TK/1096757/lockers-500x500.jpg",
-      description: "Locker: Secure storage...",
-      qtyApproved: 9,
-      qtyUsed: 8,
-      dateApproved: "04/12/2025",
-      // status: 'Submitted',
-      confirmed: false,
-    },
-  ];
+  // itemTemplate = [
+  //   {
+  //     photo:
+  //       "https://5.imimg.com/data5/SELLER/Default/2023/4/297329234/UX/PZ/JY/28869292/craft-paper-cutting-scissor-1000x1000.jpg",
+  //     description: "Scissors: Handheld cutting tool...",
+  //     qtyApproved: 9,
+  //     qtyUsed: 4,
+  //     dateApproved: "01/24/2025",
+  //     // status: 'Submitted',
+  //     confirmed: false,
+  //   },
+  //   {
+  //     photo:
+  //       "https://5.imimg.com/data5/SELLER/Default/2024/3/400571400/MF/CY/TK/1096757/lockers-500x500.jpg",
+  //     description: "Locker: Secure storage...",
+  //     qtyApproved: 9,
+  //     qtyUsed: 8,
+  //     dateApproved: "04/12/2025",
+  //     // status: 'Submitted',
+  //     confirmed: false,
+  //   },
+  // ];
 
   items = [
     { name: "Item 1", status: "" },
@@ -124,6 +125,7 @@ export class ConcessionssecurityauditComponent implements OnInit {
   auditNo: number;
   auditLocationId:number
   completedAuditCount:number
+  modalOptions: NgbModalOptions;
   constructor(
     private ref: ChangeDetectorRef,
     private companyMasterService: CompanyMasterService,
@@ -138,7 +140,14 @@ export class ConcessionssecurityauditComponent implements OnInit {
     private dateAdapter: NgbDateAdapter<string>,
     private ngbCalendar: NgbCalendar,
     private sanitizer: DomSanitizer
-  ) {}
+  ) {
+    this.modalOptions = {
+      backdrop: 'static',
+      backdropClass: 'customBackdrop',
+      size: 'lg',      
+      keyboard: false
+    }
+  }
   ngOnInit(): void {
     var user = JSON.parse(sessionStorage.getItem("currentUser"));
     this.user = user;
@@ -450,11 +459,11 @@ export class ConcessionssecurityauditComponent implements OnInit {
     if (this.user.rolename == "StaffAdmin") {
       this.selectedAuditCount = log.auditNo.toString();
     }
-    this.getDailyItemsForAudit(log.id, this.user.rolename, log.auditNo);
+    this.getDailyItemsForAudit(log.id, this.user.rolename, log.auditNo, this.user.id);
     // Load items (clone data)
-    this.clonedItems = JSON.parse(JSON.stringify(this.itemTemplate)); // deep clone to avoid mutation
+   // this.clonedItems = JSON.parse(JSON.stringify(this.itemTemplate)); // deep clone to avoid mutation
 
-    this.modalService.open(template2, { size: "lg" }).result.then(
+    this.modalService.open(template2, this.modalOptions).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
       },
@@ -536,9 +545,9 @@ getItemStatus(dailyAuditId: number, modal: any) {
 
 
 
-  getDailyItemsForAudit(logid, roleName, auditNo) {
+  getDailyItemsForAudit(logid, roleName, auditNo,userId) {
     this.companyMasterService
-      .GetProhibitedItemForAudit(logid, roleName, auditNo)
+      .GetProhibitedItemForAudit(logid, roleName, auditNo,userId)
       .subscribe(
         (response: ProhibitedItemAudit[]) => {
           this.prohibitedItemList = response;
@@ -822,5 +831,24 @@ finalSubmit(modal: any) {
     } else {
       this.toastr.error("This citation does not exist.", "Information");
     }
+  }
+
+  getAuditButtonClass(log: any): string {
+    const nextAudit = log.completedAuditCount + 1;
+
+    if (nextAudit === 1) {
+      return "btn-danger"; // Red
+    }
+
+    if (nextAudit === 2) {
+      return "btn-warning"; // Yellow
+    }
+
+    return "btn-success"; // Green
+  }
+  getAuditButtonText(log: any): string {
+    const nextAudit = log.completedAuditCount + 1;
+
+    return `Start Audit ${nextAudit}`;
   }
 }

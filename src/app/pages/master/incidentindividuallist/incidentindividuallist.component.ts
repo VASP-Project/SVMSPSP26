@@ -30,7 +30,28 @@ export class IncidentindividuallistComponent implements OnInit {
       stateSave: true,
       stateDuration: -1,
     };
-    console.log("abc")
+    //console.log("abc")
+    const editedRowId = sessionStorage.getItem("editedIncidentIndiRowId");
+
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          row.classList.add("highlight-row");
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+          }, 3000);
+        }
+      }, 500);
+      sessionStorage.removeItem("editedIncidentIndiRowId");
+    }
   }
 
   public GetIndividualTypeList()
@@ -72,5 +93,8 @@ export class IncidentindividuallistComponent implements OnInit {
             this.GetIndividualTypeList();
         });
     }
+  }
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedIncidentIndiRowId', id.toString());
   }
 }

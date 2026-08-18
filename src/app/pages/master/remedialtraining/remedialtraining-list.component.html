@@ -22,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let training of remedialTraining" class="pointerCursor"
+                                <tr *ngFor="let training of remedialTraining;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     
                                     >
 
@@ -53,7 +53,7 @@
                                             <button [disabled]="!training.isActive"
                                                 [routerLink]="['/admin/remedialtrainingedit']" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ id: training.id, isEdit: 1, isView: 0 }">
-                                                <span><i class="bi bi-pencil"></i>
+                                                <span><i class="bi bi-pencil" (click)="saveRemedialEdited(i)"></i>
                                                 </span></button>
                                             &nbsp;
 

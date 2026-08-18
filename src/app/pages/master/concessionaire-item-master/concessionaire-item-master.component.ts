@@ -405,6 +405,33 @@ export class CompanyMasterComponent implements OnInit, OnDestroy {
     );
   }
 
+  HighlightItem(){
+    const editedRowId = sessionStorage.getItem('editedConssRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+
+                const row = document.getElementById('row-' + editedRowId);
+
+                if (row) {
+
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                   
+                    row.classList.add('highlight-row');
+
+                    setTimeout(() => {
+                        row.classList.remove('highlight-row');
+                    }, 3000);
+                }
+             
+            }, 500);
+           sessionStorage.removeItem('editedConssRowId');
+        }
+  }
+
   setPagedData() {
     const start = (this.queryParam1.pageNumber - 1) * this.queryParam1.pageSize;
     const end = start + this.queryParam1.pageSize;
@@ -2272,5 +2299,9 @@ async GetProhibitedItemListForExport() {
   }
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
+  }
+
+  saveItemMaster(id: number): void {
+    sessionStorage.setItem('editedConssRowId', id.toString());
   }
 }

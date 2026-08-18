@@ -66,8 +66,8 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let file of this.referenceGuides" class="pointerCursor" style="cursor: pointer"
-                        (click)="viewFile(file.id, file.fileName)">
+                      <tr *ngFor="let file of this.referenceGuides;let i = index" [attr.id]="'row-' + i" class="pointerCursor" style="cursor: pointer"
+                        >
                         <td *ngIf="user.rolename === 'StaffAdmin'" style="width: 10%">
                           {{
                           file.createdDate | date : "MM/dd/yyyy hh:mm:ss a"
@@ -83,7 +83,15 @@
                           </div>
 
                           <div *ngIf="file.fileName.search('href') === -1">
-                            {{ file.comments }}
+                            <a
+                                          [href]="getFileUrl(file.id)"
+                                          [target]="isPreviewableFile(file.fileName) ? '_blank' : null"
+                                          rel="noopener noreferrer"
+                                          style="color: #3467c5; cursor: pointer;"
+                                          (click)="handleFileClick($event, file)"
+                                        >
+                                          {{ file.comments }}
+                                        </a>
                           </div>
                         </td>
                         <td *ngIf="user.rolename === 'StaffAdmin'">
@@ -111,7 +119,7 @@
                           <button type="button" *ngIf="file.fileName.search('href') == -1" title="View File"
                             (click)="viewFile(file.id, file.fileName)"
                             class="btn btn-primary btn-sm bi bi-card-image"></button>&nbsp;
-                          <button [routerLink]="['/admin/referenceguideedit']" class="btn btn-warning btn-sm"
+                          <button [routerLink]="['/admin/referenceguideedit']" (click)="onEditClick(i)" class="btn btn-warning btn-sm"
                             [queryParams]="{
                               referenceId: file.id,
                               isEdit: 1,
@@ -203,10 +211,8 @@
                               <table class="table table-bordered table-striped table-hover dataTable"
                                 style="border-style: groove">
                                 <tbody>
-                                  <tr *ngFor="
-                                      let file of this.element.referencelist
-                                    " (click)="viewreference(file.id)" class="pointerCursor" style="cursor: pointer"
-                                    (click)="viewFile(file.id, file.fileName)">
+                                  <tr *ngFor=" let file of this.element.referencelist"  class="pointerCursor" style="cursor: pointer"
+                                    >
                                     <td>
                                       <div *ngIf="
                                           file.fileName.search('href') !== -1
@@ -215,10 +221,16 @@
                                         <span style="color: #3467c5" (click)="newtabopen(file.fileName)">{{
                                           file.comments }}</span>
                                       </div>
-                                      <div *ngIf="
-                                          file.fileName.search('href') === -1
-                                        ">
-                                        {{ file.comments }}
+                                      <div *ngIf=" file.fileName.search('href') === -1 ">
+                                        <a
+                                          [href]="getFileUrl(file.id)"
+                                          [target]="isPreviewableFile(file.fileName) ? '_blank' : null"
+                                          rel="noopener noreferrer"
+                                          style="color: #3467c5; cursor: pointer;"
+                                          (click)="handleFileClick($event, file)"
+                                        >
+                                          {{ file.comments }}
+                                        </a>
                                       </div>
                                     </td>
                                   </tr>
@@ -283,7 +295,15 @@
                                         <div *ngIf="
                                             file.fileName.search('href') === -1
                                           ">
-                                          {{ file.comments }}
+                                         <a
+                                            [href]="getFileUrl(file.id)"
+                                            [target]="isPreviewableFile(file.fileName) ? '_blank' : null"
+                                            rel="noopener noreferrer"
+                                            style="color: #3467c5; cursor: pointer;"
+                                            (click)="handleFileClick($event, file)"
+                                          >
+                                            {{ file.comments }}
+                                          </a>
                                         </div>
                                       </td>
                                     </tr>

@@ -141,7 +141,7 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
     }
     this.GetReferenceCategoriesList();
     this.getRefGuide();
-
+    this.highlightRow();
   }
 
   chatInput: string = '';
@@ -734,5 +734,100 @@ export class ReferenceguidesComponent extends FormCanDeactivate implements OnIni
     } catch (err) { }
   }
 
+  getFileUrl(fileId: number): string {
+    return this.referenceGuidesServices.getUploadedFileUrl(fileId);
+  }
 
+  isPreviewableFile(fileName: string): boolean {
+    const extension = fileName.split(".").pop()?.toLowerCase();
+
+    return ["pdf", "jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(
+      extension || "",
+    );
+  }
+  handleFileClick(event: MouseEvent, file: any): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.isPreviewableFile(file.fileName)) {
+      // PDF / image
+      window.open(this.getFileUrl(file.id), "_blank");
+    } else {
+      // Word / Excel / other files
+      this.downloadFilenew(file.id, file.fileName);
+    }
+  }
+  downloadFilenew(fileId: number, fileName: string): void {
+    this.referenceGuidesServices.downloadUploadedFilenew(fileId).subscribe(
+      (response) => {
+        const blob = response.body;
+
+        if (!blob) {
+          return;
+        }
+
+        let downloadFileName = this.getActualFileName(fileName);
+
+        // Get actual filename sent by API
+        const contentDisposition =
+          response.headers.get("Content-Disposition");
+
+        if (contentDisposition) {
+          const match = contentDisposition.match(
+            /filename\*=UTF-8''([^;]+)|filename="?([^"]+)"?/i
+          );
+
+          if (match) {
+            downloadFileName = decodeURIComponent(
+              match[1] || match[2]
+            );
+          }
+        }
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = downloadFileName;
+
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error("Error downloading file:", error);
+      }
+    );
+  }
+  getActualFileName(fileName: string): string {
+    return fileName.split(/[/\\]/).pop() || "download";
+  }
+
+  highlightRow(){
+    const editedRowId = sessionStorage.getItem("ReferenceGuideEdited");
+
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          row.classList.add("highlight-row");
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+          }, 3000);
+        }
+      }, 500);
+      sessionStorage.removeItem("ReferenceGuideEdited");
+    }
+  }
+   onEditClick(id: number): void {
+    sessionStorage.setItem('ReferenceGuideEdited', id.toString());
+  }
 }

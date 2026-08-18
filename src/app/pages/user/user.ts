@@ -55,6 +55,8 @@ export class UserList {
     rolename: string=''
     isActive: boolean = false
     isADAuthenticated: boolean = false
+    role:string=''
+    isBadgeAudit: boolean = false;
 }
 export class Role {
     id: number =0;

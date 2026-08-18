@@ -23,13 +23,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let eventType of eventTypes" class="pointerCursor"
-                                    (click)="viewEventType(eventType.id)">
+                                <tr *ngFor="let eventType of eventTypes;let i = index" class="pointerCursor"
+                                    (click)="viewEventType(eventType.id)" [attr.id]="'row-' + i">
                                     <td>{{eventType.type}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
                                             <button [routerLink]="['/admin/eventtypeedit']" class="btn btn-warning btn-sm"
-                                                [queryParams]="{ id: eventType.id, isEdit: 1, isView: 0 }">
+                                                [queryParams]="{ id: eventType.id, isEdit: 1, isView: 0 }" (click)="EventClicked(i)">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>
                                             &nbsp;

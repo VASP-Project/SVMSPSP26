@@ -55,6 +55,27 @@ export class FacilitylistComponent implements OnInit {
       
     };
    
+    const editedRowId = sessionStorage.getItem("editedFacilityRowId");
+
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          row.classList.add("highlight-row");
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+          }, 3000);
+        }
+      }, 500);
+      sessionStorage.removeItem("editedFacilityRowId");
+    }
   }
 
   onClick(facilityId: string, facilityName: string) {
@@ -153,5 +174,9 @@ export class FacilitylistComponent implements OnInit {
             this.GetFacilityList();
         });
     }
+  }
+
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedFacilityRowId', id.toString());
   }
 }

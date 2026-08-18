@@ -10,3 +10,7 @@
   .list-group-item {
     border: 1px solid black;
   }
+   #dt1 tbody tr.highlight-row > * {
+    --bs-table-accent-bg: #b5ca77 !important;
+    color: #000 !important;
+}

@@ -44,13 +44,39 @@ export class EventTypeslistComponent implements OnInit {
           this.router.navigate(['admin/changepassword']);
         }
       }    
+      this.GetEventTypeList();
         this.dtOptions = {
             pagingType: 'full_numbers',
             pageLength: 10,
             stateSave: true,
       stateDuration: -1,
         };
-        this.GetEventTypeList();
+        
+
+        const editedRowId = sessionStorage.getItem('editedEventRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+
+                const row = document.getElementById('row-' + editedRowId);
+
+                if (row) {
+
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                   
+                    row.classList.add('highlight-row');
+
+                    setTimeout(() => {
+                        row.classList.remove('highlight-row');
+                    }, 3000);
+                }
+             
+            }, 500);
+           sessionStorage.removeItem('editedEventRowId');
+        }
     }
 
     onClick(id: string, type: string) {
@@ -147,4 +173,7 @@ export class EventTypeslistComponent implements OnInit {
         }
     }
 
+     EventClicked(id: number): void {
+  sessionStorage.setItem('editedEventRowId', id.toString());
+}
 }

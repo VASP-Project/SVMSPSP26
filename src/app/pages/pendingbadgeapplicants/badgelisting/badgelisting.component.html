@@ -9,7 +9,7 @@
             [routerLink]="['/admin/badgelistingedit']"
             class="btn btn-primary"
             style="float: right; margin-right: 18px"
-            [queryParams]="{ isEdit: 0, auditId: 0 }" skipLocationChange
+            [queryParams]="{ isEdit: 0, auditId: 0 }" [skipLocationChange]="true"
             *ngIf="!isAuthSigner"
           >
             New Audit
@@ -98,8 +98,8 @@
                               itemsPerPage: pageHeaders.pageSize,
                               currentPage: pageHeaders.pageNumber,
                               totalItems: pageHeaders.totalItems
-                            }
-                    "
+                            };let i = index
+                    "[attr.id]="'row-' + i"
                   >
                     <td>{{ item.auditName }}</td>
 
@@ -111,21 +111,22 @@
                       <a
                         *ngIf="!isAuthSigner "
                         title="Edit"
+                        (click)="onEditClick(i)"
                         [routerLink]="['/admin/badgelistingedit/']"
                         [queryParams]="{
                           auditId: item.id,
                           isEdit: 1,
                           isView: 0
                         }"
-                        skipLocationChange
+                        [skipLocationChange]="true"
                       >
                         Edit |
                       </a>                    
                       
-                      <a *ngIf="isAuthSigner"  title="View" [routerLink]="['/admin/badgelistingauth/']"
+                      <a *ngIf="isAuthSigner"  title="View" [routerLink]="['/admin/badgelistingauth/']" (click)="onEditClick(i)"
                        [queryParams]="{ auditId: item.id, isEdit: 0, isView:1 }" 
                          >Audit </a>
-                         <a *ngIf="!isAuthSigner" title="View" [routerLink]="['/admin/badgedashoard/']" 
+                         <a *ngIf="!isAuthSigner" title="View" [routerLink]="['/admin/badgedashoard/']" (click)="onEditClick(i)"
                          [queryParams]="{ auditId: item.id, isEdit: 0, isView:1 }" 
                          >View </a>
                      

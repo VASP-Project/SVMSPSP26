@@ -172,6 +172,36 @@ this.dtOptions = {
     };
   }
 
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedInspectionRowId', id.toString());
+  }
+
+  HighlightInspectionRec(){
+    const editedRowId = sessionStorage.getItem('editedInspectionRowId');
+
+          if (editedRowId) {
+              setTimeout(() => {
+
+                  const row = document.getElementById('row-' + editedRowId);
+
+                  if (row) {
+
+                      row.scrollIntoView({
+                          behavior: 'smooth',
+                          block: 'center'
+                      });
+                    
+                      row.classList.add('highlight-row');
+
+                      setTimeout(() => {
+                          row.classList.remove('highlight-row');
+                      }, 3000);
+                  }
+              
+              }, 500);
+            sessionStorage.removeItem('editedInspectionRowId');
+          }
+  }
   fromModel(value: string | null): NgbDateStruct | null {
     if (value) {
       // console.log(value)
@@ -252,6 +282,7 @@ this.dtOptions = {
         this.inspectionListAll = response.items;
         this.pageHeaders = response.paging;
           this.mobileViewData.pageNumber = 1;
+          this.HighlightInspectionRec();
       },
       (error: any) => {
         this.toastr.error("Error while fetching Inspection data", "Error");

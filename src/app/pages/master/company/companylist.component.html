@@ -22,14 +22,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let companyType of companies" (click)="viewcompany(companyType.id)"
+                            <tr *ngFor="let companyType of companies;let i = index" (click)="viewcompany(companyType.id)" [attr.id]="'row-' + i "
                                 class="pointerCursor">
                                 <td>{{companyType.companyName}}</td>
                                <td>{{ companyType.isConcessionaire ? 'Yes' : 'No' }}</td>
                                 <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                     <div>
                                         <button [routerLink]="['/admin/companyedit/']" class="btn btn-warning btn-sm"
-                                            [queryParams]="{ companyId: companyType.id, isEdit: 1, isView: 0 }">
+                                            [queryParams]="{ companyId: companyType.id, isEdit: 1, isView: 0 }" (click)="SavecompHighlight(i)">
                                             <span><i class="bi bi-pencil"></i>
                                             </span></button>
                                         &nbsp;

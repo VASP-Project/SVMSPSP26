@@ -61,6 +61,27 @@ export class LocationlistComponent implements OnInit {
     stateDuration: -1
 
   };
+  const editedRowId = sessionStorage.getItem("editedLocationRowId");
+
+  if (editedRowId) {
+    setTimeout(() => {
+      const row = document.getElementById("row-" + editedRowId);
+
+      if (row) {
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        row.classList.add("highlight-row");
+
+        setTimeout(() => {
+          row.classList.remove("highlight-row");
+        }, 3000);
+      }
+    }, 500);
+    sessionStorage.removeItem("editedLocationRowId");
+  }
   }
 
   public GetLocationList() {
@@ -179,6 +200,9 @@ export class LocationlistComponent implements OnInit {
     this.router.navigate(['/admin/locationedit'], navigationExtras);
   }
 
+   onEditClick(id: number): void {
+    sessionStorage.setItem('editedLocationRowId', id.toString());
+  }
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();

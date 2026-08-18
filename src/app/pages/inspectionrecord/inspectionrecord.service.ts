@@ -16,7 +16,7 @@ export class InspectionrecordService {
     this.gnBaseURL = appURL.getServerUrl();
    }
 
-   public AddInpsectionDetail(inspectionDetail,isSaveFormDetails,files, deletedFiles,selectedDoorList,findingDoorList,deletedBadgeholderIds,deletedVehicleIds,deletedCompanyIds)
+   public AddInpsectionDetail(inspectionDetail,isSaveFormDetails,files, deletedFiles,selectedDoorList,findingDoorList,deletedBadgeholderIds,deletedVehicleIds,deletedCompanyIds,InspectionImagesLst)
    {
     //  console.log(deletedFiles);
     var formData = new FormData();
@@ -29,6 +29,7 @@ export class InspectionrecordService {
     formData.append("deletedBadgeholderIds", JSON.stringify(deletedBadgeholderIds));
     formData.append("deletedVehicleIds", JSON.stringify(deletedVehicleIds));
     formData.append("deletedCompanyIds", JSON.stringify(deletedCompanyIds));
+    formData.append("InspectionImagesLst", JSON.stringify(InspectionImagesLst));
     
     if (files != null) {
       for (var i = 0; i < files.length; i++) {

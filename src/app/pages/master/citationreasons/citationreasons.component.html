@@ -23,14 +23,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let CitationReason of CitationReasons"
-                                    (click)="viewCitationreasons(CitationReason.id, 1)" class="pointerCursor">
+                                <tr *ngFor="let CitationReason of CitationReasons;let i = index"
+                                    (click)="viewCitationreasons(CitationReason.id)" class="pointerCursor" [attr.id]="'row-' + i">
                                     <td > 
                                         {{ CitationReason.violationType }}</td>
                                     <td>{{ CitationReason.reason }}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
                                             <button [routerLink]="['/admin/citationreasonsedit']"
+                                                (click)="saveCitationEdited(i)"
                                                 class="btn btn-warning btn-sm"
                                                 [queryParams]="{ citatitionId: CitationReason.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>

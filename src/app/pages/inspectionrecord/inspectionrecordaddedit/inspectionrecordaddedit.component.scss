@@ -4,10 +4,10 @@
 {
   background-color: cadetblue;
 }
-.actionBtn {
-  font-size: 4em;
-  cursor: pointer;
-}
+// .actionBtn {
+//   font-size: 4em;
+//   cursor: pointer;
+// }
 
 ul.links {
   padding-bottom: 20px;
@@ -220,4 +220,93 @@ table {
       border: 1px solid black;
     }
   
-    
+ .camera-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Webcam itself */
+.webcam-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.actionBtn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  user-select: none;
+}
+
+.actionBtn i {
+  font-size: 22px;
+}
+
+/* Take Picture */
+.captureBtn {
+  background: #2563eb;
+  color: white;
+}
+
+.captureBtn:hover {
+  background: #0f40c6;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+/* Switch Camera */
+.switchBtn {
+  background: white;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.switchBtn:hover {
+  background: #f1f5f9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+/* Click animation */
+.actionBtn:active {
+  transform: scale(0.92);
+}
+.camera-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   gap: 150px;
+  margin-top: 20px;
+  padding: 10px;
+}
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+ display: inline-block;
+}
+
+.cameraOn {
+  background-color: #28a745;
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.7);
+}
+
+.cameraOff {
+  background-color: #dc3545;
+  box-shadow: 0 0 6px rgba(220, 53, 69, 0.5);
+}

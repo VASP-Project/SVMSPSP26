@@ -183,7 +183,8 @@ export class CompanyMasterService {
   public GetProhibitedItemForAudit(
     logid: number,
     rolename: string,
-    auditNo: string
+    auditNo: string,
+    userId: string
   ) {
     return this.http.get<ProhibitedItemAudit[]>(
       `${this.gnBaseURL}ConcessionSecurity/GetDailyPohibitedItemForAudit`,
@@ -192,6 +193,7 @@ export class CompanyMasterService {
           summaryId: logid.toString(),
           roleName: rolename,
           auditNo: auditNo,
+          userId: userId
         },
       }
     );

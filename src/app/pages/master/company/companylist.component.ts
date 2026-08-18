@@ -47,14 +47,42 @@ export class CompanylistComponent implements OnInit {
       }
     }    
 
+    this.GetCompanyList();
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10,
       stateSave: true,
       
     };
-    this.GetCompanyList();
+    
+    const editedRowId = sessionStorage.getItem("editedCompRowId");
 
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          row.classList.add("highlight-row");
+
+          row.querySelectorAll("td").forEach((td: any) => {
+            td.style.setProperty("--bs-table-accent-bg", "#b5ca77");
+          });
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+
+            row.querySelectorAll("td").forEach((td: any) => {
+              td.style.removeProperty("--bs-table-accent-bg");
+            });
+          }, 4000);
+        }
+      }, 500);
+      sessionStorage.removeItem("editedCompRowId");
+    }
   }
 
   viewcompany(id: number) {
@@ -148,6 +176,9 @@ export class CompanylistComponent implements OnInit {
     this.GetCompanyListNew();
   }
 
+  SavecompHighlight(id: number): void {
+    sessionStorage.setItem('editedCompRowId', id.toString());
+  }
 
 
 }

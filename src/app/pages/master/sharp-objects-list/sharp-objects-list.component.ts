@@ -21,19 +21,23 @@ export class SharpObjectsListComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private sharpObjectsService: SharpObjectsService, private appURL: AppConfigService,
-    private router: Router
+    private sharpObjectsService: SharpObjectsService,
+    private appURL: AppConfigService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
     //Get user form local storage
     this.user = JSON.parse(sessionStorage.getItem("currentUser"));
-    if(this.appURL.getLoginMethod() != 'Azure' && this.appURL.getLoginMethod() != 'Okta'){
+    if (
+      this.appURL.getLoginMethod() != "Azure" &&
+      this.appURL.getLoginMethod() != "Okta"
+    ) {
       if (!this.user.passwordReseted) {
         //this.spinner.hide();
-        this.router.navigate(['admin/changepassword']);
+        this.router.navigate(["admin/changepassword"]);
       }
-    }    
+    }
     this.GetSharpObjectList();
     this.dtOptions = {
       pagingType: "full_numbers",
@@ -51,6 +55,7 @@ export class SharpObjectsListComponent implements OnInit {
         this.sharpObjects = response;
         this.dtTrigger.next();
         //this.spinner.hide();
+        this.HighlightSharp();
       });
   }
 
@@ -74,11 +79,11 @@ export class SharpObjectsListComponent implements OnInit {
         .subscribe((response: Response) => {
           if (response.statusText == "Fail") {
             this.toastr.success(
-              "There was some error deleting the record. Please try again later"
+              "There was some error deleting the record. Please try again later",
             );
           } else if (response.statusText === "Exists") {
             this.toastr.error(
-              "Sharp Object not deleted. It is attached to a Incident record"
+              "Sharp Object not deleted. It is attached to a Incident record",
             );
           } else {
             this.toastr.success("Sharp Object deleted successfully");
@@ -88,5 +93,33 @@ export class SharpObjectsListComponent implements OnInit {
           this.GetSharpObjectList();
         });
     }
+  }
+
+  HighlightSharp() {
+    const editedRowId = sessionStorage.getItem("SharpObjRowId");
+
+    if (editedRowId) {
+      setTimeout(() => {
+        const row = document.getElementById("row-" + editedRowId);
+
+        if (row) {
+          row.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          row.classList.add("highlight-row");
+
+          setTimeout(() => {
+            row.classList.remove("highlight-row");
+          }, 3000);
+        }
+        sessionStorage.removeItem("SharpObjRowId");
+      }, 300);
+    }
+  }
+
+  saveSharpObjRow(id: number): void {
+    sessionStorage.setItem("SharpObjRowId", id.toString());
   }
 }

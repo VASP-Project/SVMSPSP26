@@ -47,14 +47,37 @@ export class ViolationTypeslistComponent implements OnInit {
           //this.spinner.hide();
           this.router.navigate(['admin/changepassword']);
         }
-      }    
+      }   
+       this.GetViolationTypeList(); 
         this.dtOptions = {
             pagingType: 'full_numbers',
             pageLength: 10,
             stateSave: true,
       stateDuration: -1,
         };
-        this.GetViolationTypeList();
+       
+
+        const editedRowId = sessionStorage.getItem("editedRowId");
+
+        if (editedRowId) {
+          setTimeout(() => {
+            const row = document.getElementById("row-" + editedRowId);
+
+            if (row) {
+              row.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+
+              row.classList.add("highlight-row");
+
+              setTimeout(() => {
+                row.classList.remove("highlight-row");
+              }, 3000);
+            }
+          }, 500);
+          sessionStorage.removeItem("editedRowId");
+        }
     }
 
     onClick(violationId: string, violationType: string) {
@@ -198,6 +221,9 @@ if(res.success){
         }
     }
 
+    onEditClick(id: number): void {
+      sessionStorage.setItem('editedRowId', id.toString());
+    }
      CheckBoxChange(event, id) {
         //this.User.isTSA = event.target.checked;   
         this.violationTypesService.changeActiveFlag(event.target.checked, id,this.user.email).subscribe();

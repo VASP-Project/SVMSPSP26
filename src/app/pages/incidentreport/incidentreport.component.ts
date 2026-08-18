@@ -66,6 +66,38 @@ export class IncidentreportComponent implements OnInit {
     };
   }
 
+  HighlightIncident(){
+      const editedRowId = sessionStorage.getItem('editedIncidentRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+
+                const row = document.getElementById('row-' + editedRowId);
+
+                if (row) {
+
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                   
+                    row.classList.add('highlight-row');
+
+                    setTimeout(() => {
+                        row.classList.remove('highlight-row');
+                    }, 3000);
+                }
+             
+            }, 500);
+           sessionStorage.removeItem('editedIncidentRowId');
+        }
+    }
+
+
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedIncidentRowId', id.toString());
+  }
+
   fromModel(value: string | null): NgbDateStruct | null {
     if (value) {      
       const date = value.split("-");
@@ -169,6 +201,7 @@ export class IncidentreportComponent implements OnInit {
       (response: IncidentreportDetail[]) => {        
           this.incidentList = response;              
           this.dtTrigger.next();     
+          this.HighlightIncident();
       },
     
     );

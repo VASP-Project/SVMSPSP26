@@ -79,4 +79,17 @@ export class ReferenceguidesService {
     );
   }
 
+  getUploadedFileUrl(id: number): string {
+    return `${this.gnBaseURL}ReferenceGuides/getuploadfile?id=${id}`;
+  }
+
+  downloadUploadedFilenew(id: number) {
+    return this.http.get(
+      `${this.gnBaseURL}ReferenceGuides/getuploadfile?id=${id}`,
+      {
+        responseType: 'blob',
+        observe: 'response'
+      }
+    );
+  }
 }

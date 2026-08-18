@@ -22,7 +22,7 @@
               *ngIf="!isTSA"
               routerLink="/admin/nov/counseling"
               [queryParams]="{ isEdit: 0 }"
-              skipLocationChange
+              [skipLocationChange]="true"
             >
               Add COU
             </button>
@@ -31,7 +31,7 @@
               style="margin-left: 2px"
               routerLink="/admin/nov/details"
               [queryParams]="{ isEdit: 0 }"
-              skipLocationChange
+              [skipLocationChange]="true"
             >
               Add NOV
             </button>
@@ -358,7 +358,7 @@
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let item of citationList; trackBy: identify"
+                    *ngFor="let item of citationList; trackBy: identify;let i = index"  [attr.id]="'row-' + i"
                     [ngClass]="item.isDueDate == true ? 'redbg' : ''"
                   >
                     <td hidden>
@@ -407,13 +407,14 @@
                         title="Edit"
                         [routerLink]="['/admin/nov/details/']"
                         *ngIf="showEditButton(item)"
+                        (click)="onCitationRowClick(i)"
                         [queryParams]="{
                           citationId: item.id,
                           isEdit: 1,
                           isClone: 0,
                           inspectionId: 0
                         }"
-                        skipLocationChange
+                        [skipLocationChange]="true"
                       >
                         Edit
                       </a>
@@ -421,8 +422,9 @@
                       <a
                         title="View"
                         [routerLink]="['/admin/nov/view/']"
+                        (click)="onCitationRowClick(i)"
                         [queryParams]="{ citationId: item.id, isEdit: 0 }"
-                        skipLocationChange
+                        [skipLocationChange]="true"
                         >View</a
                       >
                       |
@@ -455,12 +457,13 @@
                       <a
                         title="Edit"
                         [routerLink]="['/admin/nov/counseling/']"
+                        (click)="onCitationRowClick(i)"
                         [queryParams]="{
                           couId: item.id,
                           isEdit: 1,
                           isClone: 0
                         }"
-                        skipLocationChange
+                        [skipLocationChange]="true"
                         *ngIf="showEditButton(item)"
                       >
                         Edit
@@ -469,8 +472,9 @@
                       <a
                         title="View"
                         [routerLink]="['/admin/nov/counselingview/']"
+                        (click)="onCitationRowClick(i)"
                         [queryParams]="{ couId: item.id, isEdit: 0 }"
-                        skipLocationChange
+                        [skipLocationChange]="true"
                         >View</a
                       >
                       |
@@ -537,7 +541,7 @@
 
             <div class="list-group">
               <a
-                *ngFor="let item of citationList; trackBy: identify; index as i"
+                *ngFor="let item of citationList; trackBy: identify; index as i" [attr.id]="'row-' + i"
                 [ngClass]="item.isDueDate == true ? 'redbg' : ''"
                 skipLocationChange
                 class="list-group-item list-group-item-action"
@@ -613,13 +617,14 @@
                           title="Edit"
                           [routerLink]="['/admin/nov/details/']"
                           *ngIf="showEditButton(item)"
+                          (click)="onCitationRowClick(i)"
                           [queryParams]="{
                             citationId: item.id,
                             isEdit: 1,
                             isClone: 0,
                             inspectionId: 0
                           }"
-                          skipLocationChange
+                          [skipLocationChange]="true"
                         >
                           Edit
                         </a>
@@ -627,8 +632,9 @@
                         <a
                           title="View"
                           [routerLink]="['/admin/nov/view/']"
+                          (click)="onCitationRowClick(i)"
                           [queryParams]="{ citationId: item.id, isEdit: 0 }"
-                          skipLocationChange
+                          [skipLocationChange]="true"
                           >View</a
                         >
                         |
@@ -661,12 +667,13 @@
                         <a
                           title="Edit"
                           [routerLink]="['/admin/nov/counseling/']"
+                          (click)="onCitationRowClick(i)"
                           [queryParams]="{
                             couId: item.id,
                             isEdit: 1,
                             isClone: 0
                           }"
-                          skipLocationChange
+                          [skipLocationChange]="true"
                           *ngIf="showEditButton(item)"
                         >
                           Edit
@@ -674,9 +681,10 @@
                         |
                         <a
                           title="View"
+                          (click)="onCitationRowClick(i)"
                           [routerLink]="['/admin/nov/counselingview/']"
                           [queryParams]="{ couId: item.id, isEdit: 0 }"
-                          skipLocationChange
+                          [skipLocationChange]="true"
                           >View</a
                         >
                         |

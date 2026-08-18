@@ -60,6 +60,28 @@ export class ReferencecategorieslistComponent implements OnInit {
          stateSave: true,
       stateDuration: -1,
      };
+
+     const editedRowId = sessionStorage.getItem("editedRefRowId");
+
+     if (editedRowId) {
+       setTimeout(() => {
+         const row = document.getElementById("row-" + editedRowId);
+
+         if (row) {
+           row.scrollIntoView({
+             behavior: "smooth",
+             block: "center",
+           });
+
+           row.classList.add("highlight-row");
+
+           setTimeout(() => {
+             row.classList.remove("highlight-row");
+           }, 3000);
+         }
+       }, 500);
+       sessionStorage.removeItem("editedRefRowId");
+     }
     
   }
 /*
@@ -209,5 +231,8 @@ viewreferencecategories(id: number) {
 ngOnDestroy(): void {
   // Do not forget to unsubscribe the event
   this.dtTrigger.unsubscribe();
+}
+onEditClick(id: number): void {
+  sessionStorage.setItem('editedRefRowId', id.toString());
 }
 }

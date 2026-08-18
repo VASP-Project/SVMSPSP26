@@ -872,7 +872,7 @@
                   <div class="input-group">
                     <input class="form-control" type="text" (click)="badgeholderDOB.toggle()" ngbDatepicker
                       #badgeholderDOB="ngbDatepicker" [(ngModel)]="badgeholderModel.badgeholderDOB"
-                      name="badgeholderDOB" placeholder="mm/dd/yyyy" required [disabled]="readonlyBadge" />
+                      name="badgeholderDOB" placeholder="mm/dd/yyyy"  [disabled]="readonlyBadge" />
                     <button class="btn btn-outline-secondary bi bi-calendar4" (click)="badgeholderDOB.toggle()"
                       type="button"></button>
                   </div>
@@ -994,7 +994,7 @@
                               #name{{i}}="ngModel" />                            
                           </td> -->
                       <td>
-                        <span>{{badgeholder.badgeholderDOB}}</span>
+                        <span>{{badgeholder.badgeholderDOB | date:'MM/dd/yyyy' }}</span>
                         <!-- <span>{{badgeholder.badgeholderDOB | date:'MM/dd/yyyy'}}</span> -->
 
                         <!-- <span [hidden]="badgeholder.inedit">{{badgeholder.badgeholderDOB | date:'MM/dd/yyyy'}}</span> -->
@@ -1154,7 +1154,7 @@
                   <div class="col-md-3 pr-md-1 pl-md-1">
                     <div class="form-group">
                       <label> Vehicle Make/Model</label>
-                      <input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required
+                      <input type="text" class="form-control" id="vehicleModel" name="vehicleModel"
                         [(ngModel)]="vehicleModel.vehicleModel" placeholder="Vehicle Make/Model">
                     </div>
                   </div>
@@ -1737,8 +1737,50 @@
                     <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                       <button type="button" class="btn btn-success" (click)="openFileSelector()" id="btnInspUpload">
                         <i class="bi bi-pin-angle"></i> Upload / Drag</button>
+                        <button type="button" class="btn btn-primary" id="btnCamera" (click)="toggleWebcam();"
+                          style="margin-left:2px; display: inline-flex; gap: 8px;"><i class="bi bi-camera-fill"></i>Camera <span class="statusDot"
+                    [class.cameraOn]="this.showWebcam"
+                    [class.cameraOff]="!this.showWebcam">
+                  </span></button>
                     </ng-template>
                   </ngx-file-drop>
+                  <hr>
+                     <div class="snapshot row" *ngIf="this.webcamImageArr.length > 0">
+                      <div class="col-md-1" style="text-align: left">
+                        <label>Photos</label>
+                      </div>
+                      <div class="col-md-2" *ngFor="let image of this.webcamImageArr">
+                        <span style="color: red;font-size: 14px;font-weight: bolder;padding-right: 7px;"
+                          class="bi bi-x-lg btn-sm" title="Delete File"
+                          (click)="removeImage(image)"></span>
+                        <img [src]="image.imageAsDataUrl" height="100px" />
+                      </div>
+                    </div>
+                    <br/> 
+                    <br/> 
+                    <div class="col-lg-12" style="text-align:center">
+
+                  
+                    <div class="camera-container" *ngIf="this.showWebcam">
+                       <div class="webcam-wrapper" > 
+                      <webcam [height]="300" [width]="300" [trigger]="triggerObservable"
+                        (imageCapture)="handleImage($event)" *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch"
+                        [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions" [imageQuality]="1"
+                        (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)"></webcam>
+                        </div>
+                      </div>
+                      <div class="camera-actions" *ngIf="showWebcam">
+                     <div >
+                       <div class="actionBtn captureBtn" (click)="triggerSnapshot();" title="Take Picture"><i class="bi bi-camera-fill"></i></div>
+                     </div>
+                     <div class="col-md-3">
+                       <div class="actionBtn switchBtn" (click)="showNextWebcam(true);" title="Switch Camera"><i class="bi bi-arrow-repeat"></i></div>
+                     </div>
+                   </div>
+                     </div>
+                      <br />
+                     
+                    
                 </div>
               </div>
             </div>

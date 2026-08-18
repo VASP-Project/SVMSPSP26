@@ -31,6 +31,27 @@ export class IncidenttypesComponent implements OnInit {
       stateSave: true,
       stateDuration: -1,
   };
+  const editedRowId = sessionStorage.getItem("editedIncidentTypesRowId");
+
+  if (editedRowId) {
+    setTimeout(() => {
+      const row = document.getElementById("row-" + editedRowId);
+
+      if (row) {
+        row.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        row.classList.add("highlight-row");
+
+        setTimeout(() => {
+          row.classList.remove("highlight-row");
+        }, 3000);
+      }
+    }, 500);
+    sessionStorage.removeItem("editedIncidentTypesRowId");
+  }
   }
 
   public GetIncidentTypeList()
@@ -73,5 +94,9 @@ export class IncidenttypesComponent implements OnInit {
             this.GetIncidentTypeList();
         });
     }
+  }
+
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedIncidentTypesRowId', id.toString());
   }
 }

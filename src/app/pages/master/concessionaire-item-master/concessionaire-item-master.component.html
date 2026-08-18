@@ -171,9 +171,9 @@
                     itemsPerPage: pageHeaders.pageSize,
                     currentPage: pageHeaders.pageNumber,
                     totalItems: pageHeaders.totalItems
-                }; 
+                }; let i = index; 
                 
-                    ">
+                   "  [attr.id]="'row-' + i" >
                   <td *ngIf="isStaffAdmin" style="width: 10%">
                     {{ company.companyName }}
                   </td>
@@ -289,18 +289,18 @@
                       </label> -->
 
                       <div *ngIf="isAuthsigner && company.showlabelReject">
-                        <button class="btn btn-warning btn-sm" [routerLink]="['/admin/addeditprohibiteditem']"
+                        <button class="btn btn-warning btn-sm" (click)="saveItemMaster(i)" [routerLink]="['/admin/addeditprohibiteditem']"
                           [queryParams]="{
                             recordId: company.id,
                             isEdit: 1,
                             isView: 0,
                             companyId: company.companyId
-                          }" skipLocationChange>
+                          }" [skipLocationChange]="true">
                           <i class="bi bi-pencil" title="Edit"></i>
                         </button>
                       </div>
                       <div *ngIf="isStaffAdmin && company.status != 'Removed'">
-                        <button class="btn btn-warning btn-sm" [routerLink]="['/admin/addeditprohibiteditem']"
+                        <button class="btn btn-warning btn-sm" (click)="saveItemMaster(i)" [routerLink]="['/admin/addeditprohibiteditem']"
                           [queryParams]="{
                             recordId: company.id,
                             isEdit: 1,
@@ -308,7 +308,7 @@
                             companyId: company.companyId,
                             user: 'staffadmin',
                             companySelected:this.iscompanyselected
-                          }" skipLocationChange>
+                          }" [skipLocationChange]="true" >
                           <i class="bi bi-pencil" title="Edit"></i>
                         </button>
                       </div>
@@ -361,7 +361,7 @@
 
             <!-- List View -->
             <div class="list-group">
-              <a *ngFor="let company of prohibitedList" class="list-group-item list-group-item-action prohibited-card">
+              <a *ngFor="let company of prohibitedList;let i = index" class="list-group-item list-group-item-action prohibited-card" [attr.id]="'row-' + i">
                 <div class="row mb-2">
 
                   <div *ngIf="isStaffAdmin" class="col-12"><strong>Company:</strong> {{ company.companyName }}</div>
@@ -427,24 +427,24 @@
                     </button>
 
                     <button *ngIf="isAuthsigner && company.showlabelReject" class="btn btn-warning btn-sm"
-                      [routerLink]="['/admin/addeditprohibiteditem']" [queryParams]="{
+                      [routerLink]="['/admin/addeditprohibiteditem']" (click)="saveItemMaster(i)" [queryParams]="{
                       recordId: company.id,
                       isEdit: 1,
                       isView: 0,
                       companyId: company.companyId
-                    }" skipLocationChange>
+                    }" [skipLocationChange]="true">
                       <i class="bi bi-pencil" title="Edit"></i>
                     </button>
 
                     <button *ngIf="isStaffAdmin && company.status !== 'Removed'" class="btn btn-warning btn-sm"
-                      [routerLink]="['/admin/addeditprohibiteditem']" [queryParams]="{
+                      [routerLink]="['/admin/addeditprohibiteditem']" (click)="saveItemMaster(i)" [queryParams]="{
                       recordId: company.id,
                       isEdit: 1,
                       isView: 0,
                       companyId: company.companyId,
                       user: 'staffadmin',
                       companySelected:this.iscompanyselected
-                    }" skipLocationChange>
+                    }" [skipLocationChange]="true">
                       <i class="bi bi-pencil" title="Edit"></i>
                     </button>
 

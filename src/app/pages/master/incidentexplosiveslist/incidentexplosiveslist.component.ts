@@ -30,7 +30,31 @@ export class IncidentexplosiveslistComponent implements OnInit {
       stateSave: true,
       stateDuration: -1,
     };
-    console.log("abc")
+    // console.log("abc")
+    const editedRowId = sessionStorage.getItem('editedExploisvesRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+
+                const row = document.getElementById('row-' + editedRowId);
+
+                if (row) {
+
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                   
+                    row.classList.add('highlight-row');
+
+                    setTimeout(() => {
+                        row.classList.remove('highlight-row');
+                    }, 3000);
+                }
+             
+            }, 500);
+           sessionStorage.removeItem('editedExploisvesRowId');
+        }
    
   }
 
@@ -73,5 +97,9 @@ export class IncidentexplosiveslistComponent implements OnInit {
             this.GetExplosivesList();
         });
     }
+  }
+
+  onEditClick(id: number): void {
+    sessionStorage.setItem('editedExploisvesRowId', id.toString());
   }
 }

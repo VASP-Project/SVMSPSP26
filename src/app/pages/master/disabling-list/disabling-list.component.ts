@@ -42,6 +42,27 @@ export class DisablingListComponent implements OnInit {
           stateSave:true
         };
         
+        const editedRowId = sessionStorage.getItem("editedDisablingRowId");
+
+        if (editedRowId) {
+          setTimeout(() => {
+            const row = document.getElementById("row-" + editedRowId);
+
+            if (row) {
+              row.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+
+              row.classList.add("highlight-row");
+
+              setTimeout(() => {
+                row.classList.remove("highlight-row");
+              }, 3000);
+            }
+          }, 500);
+          sessionStorage.removeItem("editedDisablingRowId");
+        }
       }
     
       public GetDisablingList() {
@@ -89,5 +110,9 @@ export class DisablingListComponent implements OnInit {
               this.GetDisablingList();
             });
         }
+      }
+
+      onEditClick(id: number): void {
+        sessionStorage.setItem('editedDisablingRowId', id.toString());
       }
     }

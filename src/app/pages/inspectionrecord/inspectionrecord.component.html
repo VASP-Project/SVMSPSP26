@@ -259,7 +259,7 @@
                     itemsPerPage: pageHeaders.pageSize,
                     currentPage: pageHeaders.pageNumber,
                     totalItems: pageHeaders.totalItems
-                };  " >
+                }; let i = index " [attr.id]="'row-' + i" >
                     
                     <td>{{ item.inspectionRecordNo }}</td>
 
@@ -282,7 +282,7 @@
                       {{ item.statusDisplayName }}
                     </td>
                     <td>
-                      <a title="Edit" [routerLink]="['/admin/inspection/details/']" *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
+                      <a title="Edit" (click)="onEditClick(i)" [routerLink]="['/admin/inspection/details/']" *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
                         && user.rolename != 'TSA User' && user.rolename === 'Issuer' && user.id === item.createdBy )                       
                         || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
                             inspectionId: item.id,
@@ -291,7 +291,7 @@
                         Edit
                       </a>
                       |
-                      <a title="View" [routerLink]="['/admin/inspection/view/']"
+                      <a title="View" (click)="onEditClick(i)" [routerLink]="['/admin/inspection/view/']"
                         [queryParams]="{ inspectionId: item.id, isEdit: 0 }" [skipLocationChange] = "true" >View</a>
                       |
                       <a title="Clone" [routerLink]="['/admin/inspection/details/']"
@@ -336,7 +336,7 @@
 
             <div class="list-group" class="small-font">
               <a *ngFor="let item of inspectionList; index as i; trackBy: identify"
-                [routerLink]="['/admin/inspection/view/']" [queryParams]="{ inspectionId: item.id, isEdit: 0 }"
+                [routerLink]="['/admin/inspection/view/']" [attr.id]="'row-' + i" [queryParams]="{ inspectionId: item.id, isEdit: 0 }"
                 [skipLocationChange] = "true" class="list-group-item list-group-item-action">
                 <div class="row">
                   <div class="col-md-4">
@@ -384,7 +384,7 @@
                     </div>
                     <div class="col-md-4">
                       <span style="font-weight: bold;">Action:</span>
-                      <a title="Edit" [routerLink]="['/admin/inspection/details/']"
+                      <a title="Edit" (click)="onEditClick(i)" [routerLink]="['/admin/inspection/details/']"
                         *ngIf="(item.statusDisplayName === 'Draft' && item.statusDisplayName != 'Closed' 
                                                     && user.rolename != 'TSA User' && user.rolename === 'Issuer' && user.id === item.createdBy )                       
                                                     || (user.rolename === 'StaffAdmin' || user.rolename === 'Security')" [queryParams]="{
@@ -394,7 +394,7 @@
                         Edit
                       </a>
                       |
-                      <a title="View" [routerLink]="['/admin/inspection/view/']"
+                      <a title="View" (click)="onEditClick(i)" [routerLink]="['/admin/inspection/view/']"
                         [queryParams]="{ inspectionId: item.id, isEdit: 0 }" [skipLocationChange] = "true" >View</a>
                       |
                       <a title="Clone" [routerLink]="['/admin/inspection/details/']"

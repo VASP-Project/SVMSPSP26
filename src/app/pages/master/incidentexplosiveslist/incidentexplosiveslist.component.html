@@ -21,12 +21,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of explosiveList" class="pointerCursor"
+                                <tr *ngFor="let item of explosiveList;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     (click)="viewExplosive(item.id)">
                                     <td>{{item.explosiveTypeName}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/explosiveaddedit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/explosiveaddedit']" (click)="onEditClick(i)" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ explosiveId: item.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>

@@ -21,12 +21,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of allIncidentTypeDisplayNameList" class="pointerCursor"
+                                <tr *ngFor="let item of allIncidentTypeDisplayNameList;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     (click)="viewIncidentType(item.id)">
                                     <td>{{item.incidentType}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/incidenttypeaddedit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/incidenttypeaddedit']" class="btn btn-warning btn-sm" (click)="onEditClick(i)"
                                                 [queryParams]="{ incidenttypeId: item.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>

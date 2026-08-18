@@ -17,7 +17,7 @@ import { InspectionrecordService } from "../inspectionrecord.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Company } from "../../master/company";
 import { CompanyService } from "../../master/company/company.service";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import {
   FileSystemDirectoryEntry,
   FileSystemFileEntry,
@@ -43,6 +43,7 @@ import {
   NgbTimeStruct,
 } from "@ng-bootstrap/ng-bootstrap";
 import { replaceAll } from "chartist";
+import { WebcamImage, WebcamInitError, WebcamUtil } from "ngx-webcam";
 
 @Component({
   selector: "app-inspectionrecordaddedit",
@@ -74,6 +75,11 @@ export class InspectionrecordaddeditComponent
   allInspectionTypeList: InspectionTypes[];
   allFacilityList: Facilities[];
   allLocationList: Locations[] = [];
+  public webcamImage: WebcamImage = null;
+  public webcamImageArr: WebcamImage[] = [];
+  InspectionImagesLst: string[] = [];
+  public errors: WebcamInitError[] = [];
+  public deviceId: string;
   @ViewChild("input", { static: false }) myInputVariable: ElementRef;
   public inspectionImageList: InspectionAttachments[] = [];
   public inspectionFilesList: InspectionAttachments[] = [];
@@ -90,6 +96,11 @@ export class InspectionrecordaddeditComponent
   isViewAuthorizedSigner: boolean = false;
   isSubmitShow: boolean = false;
   showBtn = -1;
+  public showWebcam = false;
+  private trigger: Subject<void> = new Subject<void>();
+  // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
+   public multipleWebcamsAvailable = false;
+  private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
   closeResult: string = "";
   public citationId: number = 0;
   isCitationId: boolean = false;
@@ -232,6 +243,7 @@ export class InspectionrecordaddeditComponent
   isschedularId: boolean = false;
   // time = {hour: 13, minute: 30};
   time: NgbTimeStruct = { hour: 13, minute: 30, second: 0 };
+  vehicleAdded = false;
   readonly DELIMITER = "/";
 
   constructor(
@@ -334,7 +346,10 @@ export class InspectionrecordaddeditComponent
     
     this.getEdtResolutionList();
     this.getEdtAlarmList();
-
+    WebcamUtil.getAvailableVideoInputs()
+      .then((mediaDevices: MediaDeviceInfo[]) => {
+        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
+      });
     this.doorDropdownSettings = {
       singleSelection: false,
       idField: "id",
@@ -459,6 +474,14 @@ export class InspectionrecordaddeditComponent
 
 
   bindInspectionDetails() {
+    if (this.webcamImageArr != null) {
+      this.webcamImageArr.forEach(element => {
+        this.InspectionImagesLst.push(element.imageAsDataUrl);
+      });
+      //this.citation.capturedImage = this.webcamImage.imageAsDataUrl;
+
+
+    }
     var inspectionDetails = {
       id: this.inspectioninfo.id,
       InspectionRecordNo: this.inspectioninfo.inspectionRecordNo,
@@ -631,7 +654,9 @@ onlyNumberKey(event: KeyboardEvent) {
         this.validateAndAddBadgeholderRecord(0);
       }
       if (this.isVehicleInspection == true) {
-        this.validateAndAddVehicleRecord(0);
+        if (this.isVehicleInspection && !this.vehicleAdded) {
+          this.validateAndAddVehicleRecord(0);
+        }
       }
       if (this.isSterileAreaPiInsp == true) {
         this.validateAndAddCompanyRecord(0);
@@ -670,7 +695,8 @@ onlyNumberKey(event: KeyboardEvent) {
           this.findingDoorList,
           this.deletedBadgeholderIds,
           this.deletedVehicleIds,
-          this.deletedCompanyIds
+          this.deletedCompanyIds,
+          this.InspectionImagesLst,
         )
         .subscribe(
           (response: string) => {
@@ -805,7 +831,9 @@ onlyNumberKey(event: KeyboardEvent) {
         this.validateAndAddBadgeholderRecord(0);
       }
       if (this.isVehicleInspection == true) {
-        this.validateAndAddVehicleRecord(0);
+        if (this.isVehicleInspection && !this.vehicleAdded) {
+            this.validateAndAddVehicleRecord(0);
+        }
       }
       if (this.isSterileAreaPiInsp == true) {
         this.validateAndAddCompanyRecord(0);
@@ -838,7 +866,8 @@ onlyNumberKey(event: KeyboardEvent) {
           this.findingDoorList,
           this.deletedBadgeholderIds,
           this.deletedVehicleIds,
-          this.deletedCompanyIds
+          this.deletedCompanyIds,
+          this.InspectionImagesLst,
         )
         .subscribe(
           (response: string) => {
@@ -946,6 +975,49 @@ onlyNumberKey(event: KeyboardEvent) {
     );
   }
 
+  public triggerSnapshot(): void {
+    this.trigger.next();
+  }
+   public toggleWebcam(): void {
+    this.showWebcam = !this.showWebcam;
+  }
+  
+  public handleInitError(error: WebcamInitError): void {
+    if (error.mediaStreamError && error.mediaStreamError.name === "NotAllowedError") {
+      console.warn("Camera access was not allowed by user!");
+    }
+    this.errors.push(error);
+  }
+
+  public showNextWebcam(directionOrDeviceId: boolean | string): void {
+    // true => move forward through devices
+    // false => move backwards through devices
+    // string => move to device with given deviceId
+    this.nextWebcam.next(directionOrDeviceId);
+  }
+ public handleImage(webcamImage: WebcamImage): void {
+    //console.log('received webcam image', webcamImage);
+    this.webcamImage = webcamImage;
+    this.webcamImageArr.push(webcamImage);
+  }
+removeImage(image) {
+    this.webcamImageArr.splice(this.webcamImageArr.indexOf(image), 1)
+  }
+
+  public cameraWasSwitched(deviceId: string): void {
+    //console.log('active device: ' + deviceId);
+    this.deviceId = deviceId;
+  }
+  //-----------------------------------------------CAMERA PART Ends---------------------------------------------------------//
+
+  public get triggerObservable(): Observable<void> {
+    return this.trigger.asObservable();
+  }
+
+  public get nextWebcamObservable(): Observable<boolean | string> {
+    return this.nextWebcam.asObservable();
+  }
+  
   public GetFacilityList(inspTypeName) {
     this.facilityService.GetFacilityList().subscribe(
       (Response: Facilities[]) => {
@@ -1106,6 +1178,7 @@ onlyNumberKey(event: KeyboardEvent) {
       .GetInspectionDetailsById(inspectionId, companyId)
       .subscribe(
         (data: InspetionRecordDetail) => {
+          this.vehicleAdded = true
           this.showFields(data.inspectionType, data.inspType);
           // this.isFacility = true;
           this.inspectioninfo = data as InspetionRecordDetail;
@@ -1373,7 +1446,9 @@ onlyNumberKey(event: KeyboardEvent) {
           this.validateAndAddBadgeholderRecord(0);
         }
         if (this.isVehicleInspection == true) {
-          this.validateAndAddVehicleRecord(0);
+          if (this.isVehicleInspection && !this.vehicleAdded) {
+              this.validateAndAddVehicleRecord(0);
+          }
         }
         if (this.isSterileAreaPiInsp == true) {
           this.validateAndAddCompanyRecord(0);
@@ -1406,7 +1481,8 @@ onlyNumberKey(event: KeyboardEvent) {
             this.findingDoorList,
             this.deletedBadgeholderIds,
             this.deletedVehicleIds,
-            this.deletedCompanyIds
+            this.deletedCompanyIds,
+            this.InspectionImagesLst,
           )
           .subscribe(
             (response: string) => {
@@ -1874,11 +1950,12 @@ onlyNumberKey(event: KeyboardEvent) {
       this.badgeholderModel.firstName !== undefined &&
       this.badgeholderModel.lastName !== undefined &&
       this.badgeholderModel.companyId !== undefined &&
-      this.badgeholderModel.badgeholderDOB !== undefined &&
+     // this.badgeholderModel.badgeholderDOB !== undefined &&
       this.badgeholderModel.companyId !== null &&
       this.badgeholderModel.firstName !== null &&
-      this.badgeholderModel.lastName !== null &&
-      this.badgeholderModel.badgeholderDOB !== null 
+      this.badgeholderModel.lastName !== null 
+      //&&
+      //this.badgeholderModel.badgeholderDOB !== null 
     );
   }
 
@@ -1902,7 +1979,7 @@ onlyNumberKey(event: KeyboardEvent) {
           // }
 
           element.badgeNumber = element.securityBadgeNo
-          element.badgeholderDOB = this.convertMMDDYYYYtoDDMMYYYY(element.badgeholderDOB);
+          // element.badgeholderDOB = this.convertMMDDYYYYtoDDMMYYYY(element.badgeholderDOB);
 
         });
         // this.inspectioninfo.badgeholderList.sort(this.sortFunction);
@@ -2116,7 +2193,8 @@ onlyNumberKey(event: KeyboardEvent) {
   }
 
   validateAndAddVehicleRecord(flag): boolean {
-    if (this.validateVehicleRecord()) {
+    this.vehicleAdded = true;
+    //if (this.validateVehicleRecord()) {
       if (this.vehicleModel.inedit == true) {
         this.UpdateVehicleRecord(this.vehicleModel, 0);
       } else {
@@ -2129,7 +2207,7 @@ onlyNumberKey(event: KeyboardEvent) {
         this.resetVehicleModel();
       }
       return true;
-    } else {
+    // } else {
       if (flag == 1) {
         this.toastr.error("Please enter required field.", "Information");
         //this.spinner.hide();
@@ -2138,7 +2216,7 @@ onlyNumberKey(event: KeyboardEvent) {
       if (flag == 0) {
         //this.spinner.hide();
       }
-    }
+    //}
 
     // if (this.validateVehicleRecord()) {
     //   // this.vehicleModel.inspectionId = this.inspectionId;
@@ -2677,8 +2755,17 @@ onlyNumberKey(event: KeyboardEvent) {
                 this.badgeholderModel.lastName = this.badgeholder.lastName;
                 // this.badgeholderModel.badgeholderDOB = this.datePipe.transform(this.badgeholder.dob, 'MM/dd/yyyy');
 
-                this.badgeholderModel.badgeholderDOB = this.formatDateToMMDDYYYY(this.badgeholder.birthDate)
-                this.badgeholderModel.badgeholderDOB = this.dateAdapter.toModel(this.fromModel(this.badgeholderModel.badgeholderDOB));
+                if(this.badgeholder.birthDate){
+              this.badgeholderModel.badgeholderDOB = this.formatDateToMMDDYYYY(this.badgeholder.birthDate)
+              this.badgeholderModel.badgeholderDOB = this.dateAdapter.toModel(this.fromModel(this.badgeholderModel.badgeholderDOB));
+              }else{
+                  this.badgeholder.birthDate = null;
+              }
+                // this.badgeholderModel.badgeholderDOB =
+                //   this.formatDateToMMDDYYYY(this.badgeholder.birthDate);
+                // this.badgeholderModel.badgeholderDOB = this.dateAdapter.toModel(
+                //   this.fromModel(this.badgeholderModel.badgeholderDOB),
+                // );
                 var company = this.allCompanyList.find(
                   (x) => x.companyName == this.badgeholder.company
                 );

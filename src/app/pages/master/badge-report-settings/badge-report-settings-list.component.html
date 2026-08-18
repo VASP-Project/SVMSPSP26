@@ -68,13 +68,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let badgereport of badgereportemailsettings" class="pointerCursor"
-                                    (click)="viewBadgeReportSettings(badgereport.id)">
+                                <tr *ngFor="let badgereport of badgereportemailsettings;let i = index" class="pointerCursor"
+                                     [attr.id]="'row-' + i">
                                     <td>{{badgereport.email}}</td>
                                     <td>{{badgereport.type}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/badgereportaddedit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/badgereportaddedit']" (click)="saveBadgeReport(i)" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ id: badgereport.id, isEdit: 1, isView: 0 }">
                                                   <span><i class="bi bi-pencil"></i>
                                                 </span></button>

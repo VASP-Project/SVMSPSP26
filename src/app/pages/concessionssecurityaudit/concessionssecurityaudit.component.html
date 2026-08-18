@@ -160,15 +160,30 @@
                     <td>
 
 
-                      <button *ngIf="
+                      <!-- <button *ngIf="
                           isAuthsigner
                            &&
                             (log.completedAuditCount != log.dailyAuditCount)
-                        " class="btn btn-success btn-sm" [disabled]="isAuditCompleted(log.audits)"
+                        " class="btn btn-sm" [ngClass]="getAuditButtonClass(log)" [disabled]="isAuditCompleted(log.audits)"
                         (click)="openModalInspection(log, template2)">
                         Conduct Audit
+                      </button> -->
+                      <button
+                        *ngIf="isAuthsigner && log.completedAuditCount != log.dailyAuditCount"
+                        class="btn btn-sm"
+                        [ngClass]="getAuditButtonClass(log)"
+                        [disabled]="isAuditCompleted(log.audits)"
+                        (click)="openModalInspection(log, template2)"
+                      >
+                        {{ getAuditButtonText(log) }}
                       </button>
 
+                      <span
+                        *ngIf="isAuthsigner && log.completedAuditCount == log.dailyAuditCount"
+                        class="daily-audits-complete"
+                      >
+                       <strong style="color: green;"> Daily Audits Complete </strong> 
+                      </span>
 
                       <div *ngIf="isStaffAdmin">
 
@@ -194,7 +209,7 @@
                           isProhibitedAudit: true,
                           companyId: log.companyId,
                           auditId: log.dailyAuditId
-                        }" skipLocationChange>
+                        }" [skipLocationChange]="true">
                           <i class="bi bi-pencil" title="Add NOV"></i>
                         </button>
                       </div>
@@ -248,14 +263,30 @@
                       </div>
                       <div class="col-12 mt-2 d-flex flex-wrap gap-2">
                         <!-- Conduct Audit Button -->
-                        <button *ngIf="
+                        <!-- <button *ngIf="
                             isAuthsigner 
                              &&
                              ( log.completedAuditCount != log.dailyAuditCount)
-                          " class="btn btn-success btn-sm" [disabled]="isAuditCompleted(log.audits)"
+                          " class="btn btn-sm" [ngClass]="getAuditButtonClass(log)" [disabled]="isAuditCompleted(log.audits)"
                           (click)="openModalInspection(log, template2)">
                           Conduct Audit
+                        </button> -->
+                        <button
+                          *ngIf="isAuthsigner && log.completedAuditCount != log.dailyAuditCount"
+                          class="btn btn-sm"
+                          [ngClass]="getAuditButtonClass(log)"
+                          [disabled]="isAuditCompleted(log.audits)"
+                          (click)="openModalInspection(log, template2)"
+                        >
+                          {{ getAuditButtonText(log) }}
                         </button>
+
+                        <span
+                          *ngIf="isAuthsigner && log.completedAuditCount == log.dailyAuditCount"
+                          class="daily-audits-complete"
+                        >
+                          Daily Audits Complete
+                        </span>
 
                         <!-- Staff Admin View Button -->
                         <div *ngIf="isStaffAdmin">
@@ -321,15 +352,15 @@
       </div>
     </ng-template>
     <!-- Perform Audit Modal -->
-    <ng-template #template2 let-modal>
+    <ng-template #template2 let-modal >
       <div class="modal-header">
         <h5 class="modal-title card-title">
           Perform Audit For Company : <br />{{ selectedCompany }} at {{ selectedcompanylocation }}
         </h5>
 
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Close click')">
+        <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Close click')">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       </div>
       <br />
       <div class="d-flex justify-content-between align-items-center p-2">
@@ -395,7 +426,7 @@
             class="list-group-item list-group-item-action prohibited-card">
             <div class="row mb-2">
               <div class="col-12 my-2" *ngIf="item.thumbnailUrl">
-                <img [src]="item.thumbnailUrl" (click)="openImageModal(item.originalImage)" alt="Item Image" style="
+                <img [src]="item.thumbnailUrl"  alt="Item Image" style="
                     max-width: 100px;
                     height: auto;
                     border-radius: 6px;
@@ -474,6 +505,10 @@
                   (click)="modal.dismiss('Close click')">
             Close
           </button>
+        </div>
+        <div class="d-flex align-items-center ms-3">
+          
+          <span><strong>Important:</strong> Please wait for this message<strong> “Audit submitted Successfully,”</strong> to appear before leaving the page.</span>
         </div>
       </div>
     </ng-template>

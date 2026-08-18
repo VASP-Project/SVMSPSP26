@@ -25,7 +25,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let Location of locations"
+                            <tr *ngFor="let Location of locations;let i = index" [attr.id]="'row-' + i"
                                 (click)="viewLocation(Location.id)" class="pointerCursor">
                                 <td style="width: 15%;"> 
                                     {{ Location.facilityName }}</td>
@@ -56,7 +56,7 @@
                                 <td style="width: 12%;" (click)="$event.preventDefault(); $event.stopPropagation();">
                                     <div>
                                         <button [routerLink]="['/admin/locationedit']"
-                                            class="btn btn-warning btn-sm"
+                                            class="btn btn-warning btn-sm" (click)="onEditClick(i)"
                                             [queryParams]="{ locationId: Location.id, isEdit: 1, isView: 0 }">
                                             <span><i class="bi bi-pencil"></i>
                                             </span></button>

@@ -574,11 +574,12 @@
                     <button
                       type="button"
                       class="btn btn-primary"
-                      style="margin-left: 2px"
+                      style="margin-left: 2px;display: inline-flex; gap: 8px;"
                       (click)="toggleWebcam()"
-                    >
-                      Open Camera
-                    </button>
+                    ><i class="bi bi-camera-fill"></i>Camera <span class="statusDot"
+                    [class.cameraOn]="this.showWebcam"
+                    [class.cameraOff]="!this.showWebcam">
+                  </span></button>
                     <hr />
 
                     <div
@@ -623,23 +624,23 @@
                         (initError)="handleInitError($event)"
                       ></webcam>
                       <br />
-                      <div class="row" *ngIf="showWebcam">
-                        <div class="col-md-3 offset-md-3">
+                      <div class="camera-actions" *ngIf="showWebcam">
+                        <div >
                           <div
-                            class="actionBtn"
+                            class="actionBtn captureBtn"
                             (click)="triggerSnapshot()"
                             title="Take Picture"
                           >
-                            📸
+                            <i class="bi bi-camera-fill"></i>
                           </div>
                         </div>
-                        <div class="col-md-3">
+                        <div >
                           <div
-                            class="actionBtn"
+                            class="actionBtn switchBtn"
                             (click)="showNextWebcam(true)"
                             title="Switch Camera"
                           >
-                            🔁
+                            <i class="bi bi-arrow-repeat"></i>
                           </div>
                         </div>
                       </div>

@@ -21,12 +21,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let violationType of violationTypes" class="pointerCursor"
-                                    (click)="viewViolationType(violationType.id)">
+                                <tr *ngFor="let violationType of violationTypes;let i = index" class="pointerCursor"
+                                    (click)="viewViolationType(violationType.id)" [attr.id]="'row-' + i">
                                     <td>{{violationType.violationType}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button title="Edit" [routerLink]="['/admin/violationtypeedit']" class="btn btn-warning btn-sm"
+                                            <button title="Edit" [routerLink]="['/admin/violationtypeedit']" class="btn btn-warning btn-sm" (click)="onEditClick(i)"
                                                 [queryParams]="{ violationtypeId: violationType.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>

@@ -6,7 +6,8 @@ export class FormDataModel {
   itemQuantity: number | null;
   itemForCompany: number | null;
   auditCount: number | null;
-  emailId:string | null
+  emailId:string | null;
+  auditSchedules: ConcessionaireAuditSchedule[];
 }
 
 // company-item.model.ts
@@ -264,4 +265,11 @@ export class ProhibitedItemForAudit {
   auditedOn?: string;
   isSubmitted?: boolean;
   thumbnailUrl: any;
+}
+
+export class ConcessionaireAuditSchedule
+{
+    auditNo :number;
+    overdueTime :string;
+    isNextDay: boolean
 }

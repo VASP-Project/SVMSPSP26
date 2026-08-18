@@ -51,9 +51,40 @@ export class InspectiontypelistComponent implements OnInit {
       stateSave: true,
       stateDuration: -1,
     };
+    this.HighlightInsType();
   }
 
 
+  HighlightInsType(){
+      const editedRowId = sessionStorage.getItem('editedInsRowId');
+
+        if (editedRowId) {
+            setTimeout(() => {
+                const row = document.getElementById('row-' + editedRowId);
+                if (row) {
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                     row.classList.add('highlight-row');
+
+                  row.querySelectorAll('td').forEach((td: any) => {
+                      td.style.setProperty('--bs-table-accent-bg', '#b5ca77');
+                  });
+
+                  setTimeout(() => {
+                      row.classList.remove('highlight-row');
+
+                      row.querySelectorAll('td').forEach((td: any) => {
+                          td.style.removeProperty('--bs-table-accent-bg');
+                      });
+                  }, 4000);
+              } 
+            }, 500);
+           sessionStorage.removeItem('editedInsRowId');
+        }
+
+  }
   public GetInspectionTypeList() {
     //this.spinner.show();
     this.inspectiontypes=[];
@@ -61,6 +92,7 @@ export class InspectiontypelistComponent implements OnInit {
       this.inspectiontypes = response;
       //this.spinner.hide();
       this.dtTrigger.next();
+      this.HighlightInsType();
     },
     (error:any)=> {
       this.toastr.error('Error while fetching Inspection Type', 'Error');
@@ -150,7 +182,8 @@ export class InspectiontypelistComponent implements OnInit {
     }
   }
 
-  editInspectionType(id,typeName){
+  editInspectionType(id,typeName,rowId){
+    sessionStorage.setItem('editedInsRowId', rowId.toString());
     this.inspectionTypeService.GetInspectionTypeByIdName(id,typeName).subscribe((response: InspectionTypesView) => {
       if(response.statusText == 'Exists'){        
         this.toastr.error('Inspection Category not edited. It is attached to a Inspection');

@@ -91,7 +91,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr *ngFor="let item of incidentList; index as i; trackBy: identify" >                                  
+                          <tr *ngFor="let item of incidentList; index as i; trackBy: identify"[attr.id]="'row-' + i" >                                  
                             <td style="border-bottom: 1px solid black;" >{{item.incidentRecordNo}}</td>
                             <td style="border-bottom: 1px solid black;">{{item.inciType}}</td>
                             <td style="border-bottom: 1px solid black;">{{ item.incidentDoorName}}</td>                            
@@ -111,13 +111,13 @@
                           " style="border-bottom: 1px solid black;">{{item.incidentStatusDisplay}}</td>
                             
                             <td width="15%" style="border-bottom: 1px solid black;">
-                                <a title="Edit" [routerLink]="['/admin/incident/incidentreportadd']" *ngIf="showEditButton(item)"  [queryParams]="{
+                                <a title="Edit" (click)="onEditClick(i)" [routerLink]="['/admin/incident/incidentreportadd']" *ngIf="showEditButton(item)"  [queryParams]="{
                                     incidentId: item.id,
                                     isEdit: 1,
                                     isClone: 0,
                                     isView: 0,
                                     inciTypeName: item.inciType
-                                          }" skipLocationChange >
+                                          }" [skipLocationChange]="true" >
                                   Edit |
                                 </a>     
                                 <!-- <a title="View" [routerLink]="['/admin/incident/incidentreportview']" *ngIf="showViewButton(item) && user.rolename == 'Superadmin'" [queryParams]="{
@@ -130,13 +130,13 @@
                                           
                                  Edit |
                                 </a>    -->
-                                <a title="View" [routerLink]="['/admin/incident/incidentreportview']" *ngIf="showViewButton(item)" [queryParams]="{
+                                <a title="View" (click)="onEditClick(i)" [routerLink]="['/admin/incident/incidentreportview']" *ngIf="showViewButton(item)" [queryParams]="{
                                     incidentId: item.id,
                                     isEdit: 1,
                                     isClone: 0,
                                     isView: 1,
                                     inciTypeName: item.inciType
-                                          }" skipLocationChange >
+                                          }" [skipLocationChange]="true" >
                                           
                                  View |
                                 </a>             

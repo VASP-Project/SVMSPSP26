@@ -21,12 +21,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let facility of facilities" class="pointerCursor"
+                                <tr *ngFor="let facility of facilities;let i = index" [attr.id]="'row-' + i" class="pointerCursor"
                                     (click)="viewFacility(facility.id)">
                                     <td>{{facility.facilityName}}</td>
                                     <td (click)="$event.preventDefault(); $event.stopPropagation();">
                                         <div>
-                                            <button [routerLink]="['/admin/facilityedit']" class="btn btn-warning btn-sm"
+                                            <button [routerLink]="['/admin/facilityedit']" (click)="onEditClick(i)" class="btn btn-warning btn-sm"
                                                 [queryParams]="{ facilityId: facility.id, isEdit: 1, isView: 0 }">
                                                 <span><i class="bi bi-pencil"></i>
                                                 </span></button>
