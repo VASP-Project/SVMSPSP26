@@ -279,9 +279,14 @@ export class NovViewComponent implements OnInit {
             .subscribe(
                 data => {
                     this.citation = data;                   
-                    this.citationEvents = this.citation.eventList;
-                    this.citationEvents.forEach(element => {
-                      element.eventDate = new Date(element.eventDate).toString();
+                    this.citationEvents = this.citation.eventList.map(element => ({
+                    ...element,
+                    eventDateTime: new Date(`${element.eventDate} ${element.eventTime}`)
+                    }));
+
+                    // Latest event first
+                    this.citationEvents.sort((a, b) => {
+                    return b.eventDateTime.getTime() - a.eventDateTime.getTime();
                     });
                     this.dtTrigger.next();
                     // this.citation.eventList.forEach(element => {

@@ -2172,6 +2172,12 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
         this.citation.eventEdited = "Added";
         //this.citationEvents.push(copyEvent);  
         this.citationEvents.push(this.eventsModel);
+        this.citationEvents.sort((a, b) => {
+          const dateTimeA = new Date(`${a.eventDate} ${a.eventTime}`).getTime();
+          const dateTimeB = new Date(`${b.eventDate} ${b.eventTime}`).getTime();
+
+          return dateTimeB - dateTimeA;
+        });
         this.resetEventModel();
       }
       return true;
@@ -2440,11 +2446,20 @@ export class NovaddeditComponent extends FormCanDeactivate implements OnInit {
     this.citationEvents = [] = [];
     this.NovService.GetCitationEventsByCitationId(citationId)
       .subscribe((response: CitationEvents[]) => {
-        this.citationEvents = response;
-        this.citationEvents.forEach(element => {
+        this.citationEvents = response.sort((a, b) => {
+        const [monthA, dayA, yearA] = a.eventDate.split('-').map(Number);
+        const [monthB, dayB, yearB] = b.eventDate.split('-').map(Number);
 
-        });
-        this.citation.eventList.sort(this.sortFunction);
+        const [hourA, minuteA] = a.eventTime.split(':').map(Number);
+        const [hourB, minuteB] = b.eventTime.split(':').map(Number);
+
+        const dateTimeA = new Date(yearA, monthA - 1, dayA, hourA, minuteA).getTime();
+        const dateTimeB = new Date(yearB, monthB - 1, dayB, hourB, minuteB).getTime();
+
+        return dateTimeB - dateTimeA;
+      });
+        
+       //  this.citation.eventList.sort(this.sortFunction);
         this.dtTrigger.next();
       }, (error: any) => {
         //this.spinner.hide();

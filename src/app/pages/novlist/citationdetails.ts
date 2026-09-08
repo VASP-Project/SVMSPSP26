@@ -104,6 +104,7 @@ export class CitationEvents {
      public eventTimeObj: any;
      public inedit: boolean = false;
      public newEventTime: string ;
+     public eventDateTime: Date;
 
 }
 export class EventTimeObj {

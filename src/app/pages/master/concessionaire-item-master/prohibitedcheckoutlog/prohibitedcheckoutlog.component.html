@@ -209,7 +209,7 @@
                   [(ngModel)]="prohibitedCheckoutModel.location"
                   [disabled]="!isEdit"
                 /> -->
-                <ng-select
+                <ng-select *ngIf="!isEdit"
                   [items]="locationList"
                   bindLabel="location"
                   [(ngModel)]="prohibitedCheckoutModel.locationId"
@@ -221,6 +221,14 @@
                   (change)="GetLocationById(prohibitedCheckoutModel.locationId)"
                 >
                 </ng-select>
+                <input *ngIf="isEdit"
+                  class="form-control"
+                  placeholder="Location"
+                  type="text"
+                  name="location"
+                  [(ngModel)]="prohibitedCheckoutModel.location"                  
+                  [disabled]="isEdit"
+                />
               </div>
 
               <!-- Badge No -->

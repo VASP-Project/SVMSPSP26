@@ -40,6 +40,7 @@ export class AppComponent {
       if (res) {
         if (this.router.url != '/authentication') {
           console.log("session expired");
+          sessionStorage.clear();
           this.router.navigate(["/authentication"])
         }
       }

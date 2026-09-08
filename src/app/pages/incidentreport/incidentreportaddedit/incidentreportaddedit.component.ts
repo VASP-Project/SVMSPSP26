@@ -2292,6 +2292,37 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
       const copyEvent = { ...this.eventModel };
       
       this.incidentinfo.incidentEvents.push(copyEvent);
+      this.incidentinfo.incidentEvents.sort((a, b) => {
+
+      const getDateTime = (date: any, time: string): number => {
+
+        // Date: MM/dd/yyyy
+        const d = new Date(date);
+
+        // Time: 3:09 PM
+        const timeParts = time.trim().split(' ');
+        const [hours, minutes] = timeParts[0].split(':').map(Number);
+        const period = timeParts[1].toUpperCase();
+
+        let hour = hours;
+
+        if (period === 'PM' && hour !== 12) {
+          hour += 12;
+        }
+
+        if (period === 'AM' && hour === 12) {
+          hour = 0;
+        }
+
+        d.setHours(hour, minutes, 0, 0);
+
+        return d.getTime();
+      };
+
+      return getDateTime(b.newDate, b.newTime) -
+            getDateTime(a.newDate, a.newTime);
+    });
+      
       //this.incidentinfo.notificationEdited = "Added";
       
       //this.eventTypeIdValue(this.eventModel)

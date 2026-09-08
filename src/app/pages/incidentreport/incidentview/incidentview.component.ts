@@ -160,6 +160,36 @@ export class IncidentviewComponent implements OnInit {
            element.newDate = element.eventDate
            element.newTime = this.onTimeChange(element.eventTime)
           });
+          this.incidentEvent.sort((a, b) => {
+
+            const getDateTime = (date: any, time: string): number => {
+
+              // Date: MM/dd/yyyy
+              const d = new Date(date);
+
+              // Time: 3:09 PM
+              const timeParts = time.trim().split(' ');
+              const [hours, minutes] = timeParts[0].split(':').map(Number);
+              const period = timeParts[1].toUpperCase();
+
+              let hour = hours;
+
+              if (period === 'PM' && hour !== 12) {
+                hour += 12;
+              }
+
+              if (period === 'AM' && hour === 12) {
+                hour = 0;
+              }
+
+              d.setHours(hour, minutes, 0, 0);
+
+              return d.getTime();
+            };
+
+            return getDateTime(b.newDate, b.newTime) -
+                  getDateTime(a.newDate, a.newTime);
+          });
           this.inciIndividual = data.incidentIndividuals
           this.inciIndividual.forEach(element => {            
             if ( element.otherIndividualTypevalue != null) {

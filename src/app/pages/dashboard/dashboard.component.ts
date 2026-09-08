@@ -299,10 +299,18 @@ export class DashboardComponent implements OnInit {
 
   public lineChartOptions: any = {
     responsive: true,
-    borederWidth: 1,
+    //borederWidth: 1,
     // maintainAspectRatio: false,
     scales: {
       //you're missing this
+      xAxes: [
+        {
+          gridLines: { display: false },
+          ticks: {
+            autoSkip: false,
+          },
+        },
+      ],
       yAxes: [
         {
           scaleLabel: {
@@ -316,7 +324,25 @@ export class DashboardComponent implements OnInit {
         },
       ],
     },
-    legend: { position: "bottom" }, //END scales
+    legend: { 
+      display: false
+    }, //END scales
+    layout: {
+          // room for the count label above the tallest bar
+          padding: { top: 20 },
+        },
+        plugins: {
+          // chartjs-plugin-labels is registered globally and defaults to percentages
+          // on bar charts; show the raw count instead, and nothing for a 0 count so
+          // the labels don't pile up on the x-axis
+          labels: {
+            render: (args) => (args.value ? args.value : ""),
+            fontSize: 11,
+            fontStyle: "bold",
+            fontColor: "#444",
+            textMargin: 4,
+          },
+        }, 
   };
   public lineChartColors: Array<any> = [
     // { // grey
@@ -329,7 +355,19 @@ export class DashboardComponent implements OnInit {
     // }
   ];
   public lineChartLegend: boolean = true;
-  public lineChartType: string = "line";
+  public lineChartType: string = "bar";
+  public lineChartBarPalette: Array<any> = [
+    "#4e79a7",
+    "#f28e2b",
+    "#59a14f",
+    "#e15759",
+    "#b07aa1",
+    "#76b7b2",
+    "#edc948",
+    "#ff9da7",
+    "#9c755f",
+    "#bab0ac",
+  ];
 //----------------------------------------------
 //#region Incident Line Chart
   public incidentlineChartData: Array<any> = [];
@@ -1232,18 +1270,24 @@ export class DashboardComponent implements OnInit {
       );
     }
 
-    this.lineChartModelData.forEach((element) => {
+    this.lineChartModelData.forEach((element,index) => {
       var lineChartDataArray: Array<any> = [];
       if (this.lineChartLabels.length > 0) {
         this.lineChartLabels.forEach((label) => {
           lineChartDataArray.push(element[label]);
         });
       }
-
+      var barColor = this.lineChartBarPalette[
+        index % this.lineChartBarPalette.length
+      ];
       var ss = {
         data: lineChartDataArray,
         label: element["CompanyName"],
-        fill: false,
+        fill: true,
+        backgroundColor: barColor,
+        hoverBackgroundColor: barColor,
+        borderColor: barColor,
+        borderWidth: 1,
       };
       this.lineChartData.push(ss);
     });

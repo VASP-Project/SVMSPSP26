@@ -100,6 +100,8 @@ export class InspetionRecordDetail {
   schedulerInputId?: number;
   schedulerSlotId?: string;
   isLeo: string;
+  companyNamesForEachBadgeholder : string;
+  companyNamesForEachCompanyInfo : string;
 }
 
 export class InspectionAttachments {

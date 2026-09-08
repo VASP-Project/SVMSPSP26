@@ -268,7 +268,7 @@
                   <div class=" table-responsive" style="overflow: auto;">
                     <table class="table table-stripped" id="dtCitationData" *ngIf="lineChartDataTable.length > 0">
                       <tr>
-                        <th *ngFor="let label of tableDataLabels" style="color: black !important;">{{label.replace('-', ' ')}}</th>
+                        <th *ngFor="let label of tableDataLabels;let i = index" style="color: black !important;">{{label.replace('-', ' ')}}</th>
                       </tr>
                       <tr *ngFor="let d of filtered">
                         <td *ngFor="let label of tableDataLabels; let j=index" (click)="openModal(template,d, j)">

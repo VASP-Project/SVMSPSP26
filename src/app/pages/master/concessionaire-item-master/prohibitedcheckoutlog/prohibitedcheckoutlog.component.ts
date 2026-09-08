@@ -524,7 +524,9 @@ export class ProhibitedcheckoutlogComponent implements OnInit {
         next: (response) => {
           // ✅ Filter only "Approved" items
           const approvedItems = response.filter(
-            (item) => item.status === "Approved"
+            (item) => item.status === "Approved" &&
+              item.prohibitedItemId &&
+              item.prohibitedItemId > 0
           );
 
           // ✅ Map the approved items
@@ -781,9 +783,9 @@ export class ProhibitedcheckoutlogComponent implements OnInit {
             " " +
             this.prohibitedCheckoutModel.lastName;
         }
-        if (this.prohibitedCheckoutModel.locationId) {
-          this.GetLocationById(this.prohibitedCheckoutModel.locationId);
-        }
+        // if (this.prohibitedCheckoutModel.locationId) {
+        //   this.GetLocationById(this.prohibitedCheckoutModel.locationId);
+        // }
 
         this.prohibitedCheckoutModel.thumbnailImage = response.thumbnailImage
           ? "data:image/png;base64," + response.thumbnailImage
