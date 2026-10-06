@@ -41,9 +41,10 @@ export class InspetionRecordDetail {
   vehicleLicenseNo: string;
   inspectionDate: string;
   inspectionTime: string;
+  inspectionEndTime: string;
   inspectionDateTime: Date;
   inspectionType: number;
-  inspectionFacilityId: number;
+  inspectionFacilityId: number = 0;
   // inspectionLocationId:number;
   inspectionFinding: string;
   inspectionNOV: string;
@@ -52,6 +53,12 @@ export class InspetionRecordDetail {
   companyName: string;
   status: string;
   statusDisplayName: string;
+  // CCTV Inspection new fields
+  reviewDate: any;
+  reviewStartTime: string;
+  reviewEndTime: string;
+  reviewDateStartTime: string;
+  reviewDateEndTime: string;
   currentInspectionStatusId: number;
   createdBy: string;
   createdDate: string;
@@ -187,7 +194,7 @@ export class InspetionRecordDetailStatus {
   inspectionDate: string;
   inspectionTime: string;
   inspectionType: number;
-  inspectionFacilityId: number;
+ inspectionFacilityId: number = 0;
   // inspectionLocationId:number;
   inspectionFinding: string;
   inspectionNOV: string;

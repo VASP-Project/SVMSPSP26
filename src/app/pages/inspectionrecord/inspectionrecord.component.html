@@ -234,12 +234,12 @@
                       <i (click)="onSortClick($event, 'Duration')" class="my-icon fa fa-chevron-up"></i>
                     </th>
                     <th style="width: 10%;">
-                      Finding
-                      <i (click)="onSortClick($event, 'Finding')" class="my-icon fa fa-chevron-up"></i>
+                      End Time
+                      <i (click)="onSortClick($event, 'InspectionEndTime')" class="my-icon fa fa-chevron-up"></i>
                     </th>
                     <th style="width: 10%;">
-                      NOV #
-                      <i (click)="onSortClick($event, 'NOV')" class="my-icon fa fa-chevron-up"></i>
+                      Finding
+                      <i (click)="onSortClick($event, 'Finding')" class="my-icon fa fa-chevron-up"></i>
                     </th>
                     <th style="width: 10%;">
                       Company(s) Inspected
@@ -268,8 +268,8 @@
                       item.doorNamesForEachInspection}}</td>
                     <td>{{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
                     <td>{{ item.hours}} hrs &nbsp; {{item.minutes}} mins</td>
+                    <td>{{ item.inspectionEndTime | date:'HH:mm' }}</td>
                     <td>{{ item.inspectionFinding == 'True' ? 'Yes' : 'No'}}</td>
-                    <td>{{ item.novNoMappingForEachInspection}}</td>
 
                     <td>{{ item.companyNamesForEachBadgeholder }}{{item.companyNamesForEachCompanyInfo}}</td>
                     <td [ngClass]="
@@ -300,7 +300,7 @@
                             inspectionId: item.id,
                             isEdit: 1,
                             isClone: 1
-                          }">Clone</a>
+                          }" [skipLocationChange]="true">Clone</a>
 
                       <a [routerLink]="['/admin/inspection']" title="delete" *ngIf="user.rolename == 'Superadmin'"
                         (click)="DeleteInspection(item.id)">Delete</a>
@@ -361,7 +361,10 @@
                     <span style="font-weight: bold;">Duration:</span>
                     {{ item.hours}} hrs &nbsp; {{item.minutes}} mins
                   </div>
-
+                  <div class="col-md-4">
+                    <span style="font-weight: bold;">End Time:</span>
+                    {{ item.inspectionEndTime | date:'HH:mm'}} 
+                  </div>
                 </div>
                 <div class="row">
 

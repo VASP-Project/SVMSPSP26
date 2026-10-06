@@ -565,7 +565,10 @@ export class ProhibitedcheckoutlogComponent implements OnInit {
       next: (response) => {
         // ✅ Filter only "Approved" items
         const approvedItems = response.filter(
-          (item) => item.status === "Approved"
+          (item) => 
+          item.status === "Approved" &&
+          item.prohibitedItemId &&
+          item.prohibitedItemId > 0
         );
 
         // ✅ Map the approved items

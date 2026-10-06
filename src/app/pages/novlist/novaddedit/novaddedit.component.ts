@@ -12,7 +12,7 @@ import { CorrectiveActions, CorrectiveActionsTrainings } from '../correctiveacti
 import { DatePipe } from '@angular/common';
 import { ViolationTypesService } from '../../master/violationtypes/violationtype.service'
 import { CompanyService } from '../../master/company/company.service'
-import { CitationReasonsService } from '../../master/CitationReasons/citationreasons.service'
+import { CitationReasonsService } from '../../master/citationreasons/citationreasons.service'
 import { SignaturePad } from 'angular2-signaturepad';
 import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbNav } from '@ng-bootstrap/ng-bootstrap';
 // import {TabsModule} from 'ngx-tabset';

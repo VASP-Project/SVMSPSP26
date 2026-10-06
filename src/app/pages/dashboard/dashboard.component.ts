@@ -55,7 +55,7 @@ import { MapService } from "../map/map.service";
 import { IncidentReportService } from "../incidentreport/incidentreport.service";
 import { IncidentrecordModule } from "../incidentreport/incidentrecord.module";
 import { AppConfigService } from "@app/_services/appconfigservice ";
-import { CitationReasonsService } from "../master/CitationReasons/citationreasons.service";
+import { CitationReasonsService } from "../master/citationreasons/citationreasons.service";
 
 @Component({
   selector: "app-dashboard",
@@ -1290,6 +1290,8 @@ export class DashboardComponent implements OnInit {
         borderWidth: 1,
       };
       this.lineChartData.push(ss);
+      console.log("FINAL BAR CHART DATA:", this.lineChartData);
+
     });
   }
 

@@ -58,6 +58,7 @@ export class InspectionrecordviewComponent implements OnInit {
   allCompanyList: Company[];
   edtResolutionList: InspectionEdtResolution[] = [];
   edtAlarmList: InspectionEdtAlarm[] = [];
+  isCCTVInspection: boolean = false;
 
   constructor(private router: Router, 
     private route: ActivatedRoute, 
@@ -294,6 +295,7 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = false
       this.isVisitorInfoShow = false      
+      this.isCCTVInspection = false 
     }
     else if(inspTypeName == "Portal Inspection")
     {
@@ -303,7 +305,8 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isFacilityInsp = false
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = false
-      this.isVisitorInfoShow = false       
+      this.isVisitorInfoShow = false  
+      this.isCCTVInspection = false      
     }
     else if(inspTypeName == "AWS Inspection")
     {
@@ -313,7 +316,8 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isFacilityInsp = false
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = false
-      this.isVisitorInfoShow = false       
+      this.isVisitorInfoShow = false   
+      this.isCCTVInspection = false     
     }
     else if(inspTypeName == "Facility Inspection")
     {
@@ -323,7 +327,8 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isFacilityInsp = true
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = false
-      this.isVisitorInfoShow = false      
+      this.isVisitorInfoShow = false  
+      this.isCCTVInspection = false     
     }
     else if(inspTypeName == "Delivery-Vehicle Inspection")
     {
@@ -333,7 +338,8 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isFacilityInsp = false
       this.isDeliveryVehicleInsp = true
       this.isSterileAreaPiInsp = false
-      this.isVisitorInfoShow = true      
+      this.isVisitorInfoShow = true   
+      this.isCCTVInspection = false    
     }
     else if(inspTypeName == "Sterile Area PI Inspection")
     {
@@ -343,7 +349,21 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isFacilityInsp = false
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = true
-      this.isVisitorInfoShow = false      
+      this.isVisitorInfoShow = false 
+      this.isCCTVInspection = false      
+    }else if (inspTypeName == "CCTV Inspection") {
+
+     this.isPerimeterInsp = false;
+      this.isAWSInspection = false;
+      this.isPortalInsp = false;
+      this.isFacilityInsp = false;
+      this.isDeliveryVehicleInsp = false;
+      this.isSterileAreaPiInsp = false;
+      this.isVisitorInfoShow = false;     
+      this.isCCTVInspection = true;
+      
+     
+
     }
     else{
       this.isAWSInspection = false;
@@ -353,6 +373,7 @@ export class InspectionrecordviewComponent implements OnInit {
       this.isDeliveryVehicleInsp = false
       this.isSterileAreaPiInsp = false
       this.isVisitorInfoShow = false  
+      this.isCCTVInspection = false
     }
   }
 
@@ -386,7 +407,24 @@ export class InspectionrecordviewComponent implements OnInit {
                 this.inspectioninfo = data;  
                 this.showFields(this.inspectioninfo.inspectionType,this.inspectioninfo.inspType)               
                 this.dtTrigger.next();                
+                if (data.reviewDateStartTime) {
+                  const start = data.reviewDateStartTime.toString().split('T');
 
+                  const dateParts = start[0].split('-');
+
+                  this.inspectioninfo.reviewDateStartTime =
+                    `${+dateParts[1]}-${+dateParts[2]}-${dateParts[0]} ${start[1].substring(0, 5)}`;
+                    this.inspectioninfo.reviewDateStartTime =  this.datePipe.transform(    this.inspectioninfo.reviewDateStartTime,    'MM/dd/yyyy HH:mm'  );
+                }
+
+                if (data.reviewDateEndTime) {
+                  const end = data.reviewDateEndTime.toString().split('T');
+
+                  const dateParts = end[0].split('-');
+
+                  this.inspectioninfo.reviewDateEndTime =`${+dateParts[1]}-${+dateParts[2]}-${dateParts[0]} ${end[1].substring(0, 5)}`;
+                  this.inspectioninfo.reviewDateEndTime =  this.datePipe.transform(    this.inspectioninfo.reviewDateEndTime,    'MM/dd/yyyy HH:mm'  );
+                }
                 this.inspectionImageList = data.inspAttachments.filter(x => (x.filePath.toLowerCase().split('.', 2)[1] == 'png' || x.filePath.toLowerCase().split('.', 2)[1] == 'jpg' || x.filePath.toLowerCase().split('.', 2)[1] == 'jpeg' || x.filePath.toLowerCase().split('.', 2)[1] == 'gif'));
                 this.inspectionFilesList = data.inspAttachments.filter(x => x.filePath.toLowerCase().split('.', 2)[1] != 'png' && x.filePath.toLowerCase().split('.', 2)[1] != 'jpg' && x.filePath.toLowerCase().split('.', 2)[1] != 'jpeg' && x.filePath.toLowerCase().split('.', 2)[1] != 'gif');
                 

@@ -2158,7 +2158,7 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
     }
   }
 
-  UpdateEventRecord(notificationModel: IncidentNotifications, flag) {
+  UpdateEventRecord(notificationModel: IncidentNotifications) {
     this.notificationModel = notificationModel;
     this.notificationModel.inedit = false
     this.notificationModel.notifiedDate = this.dateAdapter.toModel(this.fromModel(this.notificationModel.notifiedDate));
@@ -2336,7 +2336,7 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
       
   }
 
-  UpdateIncidentEventRecord(eventModel: IncidentEvents, flag) {
+  UpdateIncidentEventRecord(eventModel: IncidentEvents) {
     this.eventModel = eventModel;
     this.eventModel.inedit = false
     this.eventModel.eventDate = this.dateAdapter.toModel(this.fromModel(this.eventModel.eventDate));

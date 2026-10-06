@@ -499,6 +499,16 @@ this.dtOptions = {
     this.isClone = true;
   }
 
+  getInspectionEndDateTime(item: any) {   
+    if (!item.inspectionDateTime || !item.inspectionEndTime) { 
+          return null;   
+        }   
+        const endtime = new Date(item.inspectionDateTime);   
+        const [hours, minutes] = item.inspectionEndTime.split(':').map(Number);  
+         endtime.setHours(hours, minutes, 0, 0);  
+          return endtime;
+        }
+
   clearInspection() {
     $("#dt1")
       .DataTable()

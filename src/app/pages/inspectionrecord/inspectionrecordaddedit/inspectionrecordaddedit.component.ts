@@ -124,7 +124,7 @@ export class InspectionrecordaddeditComponent
   isDeliveryVehicleInsp: boolean = false;
   isSterileAreaPiInsp: boolean = false;
   isVisitorInfoShow: boolean = false;
-
+  isCCTVInspection: boolean = false;
   selectedDoorList: Locations[];
   doorDropdownSettings: {};
   selectedDoorGateNumber: Locations[] = [];
@@ -300,6 +300,7 @@ export class InspectionrecordaddeditComponent
     this.isSterileAreaPiInsp = false;
     this.isVisitorInfoShow = false;
     this.isFacility = false;
+    this.isCCTVInspection = false;
     this.isFinding = true;
     this.isNOV = true;
 
@@ -506,6 +507,7 @@ export class InspectionrecordaddeditComponent
       ),
       // InspectionTime: this.datePipe.transform(this.inspectioninfo.inspectionTime, 'MM/dd/yyyy HH:mm:ss'),
       InspectionTime: this.inspectioninfo.inspectionTime,
+      InspectionEndTime: this.inspectioninfo.inspectionEndTime,
       Hours: this.inspectioninfo.hours,
       Minutes: this.inspectioninfo.minutes,
       InspectionType: this.inspTypeId,
@@ -515,6 +517,7 @@ export class InspectionrecordaddeditComponent
       InspectionNOV: this.inspectioninfo.inspectionNOV,
       // InspectionIncidentReport: this.inspectioninfo.inspectionIncidentReport,
       InspectionSummary: this.inspectioninfo.inspectionSummary,
+
       CurrentInspectionStatusId: InspectionStatus.Draft,
       CreatedBy: this.inspectioninfo.createdBy,
       CreatedDate: this.datePipe.transform(
@@ -551,10 +554,40 @@ export class InspectionrecordaddeditComponent
       SchedulerInputId: this.inspectioninfo.schedulerInputId,
       SchedulerSlotId: this.inspectioninfo.schedulerSlotId,
       IsLeo: this.inspectioninfo.isLeo,
+      ReviewDate: this.dateAdapter.toModel(this.fromModel(this.inspectioninfo.reviewDate) ),
+      ReviewStartTime: this.inspectioninfo.reviewStartTime,
+      ReviewEndTime: this.inspectioninfo.reviewEndTime,
+
+      ReviewDateStartTime: this.combineReviewDateTime(
+        this.dateAdapter.toModel(this.fromModel(this.inspectioninfo.reviewDate) ),
+        this.inspectioninfo.reviewStartTime
+      ),
+
+      ReviewDateEndTime: this.combineReviewDateTime(
+        this.dateAdapter.toModel(this.fromModel(this.inspectioninfo.reviewDate) ),
+        this.inspectioninfo.reviewEndTime
+      ),
     };
     return inspectionDetails;
   }
 
+  private combineReviewDateTime(date: string, time: string): string | null {
+    if (!date || !time) {
+      return null;
+    }
+
+    const parts = date.split('-');
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const month = parts[0].padStart(2, '0');
+    const day = parts[1].padStart(2, '0');
+    const year = parts[2];
+
+    return `${year}-${month}-${day}T${time}:00`;
+  }
   //Inspection page UnAuthdata field only allow numeric value
 //   onlyNumberKey(event: KeyboardEvent) {
 //   const charCode = event.which ? event.which : event.keyCode;
@@ -1022,7 +1055,9 @@ removeImage(image) {
     this.facilityService.GetFacilityList().subscribe(
       (Response: Facilities[]) => {
         this.allFacilityList = Response;
+        this.inspectioninfo.inspectionFacilityId = null;
         this.checkFacility(inspTypeName);
+        console.log("Facility ", this.inspectioninfo.inspectionFacilityId);
       },
       (error: any) => {
         this.toastr.error(`${error}`, "Error");
@@ -1038,10 +1073,7 @@ removeImage(image) {
         (x) =>
           x.facilityName.toLowerCase().trim() == facility1.toLowerCase().trim()
       );
-      if (
-        facility.facilityName.toLowerCase().trim() ==
-        facility1.toLowerCase().trim()
-      ) {
+      if (facility) {
         this.inspectioninfo.inspectionFacilityId = facility.id;
         this.fillLocation(facility.id);
       }
@@ -1064,10 +1096,7 @@ removeImage(image) {
         (x) =>
           x.facilityName.toLowerCase().trim() == facility1.toLowerCase().trim()
       );
-      if (
-        facility.facilityName.toLowerCase().trim() ==
-        facility1.toLowerCase().trim()
-      ) {
+      if (facility) {
         this.inspectioninfo.inspectionFacilityId = facility.id;
         this.fillLocation(facility.id);
       }
@@ -1075,14 +1104,9 @@ removeImage(image) {
 
     if (inspTypeName == "Sterile Area PI Inspection") {
       var facility1 = "Sterile Area PI";
-      var facility = this.allFacilityList.find(
-        (x) =>
-          x.facilityName.toLowerCase().trim() == facility1.toLowerCase().trim()
-      );
-      if (
-        facility.facilityName.toLowerCase().trim() ==
-        facility1.toLowerCase().trim()
-      ) {
+      var facility = this.allFacilityList.find( (x) => x.facilityName.toLowerCase().trim() == facility1.toLowerCase().trim());
+
+      if (facility) {
         this.inspectioninfo.inspectionFacilityId = facility.id;
         this.fillLocation(facility.id);
       }
@@ -1099,6 +1123,7 @@ removeImage(image) {
     this.allLocationList = [];
     this.selectedDoorList = [];
     this.findingDoorList = [];
+    console.log("Before API", this.inspectioninfo.inspectionDate);
     this.locationService.GetLocationListByFacility(facilityId).subscribe(
       (response: Locations[]) => {
         this.allLocationList = response;
@@ -1182,6 +1207,27 @@ removeImage(image) {
           this.showFields(data.inspectionType, data.inspType);
           // this.isFacility = true;
           this.inspectioninfo = data as InspetionRecordDetail;
+          if (data.reviewDateStartTime) {
+            const start = data.reviewDateStartTime.toString().split('T');
+            if (start.length === 2) {
+              const dateParts = start[0].split('-');
+
+            if (dateParts.length === 3) {
+            // MM-DD-YYYY string for your Angular model
+              this.inspectioninfo.reviewDate =
+                `${+dateParts[1]}-${+dateParts[2]}-${dateParts[0]}`;
+              }
+              this.inspectioninfo.reviewStartTime = start[1].substring(0, 5);
+            }
+          }
+
+          if (data.reviewDateEndTime) {
+            const end = data.reviewDateEndTime.toString().split('T');
+            if (end.length === 2) {
+              this.inspectioninfo.reviewEndTime = end[1].substring(0, 5);
+            }
+          }
+          this.inspectioninfo.reviewDate = this.dateAdapter.toModel( this.fromModel(this.inspectioninfo.reviewDate));
           if (this.inspectioninfo.schedulerInputId > 0) {
             this.isschedularId = true;
           }
@@ -1210,6 +1256,10 @@ removeImage(image) {
           this.inspectioninfo.inspectionTime = this.datePipe.transform(
             this.inspectioninfo.inspectionTime,
             "HH:mm"
+          );
+          this.inspectioninfo.inspectionEndTime = this.datePipe.transform(
+            this.inspectioninfo.inspectionEndTime,
+            "HH:mm",
           );
           this.inspectioninfo.inspectionFinding =
             data.inspectionFinding.toString().toLowerCase() == "true"
@@ -1741,6 +1791,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = true;
       this.clearFields();
     } else if (inspTypeName == "Portal Inspection") {
@@ -1751,6 +1802,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = false;
       this.clearFields();
     } else if (inspTypeName == "AWS Inspection") {
@@ -1761,6 +1813,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = false;
       this.clearFields();
     } else if (inspTypeName == "Facility Inspection") {
@@ -1771,6 +1824,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = false;
       this.clearFields();
     } else if (inspTypeName == "Delivery-Vehicle Inspection") {
@@ -1781,6 +1835,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = true;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = true;
+      this.isCCTVInspection = false;
       this.isFacility = true;
       this.clearFields();
     } else if (inspTypeName == "Sterile Area PI Inspection") {
@@ -1791,9 +1846,23 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = true;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = true;
       this.clearFields();
-    } else {
+    } else if (inspTypeName == "CCTV Inspection") {
+     this.isPerimeterInsp = false;
+      this.isAWSInspection = false;
+      this.isPortalInsp = false;
+      this.isFacilityInsp = false;
+      this.isDeliveryVehicleInsp = false;
+      this.isSterileAreaPiInsp = false;
+      this.isVisitorInfoShow = false;
+      this.isFacility = false;
+      this.isCCTVInspection = true;
+      
+      this.clearFields();
+
+    }else {
       this.isPerimeterInsp = true;
       this.isPortalInsp = false;
       this.isAWSInspection = false;
@@ -1801,6 +1870,7 @@ removeImage(image) {
       this.isDeliveryVehicleInsp = false;
       this.isSterileAreaPiInsp = false;
       this.isVisitorInfoShow = false;
+      this.isCCTVInspection = false;
       this.isFacility = false;
       this.clearFields();
     }
@@ -3265,6 +3335,91 @@ removeImage(image) {
       });
     }
   }
+
+  calculateDurationFromStartTime() {
+    if (!this.inspectioninfo.inspectionTime) {
+      return;
+    }
+ 
+    // If End Time exists, calculate Duration
+    if (this.inspectioninfo.inspectionEndTime) {
+      this.calculateDurationFromEndTime();
+      return;
+    }
+ 
+    // If Duration already exists, calculate End Time
+    if (
+      this.inspectioninfo.hours != null &&
+      this.inspectioninfo.hours !== undefined &&
+      this.inspectioninfo.minutes != null &&
+      this.inspectioninfo.minutes !== undefined
+    ) {
+      this.calculateEndTimeFromDuration();
+    }
+  }
+
+  calculateDurationFromEndTime() {
+      if (
+        !this.inspectioninfo.inspectionTime ||
+        !this.inspectioninfo.inspectionEndTime
+      ) {
+        return;
+      }
+
+      const startParts = this.inspectioninfo.inspectionTime.split(":");
+      const endParts = this.inspectioninfo.inspectionEndTime.split(":");
+
+      const startMinutes =
+        Number(startParts[0]) * 60 + Number(startParts[1]);
+
+      const endMinutes =
+        Number(endParts[0]) * 60 + Number(endParts[1]);
+
+      let durationMinutes = endMinutes - startMinutes;
+
+      // If End Time is next day
+      if (durationMinutes < 0) {
+        durationMinutes += 24 * 60;
+      }
+
+      this.inspectioninfo.hours =
+        Math.floor(durationMinutes / 60);
+
+      this.inspectioninfo.minutes =
+        durationMinutes % 60;
+}
+
+calculateEndTimeFromDuration() {
+    if (!this.inspectioninfo.inspectionTime) {
+      return;
+    }
+
+    const hours = Number(this.inspectioninfo.hours || 0);
+    const minutes = Number(this.inspectioninfo.minutes || 0);
+
+    const startParts =
+      this.inspectioninfo.inspectionTime.split(":");
+
+    const startMinutes =
+      Number(startParts[0]) * 60 +
+      Number(startParts[1]);
+
+    let endMinutes =
+      startMinutes +
+      (hours * 60) +
+      minutes;
+
+    endMinutes = endMinutes % (24 * 60);
+
+    const endHour =
+      Math.floor(endMinutes / 60);
+
+    const endMinute =
+      endMinutes % 60;
+
+    this.inspectioninfo.inspectionEndTime =
+      `${String(endHour).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
+}
 
   sortFunction(a, b) {
     // this.isDesc = !this.isDesc; //change the direction
