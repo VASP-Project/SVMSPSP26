@@ -268,7 +268,10 @@
                       item.doorNamesForEachInspection}}</td>
                     <td>{{ item.inspectionDateTime | date: 'MM/dd/yyyy HH:mm' }}</td>
                     <td>{{ item.hours}} hrs &nbsp; {{item.minutes}} mins</td>
-                    <td>{{ item.inspectionEndTime | date:'HH:mm' }}</td>
+                    <td>
+                     {{ item.inspectionDateTime | date:'MM/dd/yyyy' }}
+                     {{ item.inspectionEndTime | date:'HH:mm' }}
+                    </td>
                     <td>{{ item.inspectionFinding == 'True' ? 'Yes' : 'No'}}</td>
 
                     <td>{{ item.companyNamesForEachBadgeholder }}{{item.companyNamesForEachCompanyInfo}}</td>
@@ -363,7 +366,8 @@
                   </div>
                   <div class="col-md-4">
                     <span style="font-weight: bold;">End Time:</span>
-                    {{ item.inspectionEndTime | date:'HH:mm'}} 
+                     {{ item.inspectionDateTime | date:'MM/dd/yyyy' }}
+                     {{ item.inspectionEndTime | date:'HH:mm' }}
                   </div>
                 </div>
                 <div class="row">
