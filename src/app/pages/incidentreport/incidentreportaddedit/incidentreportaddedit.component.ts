@@ -952,6 +952,49 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
            element.newTime = this.onTimeChange(element.eventTime)
           });
 
+          this.incidentEvent.sort((a, b) => {
+            const getDateTime = (date: any, time: string): number => {
+
+            const d = this.convertToDate(date);
+
+              if (!d || !time) {
+                  return 0;
+              }
+
+              const match = time.trim().match(
+                  /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+              );
+
+              if (!match) {
+                  return 0;
+              }
+
+              let hours = Number(match[1]);
+              const minutes = Number(match[2]);
+              const period = match[3].toUpperCase();
+
+              if (hours < 1 || hours > 12 || minutes > 59) {
+                  return 0;
+              }
+
+              if (period === 'PM' && hours !== 12) {
+                  hours += 12;
+              }
+
+              if (period === 'AM' && hours === 12) {
+                  hours = 0;
+              }
+
+              d.setHours(hours, minutes, 0, 0);
+
+              return d.getTime();
+            };
+
+            return getDateTime(b.newDate, b.newTime) -
+                  getDateTime(a.newDate, a.newTime);
+          });
+
+
           this.inciIndividual = data.incidentIndividuals
           this.inciIndividual.forEach(element => {            
           })
@@ -1769,6 +1812,35 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
     this.isReviewInfo = !this.isReviewInfo
   }
 
+  private convertToDate(date: any): Date | null {
+
+    if (!date) {
+        return null;
+    }
+
+    // NgbDateStruct: { year, month, day }
+    if (typeof date === 'object' &&
+        date.year && date.month && date.day) {
+
+        return new Date(
+            date.year,
+            date.month - 1,
+            date.day
+        );
+    }
+
+    // ISO date string: yyyy-MM-dd
+    if (typeof date === 'string' &&
+        /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+
+        const [year, month, day] = date.split('-').map(Number);
+
+        return new Date(year, month - 1, day);
+    }
+
+    return null;
+  }
+
   notificationTypeIdValue(notificationModel: IncidentNotifications){
     this.notificationModel = notificationModel
     if(this.isEdit == "1"){
@@ -2289,6 +2361,7 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
       this.eventModel.newTime = this.eventModel.eventTime
       this.eventModel.eventTypeName = this.eventTypeList.filter(x => x.id === this.eventModel.eventTypeId)[0].type;
       this.eventModel.eventTypeId = eventModel.eventTypeId
+      this.eventModel.userId = this.user.id;
       const copyEvent = { ...this.eventModel };
       
       this.incidentinfo.incidentEvents.push(copyEvent);
@@ -2296,28 +2369,40 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
 
       const getDateTime = (date: any, time: string): number => {
 
-        // Date: MM/dd/yyyy
-        const d = new Date(date);
+      const d = this.convertToDate(date);
 
-        // Time: 3:09 PM
-        const timeParts = time.trim().split(' ');
-        const [hours, minutes] = timeParts[0].split(':').map(Number);
-        const period = timeParts[1].toUpperCase();
+      if (!d || !time) {
+          return 0;
+      }
 
-        let hour = hours;
+      const match = time.trim().match(
+          /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+      );
 
-        if (period === 'PM' && hour !== 12) {
-          hour += 12;
-        }
+      if (!match) {
+          return 0;
+      }
 
-        if (period === 'AM' && hour === 12) {
-          hour = 0;
-        }
+      let hours = Number(match[1]);
+      const minutes = Number(match[2]);
+      const period = match[3].toUpperCase();
 
-        d.setHours(hour, minutes, 0, 0);
+      if (hours < 1 || hours > 12 || minutes > 59) {
+          return 0;
+      }
 
-        return d.getTime();
-      };
+      if (period === 'PM' && hours !== 12) {
+          hours += 12;
+      }
+
+      if (period === 'AM' && hours === 12) {
+          hours = 0;
+      }
+
+      d.setHours(hours, minutes, 0, 0);
+
+      return d.getTime();
+  };
 
       return getDateTime(b.newDate, b.newTime) -
             getDateTime(a.newDate, a.newTime);
