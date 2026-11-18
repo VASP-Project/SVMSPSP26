@@ -930,15 +930,40 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
           // this.selectedLocationList = selectedL
 
           
-          let selectedD = []
-          let doorids = data.incidentDoor.split(",")
-          doorids.forEach(element => {
-            let dor = new SelectedLocationDoor()
-            dor.id = +element
-            let name = this.locationDoorlist.filter(x => x.id == +element)[0].location
-            selectedD.push({ id: +element, location: name })
-          });
-          this.selectedDoorList = selectedD
+          // let selectedD = []
+          // let doorids = data.incidentDoor.split(",")
+          // doorids.forEach(element => {
+          //   let dor = new SelectedLocationDoor()
+          //   dor.id = +element
+          //   let name = this.locationDoorlist.filter(x => x.id == +element)[0].location
+          //   selectedD.push({ id: +element, location: name })
+          // });
+          // this.selectedDoorList = selectedD
+
+          let selectedD = [];
+
+          if (data.incidentDoor != null && data.incidentDoor.trim() !== '') {
+
+              let doorids = data.incidentDoor
+                  .split(',')
+                  .filter(x => x.trim() !== '');
+
+              doorids.forEach(element => {
+
+                  let doorId = +element;
+
+                  let door = this.locationDoorlist.find(x => x.id === doorId);
+
+                  if (door) {
+                      selectedD.push({
+                          id: door.id,
+                          location: door.location
+                      });
+                  }
+              });
+          }
+
+          this.selectedDoorList = selectedD;
 
           this.incdentNotification = data.notificationList;
           this.incdentNotification.forEach(element => {          
