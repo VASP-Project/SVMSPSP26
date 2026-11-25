@@ -12,7 +12,7 @@
                 margin-left: 18px;
               "
             >
-              Active Badges
+             Genetec Cardholders
             </span>
            
             
@@ -56,9 +56,15 @@
                 >
                   <thead class="text-primary">
                     <tr style="background-color: #484D56; color: white">
-                      
                       <th>
-                        Company Name
+                        Id
+                        <i
+                          (click)="onSortClick($event, 'CompanyName')"
+                          class="my-icon fa fa-chevron-up"
+                        ></i>
+                      </th>
+                      <th>
+                        Cardholder
                         <i
                           (click)="onSortClick($event, 'CompanyName')"
                           class="my-icon fa fa-chevron-up"
@@ -79,48 +85,48 @@
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
-                      <th>Badge Status
+                      <th>Email
                         <i
                         (click)="onSortClick($event, 'Status')"
                         class="my-icon fa fa-chevron-up"
                       ></i></th>
                       <th>
-                        Badge No.
+                        Mobile Phone
                         <i
                           (click)="onSortClick($event, 'BadgeNo')"
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
                       <th>
-                        Badge Color
+                        Status
                         <i
                           (click)="onSortClick($event, 'BadgeColor')"
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
                       <th>
-                        Issuance Date
+                       Description
                         <i
                           (click)="onSortClick($event, 'IssuanceDate')"
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
                       <th>
-                        Expiration Date<i
+                       Credentials<i
                           (click)="onSortClick($event, 'ExpirationDate')"
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
                       <th>
-                        Escort Icon
+                        Groups
                         <i
                           (click)="onSortClick($event, 'EscortIcon')"
                           class="my-icon fa fa-chevron-up"
                         ></i>
                       </th>
-                      <th>Access Level</th>                    
+                      <!-- <th>Access Level</th>                    
                       <th>Drivers Icon</th>
-                      <th>Custom Seal</th>
+                      <th>Custom Seal</th> -->
                      
                      
                      
@@ -129,7 +135,7 @@
                   <tbody>
                     <tr
                       *ngFor="
-                        let item of launchbadgeauditlist
+                        let item of cardholders
                           | paginate
                             : {
                                 itemsPerPage: pageHeaders.pageSize,
@@ -138,23 +144,29 @@
                               };
                         let i = index;
                       "
-                      [ngClass]="item.status != 'ACTIVE'?'redbg':''"
+                      [ngClass]="item.status != 'Active'?'redbg':''"
                     >
-                    <td>{{ item.company }}</td>                      
+                    <td>{{ item.guid }}</td> 
+                    <td>{{ item.name }}</td>                      
                       <td>{{ item.firstName }}</td>
                       <td>{{ item.lastName }}</td>
-                      <td>{{ item.status}}</td>
-                      <td>{{ item.badgeNumber }}</td>
-                      <td  >{{ item.badgeColor }}</td>
-                      <td>{{ item.issuanceDate | date: "MM/dd/yyyy" }}</td>
-                      <td>{{ item.expirationDate | date: "MM/dd/yyyy" }}</td>
-                      <td>{{ item.escortIcon }}</td>
-                      <td>{{ item.accessLevel }}</td>
+                      <td>{{ item.email}}</td>
+                      <td>{{ item.mobilePhone }}</td>
+                      <td  >{{ item.status }}</td>
+                      <td>{{ item.description  }}</td>
+                      <td>{{ item.credentials?.length || 0 }}</td>
+                      <td>{{ item.groups?.length || 0 }}</td>
+                      <!-- <td>{{ item.accessLevel }}</td>
                       <td>{{ item.driversIcon }}</td>
-                      <td>{{ item.customSeal }}</td> 
+                      <td>{{ item.customSeal }}</td>  -->
                                          
                       
                       
+                    </tr>
+                    <tr *ngIf="!cardholders || cardholders.length === 0">
+                      <td colspan="9" class="text-center">
+                        No cardholders found.
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -197,14 +209,22 @@
                     </span> -->
                   </div>
                   <div class="list-group" style="margin-top: 5px;">
-                    <a *ngFor=" let item of launchbadgeauditlist;
+                    <a *ngFor=" let item of cardholders;
                         trackBy: identify; index as i; "
-                        [ngClass]="item.status != 'ACTIVE'?'redbg':''"
+                        [ngClass]="item.status != 'Active'?'redbg':''"
                          skipLocationChange class="list-group-item list-group-item-action">
                       <div class="row">
                         <div class="col-md-4">
-                          <span style="font-weight: bold;"> Company Name:</span>
-                          {{ item.company }}
+                          <span style="font-weight: bold;"> Id:</span>
+                          {{ item.guid  }}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;"> Cardholder Name:</span>
+                          {{ item.name  }}
+                        </div>
+                        <div class="col-md-4">
+                          <span style="font-weight: bold;">Status:</span>
+                          {{ item.status }}
                         </div>
                         <div class="col-md-4">
                           <span style="font-weight: bold;">FirstName:</span>
@@ -217,33 +237,33 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <span style="font-weight: bold;">Badge Status:</span>
-                          {{ item.status}}
+                          <span style="font-weight: bold;">Email:</span>
+                          {{ item.email}}
                         </div>
                         <div class="col-md-4">
-                          <span style="font-weight: bold;">Badge No.:</span>
-                          {{ item.badgeNumber }}
+                          <span style="font-weight: bold;">Mobile Phone.:</span>
+                          {{ item.mobilePhone }}
                         </div>
                         <div class="col-md-4">
-                          <span style="font-weight: bold;">Badge Color:</span>
-                          {{ item.badgeColor }}
+                          <span style="font-weight: bold;">Description:</span>
+                          {{ item.description }}
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <span style="font-weight: bold;">Issuance Date:</span>
-                          {{ item.issuanceDate | date: "MM/dd/yyyy" }}
+                          <span style="font-weight: bold;">Credentials</span>
+                          {{ item.credentials?.length || 0 }}
                         </div>
                         <div class="col-md-4">
-                          <span style="font-weight: bold;">Expiration Date:</span>
-                          {{ item.expirationDate | date: "MM/dd/yyyy" }}
+                          <span style="font-weight: bold;">Groups:</span>
+                          {{ item.groups?.length || 0 }}
                         </div>
                         <div class="col-md-4">
                           <span style="font-weight: bold;">Escort Icon:</span>
                           {{ item.escortIcon }}
                         </div>
                       </div>
-                      <div class="row">
+                      <!-- <div class="row">
                         <div class="col-md-4">
                           <span style="font-weight: bold;">Access Level:</span>
                           {{ item.accessLevel }}
@@ -256,8 +276,12 @@
                           <span style="font-weight: bold;">Custom Seal:</span>
                           {{ item.customSeal }}
                         </div>
-                      </div>
+                      </div> -->
                     </a>
+                    <div *ngIf="!cardholders || cardholders.length === 0"
+                        class="text-center">
+                      No cardholders found.
+                    </div>
                     <ngb-pagination [(page)]="pageHeaders.pageNumber" [pageSize]="pageHeaders.pageSize"
                       [collectionSize]="pageHeaders.totalItems" [maxSize]="1" (pageChange)="onPageChange($event)">
                       <ng-template ngbPaginationPrevious>Prev</ng-template>

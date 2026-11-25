@@ -159,3 +159,24 @@ export class AuditCompanies {
   ssiPopup:boolean = false;
   authSignerComment:string = "";
 }
+
+
+export class GenetecCardholder {
+  guid: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobilePhone: string;
+  status: string;
+  description: string;
+  credentials: any[];
+  groups: any[];
+}
+
+export class GenetecCardholderListResponse {
+  page: number | null;
+  pageSize: number | null;
+  count: number;
+  items: GenetecCardholder[];
+}

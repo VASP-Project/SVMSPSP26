@@ -4,7 +4,7 @@ import { QueryStringParameters } from '@app/shared/shared.model';
 import { AppConfigService } from '@app/_services/appconfigservice ';
 import { Observable } from 'rxjs';
 import { AuditCompanysViewModel, BadgeHolderCountViewModel } from '../../badgeauditdashboard/badgeauditdashboard.model';
-import { AuditCompanies, AuthSignerCountViewModel, BadgeAuditCompanyEmployeeList, BadgeAuditDetails, DataOutputModel, DataOutputModelemp } from '../badgelisting.model';
+import { AuditCompanies, AuthSignerCountViewModel, BadgeAuditCompanyEmployeeList, BadgeAuditDetails, DataOutputModel, DataOutputModelemp, GenetecCardholderListResponse } from '../badgelisting.model';
 import { BadgeAuditCompanyEmployee } from '../badgelisting.model';
 
 @Injectable({
@@ -201,4 +201,9 @@ export class BadgelistingService {
       return this.http.get(this.gnBaseURL + "BadgeAudit/UpdateSubmitToLaunch/" + id + `/` + btoa(compname));
     }
     
+    public GetAllCardholders() {
+    return this.http.get<GenetecCardholderListResponse>(
+      this.gnBaseURL + "GenetecIntegration/GetAllCardholders"
+    );
+  }
 }

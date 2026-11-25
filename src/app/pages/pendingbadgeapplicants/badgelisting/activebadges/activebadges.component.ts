@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PagingHeader, QueryStringParameters } from '@app/shared/shared.model';
 import { NgbCalendar, NgbDateAdapter, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { BadgeAuditCompanyEmployee, BadgeAuditCompanyEmployeeList, DataOutputModelemp } from '../badgelisting.model';
+import { BadgeAuditCompanyEmployee, BadgeAuditCompanyEmployeeList, DataOutputModelemp, GenetecCardholder, GenetecCardholderListResponse } from '../badgelisting.model';
 import { BadgelistingService } from '../badgelistingedit/badgelisting.service';
 
 @Component({
@@ -25,7 +25,8 @@ export class ActivebadgesComponent implements OnInit {
   isEdit: number = 0;
   user: any;
   isAuthsigner: boolean = false;
-  
+  cardholders: GenetecCardholder[] = [];
+  allCardholders: GenetecCardholder[] = [];
 
   constructor(
     private modalService: NgbModal,
@@ -39,8 +40,8 @@ export class ActivebadgesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-     const savedPageSize = sessionStorage.getItem('ActiveBadgeSize');
-     const savedPageNumber = sessionStorage.getItem('ActiveBadgeNumber');
+     const savedPageSize = sessionStorage.getItem('GenetecCardholderSize');
+     const savedPageNumber = sessionStorage.getItem('GenetecCardholderNumber');
    
     this.windowRef = window;
     this.queryParam.pageSize = savedPageSize ? +savedPageSize :50;
@@ -64,7 +65,7 @@ export class ActivebadgesComponent implements OnInit {
       setTimeout(()=>{
     if (this.user.rolename == "AuthSigner" || this.user.rolename == "StaffAdmin") {
       this.isAuthsigner = true;
-      this.GetActiveBadgesByAuth()
+      this.getAllCardholders()
       
 
     }
@@ -73,6 +74,38 @@ export class ActivebadgesComponent implements OnInit {
 
 
 
+  }
+
+  public getAllCardholders(): void {
+
+    this.badgeAuditService.GetAllCardholders().subscribe(
+      (response: GenetecCardholderListResponse) => {
+
+       this.allCardholders = response?.items || [];
+        this.cardholders = [...this.allCardholders];
+
+        this.pageHeaders = {
+          pageNumber: this.queryParam.pageNumber,
+          pageSize: this.queryParam.pageSize,
+          totalItems: response?.count || 0,
+          totalPages:response.page
+        };
+
+      },
+      (error: any) => {
+
+        console.log("Error fetching Genetec cardholders", error);
+
+        this.cardholders = [];
+
+        this.pageHeaders = {
+          pageNumber: 1,
+          pageSize: this.queryParam.pageSize,
+          totalItems: 0,
+          totalPages:this.queryParam.pageNumber
+        };
+      }
+    );
   }
 
   onSortClick(event, columnname) {
@@ -88,10 +121,21 @@ export class ActivebadgesComponent implements OnInit {
       classList.remove('fa-chevron-down');
       this.sortDir = 1;
     }
-    this.queryParam.orderBy = columnname
-    this.queryParam.orderDir = this.sortDir == -1 ? "desc" : "asc"
-    this.GetActiveBadgesByAuth();
+    this.cardholders.sort((a, b) => {
+
+      let valueA = a[columnname] || '';
+      let valueB = b[columnname] || '';
+
+      let result = valueA.toString().localeCompare(
+        valueB.toString(),
+        undefined,
+        { sensitivity: 'base' }
+      );
+
+      return this.sortDir === -1 ? -result : result;
+    });
   }
+
   public GetActiveBadgesByAuth() {
     //this.spinner.show();
     this.badgeAuditService.GetActiveBadgesByAuth(this.queryParam,  this.user.id).subscribe((response: DataOutputModelemp) => {
@@ -110,27 +154,53 @@ export class ActivebadgesComponent implements OnInit {
     });
   }
   onPageChange(newPage: number): void {
-sessionStorage.setItem(
-    'ActiveBadgeNumber',
-    newPage.toString()
-  );
-    this.queryParam.pageNumber = newPage;
-    this.GetActiveBadgesByAuth();
-  }
+  sessionStorage.setItem(
+      'GenetecCardholderNumber',
+      newPage.toString()
+    );
+      this.queryParam.pageNumber = newPage;
+      this.GetActiveBadgesByAuth();
+    }
+
   onPageSizeChange(): void {
     sessionStorage.setItem(
-    'ActiveBadgeSize',
+    'GenetecCardholderSize',
     this.queryParam.pageSize.toString()
   );
 
     this.queryParam.pageSize = +this.queryParam.pageSize
     this.queryParam.maxPageSize = +this.queryParam.pageSize
-    this.GetActiveBadgesByAuth();
+    this.queryParam.pageNumber = 1;
+
+    sessionStorage.setItem('GenetecCardholderNumber', '1');
   }
 
  
-  searchtable() {
-    this.GetActiveBadgesByAuth();
+  searchtable(): void {
+
+    const searchText = (this.queryParam.searchQuery || '')
+      .trim()
+      .toLowerCase();
+
+    this.cardholders = this.allCardholders.filter(item => {
+
+      return [
+        item.name,
+        item.firstName,
+        item.lastName,
+        item.email,
+        item.mobilePhone,
+        item.status,
+        item.description
+      ].some(value =>
+        (value || '').toString().toLowerCase().includes(searchText)
+      );
+
+    });
+
+    this.pageHeaders.totalItems = this.cardholders.length;
+    this.queryParam.pageNumber = 1;
+    this.pageHeaders.pageNumber = 1;
   }
 
 }
