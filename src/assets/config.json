@@ -1,5 +1,5 @@
 {
-    "API_URL": "https://localhost:5001/api/", 
+    "API_URL": "http://localhost:54785/api/", 
     "HeaderText": "Hello, Welcome to the SAFE!",
     "SecurityMessage": "Accept all terms and conditions",
     "SecurityMessageAuth": "Acknowledge all terms and conditions",

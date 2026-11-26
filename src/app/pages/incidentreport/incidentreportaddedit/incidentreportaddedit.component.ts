@@ -982,38 +982,38 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
 
             const d = this.convertToDate(date);
 
-              if (!d || !time) {
-                  return 0;
-              }
+            if (!d || !time) {
+                return 0;
+            }
 
-              const match = time.trim().match(
-                  /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
-              );
+            const match = time.trim().match(
+                /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+            );
 
-              if (!match) {
-                  return 0;
-              }
+            if (!match) {
+                return 0;
+            }
 
-              let hours = Number(match[1]);
-              const minutes = Number(match[2]);
-              const period = match[3].toUpperCase();
+            let hours = Number(match[1]);
+            const minutes = Number(match[2]);
+            const period = match[3].toUpperCase();
 
-              if (hours < 1 || hours > 12 || minutes > 59) {
-                  return 0;
-              }
+            if (hours < 1 || hours > 12 || minutes > 59) {
+                return 0;
+            }
 
-              if (period === 'PM' && hours !== 12) {
-                  hours += 12;
-              }
+            if (period === 'PM' && hours !== 12) {
+                hours += 12;
+            }
 
-              if (period === 'AM' && hours === 12) {
-                  hours = 0;
-              }
+            if (period === 'AM' && hours === 12) {
+                hours = 0;
+            }
 
-              d.setHours(hours, minutes, 0, 0);
+            d.setHours(hours, minutes, 0, 0);
 
-              return d.getTime();
-            };
+            return d.getTime();
+        };
 
             return getDateTime(b.newDate, b.newTime) -
                   getDateTime(a.newDate, a.newTime);
@@ -2392,43 +2392,78 @@ export class IncidentreportaddeditComponent extends FormCanDeactivate implements
       this.incidentinfo.incidentEvents.push(copyEvent);
       this.incidentinfo.incidentEvents.sort((a, b) => {
 
-      const getDateTime = (date: any, time: string): number => {
+  //     const getDateTime = (date: any, time: string): number => {
 
-      const d = this.convertToDate(date);
+  //     const d = this.convertToDate(date);
 
-      if (!d || !time) {
-          return 0;
-      }
+  //     if (!d || !time) {
+  //         return 0;
+  //     }
 
-      const match = time.trim().match(
-          /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
-      );
+  //     const match = time.trim().match(
+  //         /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+  //     );
 
-      if (!match) {
-          return 0;
-      }
+  //     if (!match) {
+  //         return 0;
+  //     }
 
-      let hours = Number(match[1]);
-      const minutes = Number(match[2]);
-      const period = match[3].toUpperCase();
+  //     let hours = Number(match[1]);
+  //     const minutes = Number(match[2]);
+  //     const period = match[3].toUpperCase();
 
-      if (hours < 1 || hours > 12 || minutes > 59) {
-          return 0;
-      }
+  //     if (hours < 1 || hours > 12 || minutes > 59) {
+  //         return 0;
+  //     }
 
-      if (period === 'PM' && hours !== 12) {
-          hours += 12;
-      }
+  //     if (period === 'PM' && hours !== 12) {
+  //         hours += 12;
+  //     }
 
-      if (period === 'AM' && hours === 12) {
-          hours = 0;
-      }
+  //     if (period === 'AM' && hours === 12) {
+  //         hours = 0;
+  //     }
 
-      d.setHours(hours, minutes, 0, 0);
+  //     d.setHours(hours, minutes, 0, 0);
 
-      return d.getTime();
-  };
+  //     return d.getTime();
+  // };
+        const getDateTime = (date: any, time: string): number => {
 
+    const d = this.convertToDate(date);
+
+    if (!d || !time) {
+        return 0;
+    }
+
+    const match = time.trim().match(
+        /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i
+    );
+
+    if (!match) {
+        return 0;
+    }
+
+    let hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    const period = match[3].toUpperCase();
+
+    if (hours < 1 || hours > 12 || minutes > 59) {
+        return 0;
+    }
+
+    if (period === 'PM' && hours !== 12) {
+        hours += 12;
+    }
+
+    if (period === 'AM' && hours === 12) {
+        hours = 0;
+    }
+
+    d.setHours(hours, minutes, 0, 0);
+
+    return d.getTime();
+};
       return getDateTime(b.newDate, b.newTime) -
             getDateTime(a.newDate, a.newTime);
     });

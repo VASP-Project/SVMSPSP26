@@ -8,6 +8,9 @@ export class FormDataModel {
   auditCount: number | null;
   emailId:string | null;
   auditSchedules: ConcessionaireAuditSchedule[];
+  isAuditOverdueTimeConfigurable : boolean;
+  nextAuditStartIntervalInMin: number | null;
+  reminderTimeIntervalInMin: number | null;
 }
 
 // company-item.model.ts
@@ -175,6 +178,8 @@ export class ProhibitedAuditSummary {
   locationId?:number;
   thumbnailImage?:string;
   prohibitedItemId ?:number;
+  missedAuditCount?:number;
+  nextAuditNo?:number;
   
 }
 

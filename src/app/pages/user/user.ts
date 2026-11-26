@@ -30,6 +30,8 @@ export class User {
     countryCode:string = "";
     isTsaApprover: boolean = false;
     isTsaScheduler:boolean = false;
+    isAwsNotify: boolean = false;
+    isAwsWeeklyNotify: boolean = false;
     isAuditor:boolean;
     isPicheckout: boolean ;
     // isPIAuditPrivilege: boolean = false;

@@ -126,6 +126,9 @@ export class ConcessionssecurityauditComponent implements OnInit {
   auditLocationId:number
   completedAuditCount:number
   modalOptions: NgbModalOptions;
+  showonModalSelectedAuditcount:number = 0;
+  dailyAuditId: number | null = null;
+
   constructor(
     private ref: ChangeDetectorRef,
     private companyMasterService: CompanyMasterService,
@@ -523,7 +526,8 @@ getItemStatus(dailyAuditId: number, modal: any) {
       .subscribe(
         (response: ProhibitedItemAudit[]) => {
           this.prohibitedItemList = response; 
-         
+          this.dailyAuditId = this.prohibitedItemList[0]?.dailyAuditId;
+          this.showonModalSelectedAuditcount = this.prohibitedItemList[0]?.auditNo;
           this.prohibitedItemList.forEach((item) => { 
             this.companyMasterService.GetProhibitedItemImages(item.prohibitedItemId )
               .subscribe((imgList) => {
@@ -551,6 +555,8 @@ getItemStatus(dailyAuditId: number, modal: any) {
       .subscribe(
         (response: ProhibitedItemAudit[]) => {
           this.prohibitedItemList = response;
+          this.dailyAuditId = this.prohibitedItemList[0]?.dailyAuditId;
+          this.showonModalSelectedAuditcount = this.prohibitedItemList[0]?.auditNo;
           this.prohibitedItemList = this.prohibitedItemList.sort((a, b) =>
             a.shortDescription.localeCompare(b.shortDescription)
           );
@@ -783,7 +789,7 @@ finalSubmit(modal: any) {
   const auditComment = this.prohibitedItemModel.auditComment;
 
   this.companyMasterService
-    .UpdateProhibitedDailySummary(this.LogId, this.auditedBy, auditComment)
+    .UpdateProhibitedDailySummary(this.dailyAuditId, this.auditedBy, auditComment)
     .subscribe(
       (response: boolean) => {
         if (!response) {
@@ -834,21 +840,19 @@ finalSubmit(modal: any) {
   }
 
   getAuditButtonClass(log: any): string {
-    const nextAudit = log.completedAuditCount + 1;
-
-    if (nextAudit === 1) {
-      return "btn-danger"; // Red
+    switch (log.nextAuditNo) {
+      case 1:
+        return "btn-danger";
+      case 2:
+        return "btn-warning";
+      case 3:
+        return "btn-success";
+      default:
+        return "btn-success";
     }
-
-    if (nextAudit === 2) {
-      return "btn-warning"; // Yellow
-    }
-
-    return "btn-success"; // Green
   }
-  getAuditButtonText(log: any): string {
-    const nextAudit = log.completedAuditCount + 1;
 
-    return `Start Audit ${nextAudit}`;
+  getAuditButtonText(log: any): string {
+    return `Start Audit ${log.nextAuditNo}`;
   }
 }

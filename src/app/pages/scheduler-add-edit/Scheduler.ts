@@ -53,7 +53,8 @@ export class ScheduleItem {
     door: string;
 
     inspectionId: number | null;
-    inspectionStatus?: string;
+    inspectionStatus?: string | null;
+    inspectionRecordNo: string | null;
 }
 export class ScheduleDisplayRow {
   slotId: string;

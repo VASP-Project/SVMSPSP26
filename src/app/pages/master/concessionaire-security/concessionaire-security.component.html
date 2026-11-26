@@ -63,18 +63,41 @@
     </div>
   </div>
   <div style="margin-top: 20px;"></div>
-  <div class="row">
+  
+  <div class ="row"> 
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="checkbox">Allow Audit Overdue Time Configuration</label>
+
+        &nbsp;
+        <input
+          class="form-check-input checkbox-size"
+          type="checkbox"
+          [(ngModel)]="formDataModel.isAuditOverdueTimeConfigurable"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="checkBoxChange($event)"
+          style="font-size: 20px"
+        />
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <!-- <div class="row">
     <div class="col-md-3" *ngFor="let audit of auditTimes; let i = index">
       <div class="form-group">
         <label>
-          {{audit.auditNo}}{{getOrdinal(audit.auditNo)}} Audit overdue time
+          {{ audit.auditNo }}{{ getOrdinal(audit.auditNo) }} Audit overdue time
         </label>
 
         <input
           type="time"
           class="form-control"
           [(ngModel)]="audit.overdueTime"
-          [name]="'auditTime' + audit.auditNo">
+          [name]="'auditTime' + audit.auditNo"
+          [disabled]="!formDataModel.isAuditOverdueTimeConfigurable"
+        />
         <div class="form-check mt-2">
           <input
             type="checkbox"
@@ -89,6 +112,97 @@
           </label>
         </div>
       </div>
+    </div>
+  </div> -->
+  <!-- Audit Overdue Times Container -->
+  <div class="overdue-times-container mt-4">
+    
+    <h5 class="overdue-times-title">
+      <i class="fa fa-clock-o"></i>
+      Audit Overdue Times
+    </h5>
+    <div class="row">
+       <div class="col-sm-12 col-md-5">
+        <div class="form-group">
+          <label>Reminder Time Interval (In Min.)</label>
+          <input
+            type="number"
+            class="form-control"
+            name="reminderTimeInterval"
+            [(ngModel)]="formDataModel.reminderTimeIntervalInMin"
+            [disabled]="!formDataModel.isAuditOverdueTimeConfigurable"
+            min="0"
+            step="1"
+            #reminderInterval="ngModel"
+          />
+
+          <small class="text-muted">
+            Common reminder interval applicable to all three audits.
+          </small>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-5">
+        <div class="form-group">
+          <label>Next Audit Start Interval (In Min.)</label>
+          <input
+            type="number"
+            class="form-control"
+            name="nextAuditStartInterval"
+            [(ngModel)]="formDataModel.nextAuditStartIntervalInMin"
+            [disabled]="!formDataModel.isAuditOverdueTimeConfigurable"
+             min="0"
+            step="1"
+            #interval="ngModel"
+          />
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 20px"></div>
+    <div class="row">
+      <div class="col-sm-12 col-md-4"  *ngFor="let audit of auditTimes; let i = index" >
+        <div class="audit-time-box">
+          <h5>
+            {{ audit.auditNo }}{{ getOrdinal(audit.auditNo) }} Audit
+          </h5>
+
+          <div class="form-group">
+            <label>Overdue Time</label>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="audit.overdueTime"
+              [name]="'auditTime' + audit.auditNo"
+              [disabled]="!formDataModel.isAuditOverdueTimeConfigurable"
+            />
+          </div>
+
+          <div class="form-check mt-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [(ngModel)]="audit.isNextDay"
+              [name]="'isNextDay' + audit.auditNo"
+              [id]="'isNextDay' + audit.auditNo"
+              [disabled]="!formDataModel.isAuditOverdueTimeConfigurable"
+            />
+
+            <label
+              class="form-check-label"
+              [for]="'isNextDay' + audit.auditNo"
+            >
+              Next Day
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="text-muted mt-2"
+      *ngIf="!formDataModel.isAuditOverdueTimeConfigurable"
+    >
+      <i class="fa fa-info-circle"></i>
+      Overdue time configuration is disabled.
     </div>
   </div>
     

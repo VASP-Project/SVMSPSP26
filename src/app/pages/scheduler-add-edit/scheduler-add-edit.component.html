@@ -480,12 +480,12 @@
                                                             <button
                                                                 *ngIf="slot.inspectionId && slot.inspectionStatus !== 'Closed' && (isSuperAdmin || isStaffAdmin || isIssuer) && isAlreadyVerified"
                                                                 class="btn btn-warning btn-sm"
-                                                                (click)="goToEdit(slot)" [title]="'Edit Inspection ID: ' + slot.inspectionId">
+                                                                (click)="goToEdit(slot)" [title]="'Edit Inspection ID: ' + (slot.inspectionRecordNo || 'N/A')">
                                                                 <i class="bi bi-pencil-square"></i>
                                                             </button>
                                                             <button
                                                                 *ngIf="slot.inspectionStatus === 'Closed' && (isSuperAdmin || isStaffAdmin || isIssuer)"
-                                                                class="btn btn-primary btn-sm ms-1 action-btn" [title]="'Inspection ID: ' + slot.inspectionId"
+                                                                class="btn btn-primary btn-sm ms-1 action-btn" [title]="'Inspection ID: ' + (slot.inspectionRecordNo || 'N/A')"
                                                                 (click)="viewInspection(slot.inspectionId)">
                                                                 <i class="bi bi-eye"></i>
                                                             </button>

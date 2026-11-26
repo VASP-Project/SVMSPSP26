@@ -32,6 +32,8 @@ export class ConcessionaireSecurityComponent implements OnInit {
       (response: FormDataModel) => {
         if (response) {
           this.formDataModel = response;
+          this.formDataModel.isAuditOverdueTimeConfigurable = response.isAuditOverdueTimeConfigurable ?? false;
+          this.formDataModel.nextAuditStartIntervalInMin = response.nextAuditStartIntervalInMin ?? null;
           if (response.auditSchedules && response.auditSchedules.length > 0) {
             this.auditTimes = response.auditSchedules
               .sort((a, b) => a.auditNo - b.auditNo)
@@ -54,7 +56,7 @@ export class ConcessionaireSecurityComponent implements OnInit {
             }
           }
         } else {
-          this.toastr.warning('No data received from server.', 'Warning');
+          //this.toastr.warning('No data received from server.', 'Warning');
         }
       },
       (error: any) => {
@@ -72,6 +74,9 @@ export class ConcessionaireSecurityComponent implements OnInit {
         ItemForCompany :  this.formDataModel.itemForCompany,
         AuditCount : this.formDataModel.auditCount,
         EmailId: this.formDataModel.emailId,
+        IsAuditOverdueTimeConfigurable: this.formDataModel.isAuditOverdueTimeConfigurable,
+        NextAuditStartIntervalInMin: this.formDataModel.nextAuditStartIntervalInMin,
+        ReminderTimeIntervalInMin: this.formDataModel.reminderTimeIntervalInMin,
         AuditSchedules: this.auditTimes
       };
 
@@ -139,4 +144,28 @@ export class ConcessionaireSecurityComponent implements OnInit {
     }
   }
 
+  checkBoxChange(isChecked: boolean) {
+    if (!isChecked) {
+      // Keep existing values temporarily
+      this.auditTimes = this.auditTimes.map((audit) => ({
+        ...audit,
+      }));
+
+      // Display blank values
+      this.auditTimes.forEach((audit) => {
+        audit.overdueTime = null;
+        audit.isNextDay = false;
+        
+      });
+      this.formDataModel.nextAuditStartIntervalInMin = 0;
+      this.formDataModel.reminderTimeIntervalInMin = 0;
+    } else {
+      // Restore previously configured values
+      if (this.auditTimes.length > 0) {
+        this.auditTimes = this.auditTimes.map((audit) => ({
+          ...audit,
+        }));
+      }
+    }
+  }
 }

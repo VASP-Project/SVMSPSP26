@@ -322,6 +322,53 @@
           </div>
           <div class="row">
             <div class="col-md-6"></div>
+            <div class="col-md-3 pt-md-2">
+              <div class="form-group">
+                <label for="checkbox">AWS Daily Privilege</label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isAwsNotify"
+                      [(ngModel)]="this.User.isAwsNotify"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="checkBoxChangeAwsNotify($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 pt-md-2">
+              <div class="form-group">
+                <label for="checkbox">AWS Weekly Notifications</label>
+                <div class="form-check" style="margin-left: 10px">
+                  <label class="form-check-label">
+
+                    <input
+                      class="form-check-input checkbox-size"
+                      type="checkbox"
+                      [checked]="this.User.isAwsWeeklyNotify"
+                      [(ngModel)]="this.User.isAwsWeeklyNotify"
+                      [ngModelOptions]="{ standalone: true }"
+                      (click)="checkBoxChangeAwsWeeklyNotify($event)"
+                      style="font-size: 20px"
+                    />&nbsp;
+                    <span class="form-check-sign">
+                      <span class="check"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6"></div>
             <div
               *ngIf="!isConcessionaireUser || isAuthsigner"
               class="col-md-3 pt-md-2"

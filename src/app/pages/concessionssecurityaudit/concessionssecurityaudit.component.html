@@ -113,7 +113,7 @@
                     <th>Audit Id</th>
                     <th>Company Name</th>
                     <th>Terminal / Location(s)</th>
-                    <th *ngIf="isAuthsigner">Daily Audit Count</th>
+                    <th *ngIf="isAuthsigner">Completed Audits</th>
                     <th *ngIf="!isAuthsigner">Audit No</th>
                     <th>Submitted Date</th>
                     <th *ngIf="isStaffAdmin">Submitted By</th>
@@ -169,7 +169,7 @@
                         Conduct Audit
                       </button> -->
                       <button
-                        *ngIf="isAuthsigner && log.completedAuditCount != log.dailyAuditCount"
+                        *ngIf="isAuthsigner && log.nextAuditNo > 0"
                         class="btn btn-sm"
                         [ngClass]="getAuditButtonClass(log)"
                         [disabled]="isAuditCompleted(log.audits)"
@@ -183,6 +183,24 @@
                         class="daily-audits-complete"
                       >
                        <strong style="color: green;"> Daily Audits Complete </strong> 
+                      </span>
+                      <!-- Waiting for the next audit -->
+                      <span
+                        *ngIf="isAuthsigner && log.nextAuditNo === 0 && log.isWaitingForNextAudit"
+                        class="text-warning"
+                      >
+                        <strong>
+                          Next Audit Available At:
+                          {{ log.nextAuditAvailableAt | date:'shortTime' }}
+                        </strong>
+                      </span>
+
+                      <!-- Day Closed -->
+                       <span
+                        *ngIf="isAuthsigner && log.nextAuditNo === 0 && !log.isWaitingForNextAudit && log.missedAuditCount > 0" 
+                        class="text-danger"
+                      >
+                        <strong>Day Closed - {{ log.missedAuditCount }} Missed</strong>
                       </span>
 
                       <div *ngIf="isStaffAdmin">
@@ -244,7 +262,7 @@
                       </div>
 
                       <div class="col-12" *ngIf="isAuthsigner || isConcessionaireUser">
-                        <strong>Daily Audit Count:</strong>
+                        <strong>Completed Audits:</strong>
                         {{ log.completedAuditCount }} /
                         {{ log.dailyAuditCount }}
                       </div>
@@ -272,7 +290,7 @@
                           Conduct Audit
                         </button> -->
                         <button
-                          *ngIf="isAuthsigner && log.completedAuditCount != log.dailyAuditCount"
+                          *ngIf="isAuthsigner && log.nextAuditNo > 0"
                           class="btn btn-sm"
                           [ngClass]="getAuditButtonClass(log)"
                           [disabled]="isAuditCompleted(log.audits)"
@@ -283,11 +301,27 @@
 
                         <span
                           *ngIf="isAuthsigner && log.completedAuditCount == log.dailyAuditCount"
-                          class="daily-audits-complete"
+                          class="daily-audits-complete" style="color: green;"
                         >
                           Daily Audits Complete
                         </span>
+                        <span
+                          *ngIf=" isAuthsigner && log.nextAuditNo === 0 && log.isWaitingForNextAudit"
+                          class="text-warning"
+                      >
+                        <strong>
+                          Next Audit Available At:
+                          {{ log.nextAuditAvailableAt | date:'shortTime' }}
+                        </strong>
+                      </span>
 
+                      <!-- Day Closed -->
+                      <span
+                        *ngIf="isAuthsigner && log.nextAuditNo === 0 && !log.isWaitingForNextAudit && log.missedAuditCount > 0"
+                          class="text-danger"
+                        >
+                          <strong>Day Closed - {{ log.missedAuditCount }} Missed</strong>
+                        </span>
                         <!-- Staff Admin View Button -->
                         <div *ngIf="isStaffAdmin">
                           <button *ngIf="isStaffAdmin" class="btn btn-primary btn-sm"
@@ -365,7 +399,7 @@
       <br />
       <div class="d-flex justify-content-between align-items-center p-2">
         <h5 class="mb-0 font-weight-bold">
-          <b>Performing Audit {{ selectedAuditCount }}</b>
+          <b>Performing Audit {{ showonModalSelectedAuditcount }} / 3 </b>
         </h5>
         <h5 class="mb-0 font-weight-bold">
           <b>{{ submitteddate | date : "MM/dd/yyyy HH:mm" }}</b>

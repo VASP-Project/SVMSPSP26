@@ -151,6 +151,7 @@ export class UserComponent implements OnInit {
         countryCode:"+1",
         isTsaApprover:this.User.isTsaApprover,
         isTsaScheduler:this.User.isTsaScheduler,
+        isAwsNotify: this.User.isAwsNotify,
         isAuditor: this.User.isAuditor,
         isPiCheckout: this.User.isPicheckout ,
         // createdBy: userForm.value.id == null || userForm.value.id == "" ? this.userid : (userForm.value.createdBy == null || userForm.value.createdBy == "" ? this.userid : userForm.value.createdBy),
@@ -416,7 +417,12 @@ checkBoxChangePIAudit(event) {
   checkBoxChangeTsaUserForScheduler(event){
     this.User.isTsaScheduler = event.target.checked
   }
-
+  checkBoxChangeAwsNotify(event) {
+    this.User.isAwsNotify = event.target.checked;
+  }
+  checkBoxChangeAwsWeeklyNotify(event) {
+    this.User.isAwsWeeklyNotify = event.target.checked;
+  }
   tsaCheckBoxChange(event) {
   //  this.User.isTSA = event.target.checked;   
   }

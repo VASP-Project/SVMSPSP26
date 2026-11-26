@@ -124,7 +124,11 @@ export class SchedulerAddEditComponent implements OnInit {
   scheduleGrid: { [date: string]: ScheduleDisplayRow[] } = {};
   maxRows = 0;
   isNewSchedule = false;
-  inspectionStatuses: { [inspectionId: number]: string } = {};
+  inspectionStatuses: { [inspectionId: number]: {
+    statusName: string;
+    inspectionRecordNo: string;
+  };
+ } = {};
 
   isMoreThanOneShift: boolean = false;
   filteredShifts = [];
@@ -508,10 +512,14 @@ export class SchedulerAddEditComponent implements OnInit {
           endTime: row[i + 7],
           door: row[i + 8],
 
-          inspectionId: row[i + 9] || null,
-          inspectionStatus: inspectionId
-        ? this.inspectionStatuses[inspectionId]
-        : null
+          inspectionId: inspectionId,
+          inspectionStatus: inspectionId !== null
+          ? this.inspectionStatuses[inspectionId]?.statusName || null
+          : null,
+
+        inspectionRecordNo: inspectionId !== null
+          ? this.inspectionStatuses[inspectionId]?.inspectionRecordNo || null
+          : null
         });
       }
 
